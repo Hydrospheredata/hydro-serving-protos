@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package hydroserving;
+
+import "tensorflow/core/framework/tensor.proto";
+import "tensorflow/core/framework/tensor_shape.proto";
+import "tensorflow/core/framework/types.proto";
+
+service InferenceService {
+    rpc Infer(InferenceRequest) returns (InferenceResult) {}
+}
+
+message InferenceRequest {
+    string entry_point = 1;
+    map<string, tensorflow.TensorProto> input_data = 2;
+    repeated string output_filter = 3;
+}
+
+message InferenceResult {
+    map<string, tensorflow.TensorProto> output_data = 2;
+}

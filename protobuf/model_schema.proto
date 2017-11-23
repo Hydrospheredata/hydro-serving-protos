@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package hydroserving;
+
+import "tensorflow/core/framework/tensor_shape.proto";
+import "tensorflow/core/framework/types.proto";
+
+message ModelField {
+    string field_name = 1;
+    tensorflow.DataType type = 2;
+    tensorflow.TensorShapeProto shape = 3;
+}
+
+message ModelSignature {
+    string signature_name = 1;
+    repeated ModelField inputs = 2;
+    repeated ModelField outputs = 3;
+}
+
+message ModelContract {
+    string model_name = 1;
+    repeated ModelSignature signatures = 2;
+}
