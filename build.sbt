@@ -1,0 +1,17 @@
+name := "serving_grpc"
+
+version := "0.1"
+
+scalaVersion := "2.12.4"
+
+libraryDependencies ++= Seq(
+  "com.trueaccord.scalapb" %% "scalapb-runtime" % com.trueaccord.scalapb.compiler.Version.scalapbVersion % "protobuf",
+  "io.grpc" % "grpc-netty" % com.trueaccord.scalapb.compiler.Version.grpcJavaVersion,
+  "com.trueaccord.scalapb" %% "scalapb-runtime-grpc" % com.trueaccord.scalapb.compiler.Version.scalapbVersion,
+
+  "org.tensorflow" % "proto" % "1.2.1"
+)
+
+PB.targets in Compile := Seq(
+  scalapb.gen() -> (sourceManaged in Compile).value
+)

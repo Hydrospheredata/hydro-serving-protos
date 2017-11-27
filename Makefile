@@ -1,8 +1,11 @@
 PYTHON = python
 PROTOC = protoc
-PROTOS_PATH = protobuf
+PROTOS_PATH = src/main/protobuf
 TF_PATH = tensorflow
-PY_PB_PATH = py_pb_src
+PY_PB_PATH = target/python
+
+scala: target_dir
+	sbt compile
 
 python: py_dir runtime_service_grpc_pb.py model_schema_pb.py
 
@@ -14,9 +17,11 @@ python: py_dir runtime_service_grpc_pb.py model_schema_pb.py
 %_pb.py: $(PROTOS_PATH)/%.proto
 	$(PROTOC) -I $(TF_PATH) -I $(PROTOS_PATH) --python_out=$(PY_PB_PATH) $<
 
-py_dir:
+py_dir: target
 	if [ ! -d "$(PY_PB_PATH)" ]; then mkdir $(PY_PB_PATH); fi;
 
+target_dir:
+	if [ ! -d "target" ]; then mkdir target; fi;
+
 init:
-	git submodule init
-	git submodule update --depth=1
+	git submodule update --init --recursive --depth=1

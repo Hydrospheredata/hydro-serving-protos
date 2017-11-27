@@ -2,13 +2,13 @@ syntax = "proto3";
 
 package hydroserving;
 
-import "tensorflow/core/framework/tensor_shape.proto";
-import "tensorflow/core/framework/types.proto";
+import "tensorflow/tensor_shape.proto";
+import "tensorflow/types.proto";
 
 message ModelField {
     string field_name = 1;
-    tensorflow.DataType type = 2;
-    tensorflow.TensorShapeProto shape = 3;
+    hydroserving.tensorflow.DataType type = 2;
+    hydroserving.tensorflow.TensorShapeProto shape = 3;
 }
 
 message ModelSignature {
