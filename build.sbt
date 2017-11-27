@@ -8,8 +8,6 @@ libraryDependencies ++= Seq(
   "com.trueaccord.scalapb" %% "scalapb-runtime" % com.trueaccord.scalapb.compiler.Version.scalapbVersion % "protobuf",
   "io.grpc" % "grpc-netty" % com.trueaccord.scalapb.compiler.Version.grpcJavaVersion,
   "com.trueaccord.scalapb" %% "scalapb-runtime-grpc" % com.trueaccord.scalapb.compiler.Version.scalapbVersion,
-
-  "org.tensorflow" % "proto" % "1.2.1"
 )
 
 PB.targets in Compile := Seq(

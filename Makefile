@@ -18,7 +18,7 @@ python: py_dir runtime_service_grpc_pb.py model_schema_pb.py
 %_pb.py: $(PROTOS_PATH)/%.proto
 	$(PROTOC) -I $(PROTOS_PATH) --python_out=$(PY_PB_PATH) $<
 
-py_dir: target
+py_dir: target_dir
 	if [ ! -d "$(PY_PB_PATH)" ]; then mkdir $(PY_PB_PATH); fi;
 
 target_dir:
