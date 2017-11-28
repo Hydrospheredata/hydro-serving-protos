@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package hydroserving;
+
+import "tf/tensor.proto";
+
+message DataFrame {
+    map<string, hydroserving.tensorflow.TensorProto> fields = 1;
+}

@@ -1,7 +1,7 @@
 PYTHON = python
 PROTOS_PATH = src/main/protobuf
 PY_PB_PATH = target/python
-PROTO_FILES = src/main/protobuf/model_schema.proto src/main/protobuf/runtime_service.proto src/main/protobuf/tensorflow/tensor.proto src/main/protobuf/tensorflow/tensor_shape.proto src/main/protobuf/tensorflow/tensor_slice.proto src/main/protobuf/tensorflow/types.proto
+PROTO_FILES := $(shell find src -name '*.proto')
 GRPC_FILES = src/main/protobuf/runtime_service.proto
 
 all: scala python

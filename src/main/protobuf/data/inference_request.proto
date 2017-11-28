@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package hydroserving.data;
+
+import "data/data_frame.proto";
+
+message InferenceRequest {
+    string entry_point = 1;
+    DataFrame input_data = 2;
+    repeated string output_filter = 3;
+}

@@ -2,20 +2,10 @@ syntax = "proto3";
 
 package hydroserving;
 
-import "tensorflow/tensor.proto";
-import "tensorflow/tensor_shape.proto";
-import "tensorflow/types.proto";
+import "data/inference_request.proto";
+import "data/inference_result.proto";
 
 service InferenceService {
-    rpc Infer(InferenceRequest) returns (InferenceResult) {}
+    rpc Infer(data.InferenceRequest) returns (data.InferenceResult) {}
 }
 
-message InferenceRequest {
-    string entry_point = 1;
-    map<string, hydroserving.tensorflow.TensorProto> input_data = 2;
-    repeated string output_filter = 3;
-}
-
-message InferenceResult {
-    map<string, hydroserving.tensorflow.TensorProto> output_data = 2;
-}

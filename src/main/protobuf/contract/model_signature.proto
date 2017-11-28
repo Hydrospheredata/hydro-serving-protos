@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package hydroserving.contract;
+
+import "contract/model_field.proto";
+
+message ModelSignature {
+    string signature_name = 1;
+    repeated ModelField inputs = 2;
+    repeated ModelField outputs = 3;
+}

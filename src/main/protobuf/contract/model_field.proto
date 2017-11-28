@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package hydroserving.contract;
+
+import "tf/types.proto";
+import "tf/tensor_shape.proto";
+
+message ModelField {
+    string field_name = 1;
+    hydroserving.tensorflow.DataType type = 2;
+    hydroserving.tensorflow.TensorShapeProto shape = 3;
+}

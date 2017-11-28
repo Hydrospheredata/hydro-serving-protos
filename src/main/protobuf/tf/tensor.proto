@@ -4,8 +4,8 @@ package hydroserving.tensorflow;
 option cc_enable_arenas = true;
 option java_multiple_files = true;
 
-import "tensorflow/tensor_shape.proto";
-import "tensorflow/types.proto";
+import "tf/tensor_shape.proto";
+import "tf/types.proto";
 
 // Protocol buffer representing a tensor.
 message TensorProto {
