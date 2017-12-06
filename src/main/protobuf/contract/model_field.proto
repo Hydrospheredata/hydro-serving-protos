@@ -2,11 +2,17 @@ syntax = "proto3";
 
 package hydroserving.contract;
 
-import "tf/types.proto";
-import "tf/tensor_shape.proto";
+import "tf/tensor_info.proto";
 
 message ModelField {
+    message Dict {
+        map<string, ModelField> data = 1;
+    }
+
     string field_name = 1;
-    hydroserving.tensorflow.DataType type = 2;
-    hydroserving.tensorflow.TensorShapeProto shape = 3;
+
+     oneof info_or_dict {
+         Dict dict = 2;
+         hydroserving.tensorflow.TensorInfo info = 3;
+    }
 }

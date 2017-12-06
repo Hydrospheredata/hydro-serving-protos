@@ -4,6 +4,17 @@ package hydroserving;
 
 import "tf/tensor.proto";
 
+
 message DataFrame {
-    map<string, hydroserving.tensorflow.TensorProto> fields = 1;
+    message ModelData {
+        message Dict {
+            map<string, ModelData> fields = 1;
+        }
+        oneof data_field {
+            hydroserving.tensorflow.TensorProto tensor = 1;
+            Dict dict = 2;
+        }
+    }
+
+    map<string, ModelData> fields = 1;
 }
