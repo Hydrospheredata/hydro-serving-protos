@@ -2,19 +2,8 @@ syntax = "proto3";
 
 package hydroserving;
 
-import "tf/tensor.proto";
-
+import "data/data_field.proto";
 
 message DataFrame {
-    message ModelData {
-        message Dict {
-            map<string, ModelData> fields = 1;
-        }
-        oneof data_field {
-            hydroserving.tensorflow.TensorProto tensor = 1;
-            Dict dict = 2;
-        }
-    }
-
-    map<string, ModelData> fields = 1;
+    map<string, DataField> fields = 1;
 }
