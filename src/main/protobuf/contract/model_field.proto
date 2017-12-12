@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package hydroserving.contract;
+package hydrosphere.contract;
 
 import "tf/tensor_info.proto";
 
@@ -13,6 +13,6 @@ message ModelField {
 
      oneof info_or_dict {
          Dict dict = 2;
-         hydroserving.tensorflow.TensorInfo info = 3;
+         hydrosphere.tensorflow.TensorInfo info = 3;
     }
 }

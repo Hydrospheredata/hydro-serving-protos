@@ -2,7 +2,7 @@ PYTHON = python
 PROTOS_PATH = src/main/protobuf
 PY_PB_PATH = target/python
 PROTO_FILES := $(shell find src -name '*.proto')
-GRPC_FILES = src/main/protobuf/runtime_service.proto
+GRPC_FILES = src/main/protobuf/tf/serving/prediction_service.proto
 
 all: scala python
 

@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package hydroserving.contract;
+package hydrosphere.contract;
 
 import "contract/model_field.proto";
 

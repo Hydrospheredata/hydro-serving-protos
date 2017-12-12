@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package hydroserving.tensorflow;
+package hydrosphere.tensorflow;
 option cc_enable_arenas = true;
 option java_multiple_files = true;
 
@@ -78,6 +78,8 @@ message TensorProto {
 
     // DT_UINT64
     repeated uint64 uint64_val = 17 [packed = true];
+
+    map<string, TensorProto> map_val = 51; // Hydroserving
 };
 
 // Protocol buffer representing the serialization format of DT_VARIANT tensors.

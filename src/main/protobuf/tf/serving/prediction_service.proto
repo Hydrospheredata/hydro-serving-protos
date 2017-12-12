@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package hydrosphere.tensorflow.serving;
+
+import "tf/serving/predict.proto";
+
+service PredictionService {
+    rpc Predict(PredictRequest) returns (PredictResponse);
+}
+

@@ -1,9 +1,0 @@
-syntax = "proto3";
-
-package hydroserving.data;
-
-import "data/data_frame.proto";
-
-message InferenceResult {
-    DataFrame output_data = 2;
-}

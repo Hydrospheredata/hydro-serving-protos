@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package hydrosphere.tensorflow.serving;
+option cc_enable_arenas = true;
+
+import "google/protobuf/wrappers.proto";
+
+// Metadata for an inference request such as the model name and version.
+message ModelSpec {
+    // Required servable name.
+     reserved 1; // Hydroserving
+
+    // Optional version. If unspecified, will use the latest (numerical) version.
+    // Typically not needed unless coordinating across multiple models that were
+    // co-trained and/or have inter-dependencies on the versions used at inference
+    // time.
+    reserved 2; // Hydroserving
+
+    // A named signature to evaluate. If unspecified, the default signature will
+    // be used.
+    string signature_name = 3;
+}

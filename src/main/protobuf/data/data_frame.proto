@@ -1,9 +1,0 @@
-syntax = "proto3";
-
-package hydroserving;
-
-import "data/data_field.proto";
-
-message DataFrame {
-    map<string, DataField> fields = 1;
-}
