@@ -79,7 +79,7 @@ message TensorProto {
     // DT_UINT64
     repeated uint64 uint64_val = 17 [packed = true];
 
-    map<string, TensorProto> map_val = 51; // Hydroserving
+    map<string, TensorProto> map_val = 27; // Hydroserving
 };
 
 // Protocol buffer representing the serialization format of DT_VARIANT tensors.

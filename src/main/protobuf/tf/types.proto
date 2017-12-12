@@ -36,7 +36,7 @@ enum DataType {
     DT_UINT32 = 22;
     DT_UINT64 = 23;
 
-    DT_MAP = 51; // Hydroserving map structure inside the tensor
+    DT_MAP = 27; // Hydroserving map structure inside the tensor
 
     // Do not use!  These are only for parameters.  Every enum above
     // should have a corresponding value below (verified by types_test).
@@ -64,6 +64,6 @@ enum DataType {
     DT_UINT32_REF = 122;
     DT_UINT64_REF = 123;
 
-    DT_MAP_REF = 151; // Hydroserving
+    DT_MAP_REF = 127; // Hydroserving
 
 }
