@@ -2,7 +2,7 @@ PYTHON = python
 PROTOS_PATH = src/main/protobuf
 PY_PB_PATH = target/python
 PROTO_FILES := $(shell find src -name '*.proto')
-GRPC_FILES = src/main/protobuf/tf/serving/prediction_service.proto
+GRPC_FILES = src/main/protobuf/tf/api/prediction_service.proto
 
 all: scala python
 
@@ -10,14 +10,18 @@ scala: target_dir
 	sbt compile
 
 python: py_dir
+	pip install grpcio-tools
 	protoc -I $(PROTOS_PATH) --python_out=$(PY_PB_PATH) $(PROTO_FILES)
 	$(PYTHON) -m grpc_tools.protoc -I $(PROTOS_PATH) --python_out=$(PY_PB_PATH) --grpc_python_out=$(PY_PB_PATH) $(GRPC_FILES)
 
 py_dir: target_dir
 	if [ ! -d "$(PY_PB_PATH)" ]; then mkdir $(PY_PB_PATH); fi;
 
-target_dir:
+target_dir: clean
 	if [ ! -d "target" ]; then mkdir target; fi;
+
+clean:
+	rm -rf target
 
 init:
 	git submodule update --init --recursive --depth=1

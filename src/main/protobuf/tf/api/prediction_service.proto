@@ -1,8 +1,9 @@
 syntax = "proto3";
 
 package hydrosphere.tensorflow.serving;
+option java_package = "io.hydrosphere.serving.tensorflow.api";
 
-import "tf/serving/predict.proto";
+import "tf/api/predict.proto";
 
 service PredictionService {
     rpc Predict(PredictRequest) returns (PredictResponse);

@@ -2,9 +2,10 @@ syntax = "proto3";
 
 package hydrosphere.tensorflow.serving;
 option cc_enable_arenas = true;
+option java_package = "io.hydrosphere.serving.tensorflow.api";
 
 import "tf/tensor.proto";
-import "tf/serving/model.proto";
+import "tf/api/model.proto";
 
 // PredictRequest specifies which TensorFlow model to run, as well as
 // how inputs are mapped to tensors and how outputs are filtered before

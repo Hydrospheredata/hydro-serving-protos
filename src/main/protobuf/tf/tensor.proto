@@ -3,6 +3,7 @@ syntax = "proto3";
 package hydrosphere.tensorflow;
 option cc_enable_arenas = true;
 option java_multiple_files = true;
+option java_package = "io.hydrosphere.serving.tensorflow";
 
 import "tf/tensor_shape.proto";
 import "tf/types.proto";

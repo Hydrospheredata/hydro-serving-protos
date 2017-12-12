@@ -6,7 +6,7 @@ package hydrosphere.tensorflow;
 
 option cc_enable_arenas = true;
 option java_multiple_files = true;
-
+option java_package = "io.hydrosphere.serving.tensorflow";
 
 // Can only be interpreted if you know the corresponding TensorShape.
 message TensorSliceProto {
