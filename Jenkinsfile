@@ -90,10 +90,8 @@ node("JenkinsOnDemand") {
 
 
     stage('Build') {
-        sh "virtualenv venv --distribute"
-        sh ". venv/bin/activate"
-        sh "pip install --upgrade pip"
-        sh "pip install -r ${env.WORKSPACE}/requirements.txt"
+        sh "sudo pip install --upgrade pip"
+        sh "sudo pip install -r ${env.WORKSPACE}/requirements.txt"
         sh "env SKIP_PYTHON_REQ=true ./build.sh all"
     }
 
