@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 VERSION=$(cat version)
 BASE_DIR=$(pwd)
@@ -11,11 +11,11 @@ GRPC_FILES=src/main/protobuf/tf/api/prediction_service.proto
 
 CMD=$1
 
-function clean() {
+function clean {
     rm -rf target
 }
 
-function compilePython() {
+function compilePython {
 mkdir -p $PY_PB_PATH
 pip install -r requirements.txt
 protoc -I $PROTOS_PATH --python_out=$PY_PB_PATH $PROTO_FILES
@@ -49,7 +49,7 @@ EOF
 cd $PY_WORK_PATH && $PYTHON setup.py sdist && cd $BASE_DIR
 }
 
-function compileScala() {
+function compileScala {
     sbt -DappVersion=$VERSION package
 }
 
