@@ -90,8 +90,9 @@ node("JenkinsOnDemand") {
 
 
     stage('Build') {
-        sh 'pip install --upgrade pip'
-        sh "./build.sh all"
+        sh "pip install --upgrade pip"
+        sh "pip install -r ${env.WORKSPACE}/requirements.txt"
+        sh "env SKIP_PYTHON_REQ=true ./build.sh all"
     }
 
     if (isReleaseJob()) {

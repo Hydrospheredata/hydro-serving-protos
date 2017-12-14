@@ -8,6 +8,7 @@ PY_WORK_PATH=target/python
 PY_PB_PATH=$PY_WORK_PATH/hydro_serving_grpc
 PROTO_FILES=$(find src -name '*.proto')
 GRPC_FILES=src/main/protobuf/tf/api/prediction_service.proto
+[ -z "$SKIP_PYTHON_REQ" ] && SKIP_PYTHON_REQ="false"
 
 CMD=$1
 
@@ -17,7 +18,10 @@ function clean {
 
 function compilePython {
 mkdir -p $PY_PB_PATH
-pip install -r requirements.txt
+
+if [ "$SKIP_PYTHON_REQ" == "true" ]; then
+    pip install -r requirements.txt
+fi
 protoc -I $PROTOS_PATH --python_out=$PY_PB_PATH $PROTO_FILES
 $PYTHON -m grpc_tools.protoc -I $PROTOS_PATH --python_out=$PY_PB_PATH --grpc_python_out=$PY_PB_PATH $GRPC_FILES
 cat <<EOF > $PY_WORK_PATH/setup.py
