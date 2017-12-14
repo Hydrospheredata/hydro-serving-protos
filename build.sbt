@@ -1,7 +1,7 @@
 lazy val currentAppVersion = util.Properties.propOrElse("appVersion", "0.0.1")
 
 organization := "io.hydrosphere"
-name := "serving-grpc"
+name := "serving-grpc-scala"
 version := currentAppVersion
 
 scalaVersion := "2.11.11"
