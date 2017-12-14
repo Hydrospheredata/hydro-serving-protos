@@ -90,7 +90,7 @@ node("JenkinsOnDemand") {
 
 
     stage('Build') {
-        sh "make all"
+        sh "./build.sh all"
     }
 
     if (isReleaseJob()) {
