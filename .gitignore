@@ -3,6 +3,8 @@
 # Simple Build Tool
 # http://www.scala-sbt.org/release/docs/Getting-Started/Directories.html#configuring-version-control
 
+python-package/hydro_serving_grpc/*
+!python-package/hydro_serving_grpc/__init__.py
 dist/*
 target/
 lib_managed/
