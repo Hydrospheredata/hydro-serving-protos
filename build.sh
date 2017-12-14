@@ -5,9 +5,9 @@ BASE_DIR=$(pwd)
 PYTHON=python
 PROTOS_PATH=src
 PY_WORK_PATH=python-package
-PY_PB_PATH=$PY_WORK_PATH/hydro_serving_grpc
+PY_PB_PATH=$PY_WORK_PATH
 PROTO_FILES=$(find src -name '*.proto')
-GRPC_FILES=src/tf/api/prediction_service.proto
+GRPC_FILES=src/hydro_serving_grpc/tf/api/prediction_service.proto
 [ -z "$SKIP_PYTHON_REQ" ] && SKIP_PYTHON_REQ="false"
 
 CMD=$1
@@ -31,7 +31,7 @@ function compilePython {
 function compileScala {
     cd scala-package
     ./sbt/sbt -Dsbt.override.build.repos=true -Dsbt.repository.config=project/repositories -DappVersion=$VERSION package
-    cd ../
+    cd $BASE_DIR
 }
 
 clean

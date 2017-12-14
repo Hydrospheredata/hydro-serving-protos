@@ -3,7 +3,7 @@ syntax = "proto3";
 package hydrosphere.contract;
 option java_package = "io.hydrosphere.serving.contract";
 
-import "tf/tensor_info.proto";
+import "hydro_serving_grpc/tf/tensor_info.proto";
 
 message ModelField {
     message Dict {
