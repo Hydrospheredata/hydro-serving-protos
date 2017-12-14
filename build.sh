@@ -54,7 +54,7 @@ cd $PY_WORK_PATH && $PYTHON setup.py sdist && cd $BASE_DIR
 }
 
 function compileScala {
-    ./sbt/sbt -DappVersion=$VERSION package
+    ./sbt/sbt -Dsbt.override.build.repos=true -Dsbt.repository.config=project/repositories -DappVersion=$VERSION package
 }
 
 clean
