@@ -50,7 +50,7 @@ cd $PY_WORK_PATH && $PYTHON setup.py sdist && cd $BASE_DIR
 }
 
 function compileScala {
-    sbt -DappVersion=$VERSION package
+    ./sbt/sbt -DappVersion=$VERSION package
 }
 
 clean

@@ -90,6 +90,7 @@ node("JenkinsOnDemand") {
 
 
     stage('Build') {
+        sh 'pip install --upgrade pip'
         sh "./build.sh all"
     }
 
@@ -100,7 +101,6 @@ node("JenkinsOnDemand") {
         }
 
         stage('Push to PYPI') {
-            sh 'pip install --upgrade pip'
             sh 'sudo pip install twine'
             configFileProvider([configFile(fileId: 'PYPIDeployConfiguration', targetLocation: 'target/.pypirc', variable: 'PYPI_SETTINGS')]) {
                 sh "twine upload --config-file ${env.WORKSPACE}/target/.pypirc -r pypi ${env.WORKSPACE}/target/python/dist/*.tar.gz"
