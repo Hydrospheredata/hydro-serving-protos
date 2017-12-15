@@ -91,7 +91,8 @@ node("JenkinsOnDemand") {
 
     stage('Build') {
         sh "sudo pip install --upgrade pip"
-        sh "make INSTALL_PY_REQ=true all"
+        sh "sudo pip install -r ${env.WORKSPACE}/python-package/requirements.txt"
+        sh "make all"
     }
 
     if (isReleaseJob()) {
