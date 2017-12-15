@@ -109,10 +109,10 @@ node("JenkinsOnDemand") {
         }
         stage('Push to Maven') {
             def curVersion = currentVersion()
-            dir "${env.WORKSPACE}/scala-package"
-            sh "./sbt/sbt -DappVersion=${curVersion} 'set pgpPassphrase := Some(Array())' publishSigned"
-            sh "./sbt/sbt -DappVersion=${curVersion} 'sonatypeRelease'"
-            dir "${env.WORKSPACE}"
+            dir("${env.WORKSPACE}/scala-package") {
+                sh "./sbt/sbt -DappVersion=${curVersion} 'set pgpPassphrase := Some(Array())' publishSigned"
+                sh "./sbt/sbt -DappVersion=${curVersion} 'sonatypeRelease'"
+            }
         }
 
         stage("Create tag"){
