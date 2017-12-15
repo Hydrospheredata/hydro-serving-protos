@@ -91,8 +91,7 @@ node("JenkinsOnDemand") {
 
     stage('Build') {
         sh "sudo pip install --upgrade pip"
-        sh "sudo pip install -r ${env.WORKSPACE}/requirements.txt"
-        sh "env SKIP_PYTHON_REQ=true ./build.sh all"
+        sh "make INSTALL_PY_REQ=true all"
     }
 
     if (isReleaseJob()) {
@@ -103,8 +102,8 @@ node("JenkinsOnDemand") {
 
         stage('Push to PYPI') {
             sh 'sudo pip install twine'
-            configFileProvider([configFile(fileId: 'PYPIDeployConfiguration', targetLocation: 'target/.pypirc', variable: 'PYPI_SETTINGS')]) {
-                sh "twine upload --config-file ${env.WORKSPACE}/target/.pypirc -r pypi ${env.WORKSPACE}/target/python/dist/*.tar.gz"
+            configFileProvider([configFile(fileId: 'PYPIDeployConfiguration', targetLocation: 'python-package/.pypirc', variable: 'PYPI_SETTINGS')]) {
+                sh "twine upload --config-file ${env.WORKSPACE}/python-package/.pypirc -r pypi ${env.WORKSPACE}/python-package/dist/*"
             }
         }
         stage('Push to Maven') {

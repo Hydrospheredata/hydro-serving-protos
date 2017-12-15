@@ -1,8 +1,11 @@
 from setuptools import setup, find_packages
+import os
 
+version = os.getenv('VERSION')
+print
 setup(
     name='hydro_serving_grpc',
-    version='0.0.1',
+    version=version,
     author='Hydrospheredata',
     author_email='info@hydrosphere.io',
     long_description='hydro-serving-protos',

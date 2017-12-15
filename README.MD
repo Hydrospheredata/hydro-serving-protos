@@ -7,7 +7,7 @@ Some Tensorflow `proto` messages were extracted from main repo and slightly modi
 ## Build
 Run
 ```sh
-./build.sh [language]
+make [language]
 ```
-to run codegen for specified languages. If `language` is omitted, then `build.sh` builds bindings 
+to run codegen for specified languages. If `language` is omitted, then it builds bindings 
 for every supported language.
