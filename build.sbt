@@ -28,7 +28,24 @@ publishTo := {
     Some("releases"  at nexus + "service/local/staging/deploy/maven2/")
 }
 pomExtra := <url>https://github.com/Hydrospheredata/hydro-serving-protos</url>
+  <licenses>
+    <license>
+      <name>Apache 2.0 License</name>
+      <url>https://github.com/Hydrospheredata/hydro-serving-protos/blob/master/LICENSE</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
   <scm>
     <url>https://github.com/Hydrospheredata/hydro-serving-protos.git</url>
     <connection>https://github.com/Hydrospheredata/hydro-serving-protos.git</connection>
   </scm>
+  <developers>
+    <developer>
+      <id>KineticCookie</id>
+      <name>Bulat Luftin</name>
+      <url>https://github.com/KineticCookie</url>
+      <organization>Hydrosphere</organization>
+      <organizationUrl>http://hydrosphere.io/</organizationUrl>
+    </developer>
+  </developers>
+
