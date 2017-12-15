@@ -5,8 +5,8 @@ option cc_enable_arenas = true;
 option java_multiple_files = true;
 option java_package = "io.hydrosphere.serving.tensorflow";
 
-import "tf/types.proto";
-import "tf/tensor_shape.proto";
+import "hydro_serving_grpc/tf/types.proto";
+import "hydro_serving_grpc/tf/tensor_shape.proto";
 
 message TensorInfo {
     string name = 1;

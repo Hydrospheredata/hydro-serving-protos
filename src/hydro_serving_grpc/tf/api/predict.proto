@@ -4,8 +4,8 @@ package hydrosphere.tensorflow.serving;
 option cc_enable_arenas = true;
 option java_package = "io.hydrosphere.serving.tensorflow.api";
 
-import "tf/tensor.proto";
-import "tf/api/model.proto";
+import "hydro_serving_grpc/tf/tensor.proto";
+import "hydro_serving_grpc/tf/api/model.proto";
 
 // PredictRequest specifies which TensorFlow model to run, as well as
 // how inputs are mapped to tensors and how outputs are filtered before

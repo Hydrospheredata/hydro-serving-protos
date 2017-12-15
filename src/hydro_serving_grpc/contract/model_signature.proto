@@ -3,7 +3,7 @@ syntax = "proto3";
 package hydrosphere.contract;
 option java_package = "io.hydrosphere.serving.contract";
 
-import "contract/model_field.proto";
+import "hydro_serving_grpc/contract/model_field.proto";
 
 message ModelSignature {
     string signature_name = 1;

@@ -1,6 +1,0 @@
-script: make $TARGET_LANG
-
-env:
-  matrix:
-    - TARGET_LANG=scala
-    - TARGET_LANG=python
