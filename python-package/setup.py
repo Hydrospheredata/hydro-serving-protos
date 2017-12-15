@@ -2,7 +2,6 @@ from setuptools import setup, find_packages
 import os
 
 version = os.getenv('VERSION')
-print
 setup(
     name='hydro_serving_grpc',
     version=version,
