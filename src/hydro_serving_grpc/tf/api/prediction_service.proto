@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-package hydrosphere.tensorflow.serving;
+package tensorflow.serving; // In order to be compatible with TF serving, we left this package name.
 option java_package = "io.hydrosphere.serving.tensorflow.api";
 
 import "hydro_serving_grpc/tf/api/predict.proto";
 
 service PredictionService {
-    rpc Predict(PredictRequest) returns (PredictResponse);
+    rpc Predict(hydrosphere.tensorflow.serving.PredictRequest) returns (hydrosphere.tensorflow.serving.PredictResponse);
 }
 
