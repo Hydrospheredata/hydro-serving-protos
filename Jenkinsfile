@@ -101,17 +101,18 @@ node("JenkinsOnDemand") {
             error("Errors in tests")
         }
 
-        stage('Push to PYPI') {
-            sh 'sudo pip3 install twine'
-            configFileProvider([configFile(fileId: 'PYPIDeployConfiguration', targetLocation: 'python-package/.pypirc', variable: 'PYPI_SETTINGS')]) {
-                sh "twine upload --config-file ${env.WORKSPACE}/python-package/.pypirc -r pypi ${env.WORKSPACE}/python-package/dist/*"
-            }
-        }
         stage('Push to Maven') {
             def curVersion = currentVersion()
             dir("${env.WORKSPACE}/scala-package") {
                 sh "./sbt/sbt -DappVersion=${curVersion} 'set pgpPassphrase := Some(Array())' publishSigned"
                 sh "./sbt/sbt -DappVersion=${curVersion} 'sonatypeRelease'"
+            }
+        }
+
+        stage('Push to PYPI') {
+            sh 'sudo pip3 install twine'
+            configFileProvider([configFile(fileId: 'PYPIDeployConfiguration', targetLocation: 'python-package/.pypirc', variable: 'PYPI_SETTINGS')]) {
+                sh "twine upload --config-file ${env.WORKSPACE}/python-package/.pypirc -r pypi ${env.WORKSPACE}/python-package/dist/*"
             }
         }
 
