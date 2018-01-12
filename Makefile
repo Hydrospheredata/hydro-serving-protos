@@ -12,7 +12,7 @@ GRPC_FILES = $(shell find src -name '*_service.proto')
 all: scala python
 
 scala:
-	cd scala-package && ./sbt/sbt -Dsbt.override.build.repos=true -Dsbt.repository.config=project/repositories -DappVersion=$(VERSION) package
+	cd scala-package && ./sbt/sbt -Dsbt.override.build.repos=true -Dsbt.repository.config=project/repositories -DappVersion=$(VERSION) +package
 
 python: python_wheel
 

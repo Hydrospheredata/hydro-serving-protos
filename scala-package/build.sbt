@@ -1,10 +1,16 @@
-lazy val currentAppVersion = util.Properties.propOrElse("appVersion", "0.0.1")
+import sbt.Keys._
+
+lazy val appVersion = settingKey[String]("Version")
+
+appVersion := {appVersion ?? "dev"}.value
 
 organization := "io.hydrosphere"
 name := "serving-grpc-scala"
-version := currentAppVersion
+version := appVersion.value
 
-scalaVersion := "2.11.11"
+scalaVersion := "2.12.4"
+
+crossScalaVersions := Seq("2.11.11", "2.12.4")
 
 publishMavenStyle := true
 
