@@ -2,11 +2,10 @@ import sbt.Keys._
 
 lazy val appVersion = settingKey[String]("Version")
 
-appVersion := {appVersion ?? "dev"}.value
 
 organization := "io.hydrosphere"
 name := "serving-grpc-scala"
-version := appVersion.value
+version := sys.props.getOrElse("appVersion", "dev")
 
 scalaVersion := "2.12.4"
 
