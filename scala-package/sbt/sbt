@@ -20,9 +20,9 @@
 # This script launches sbt for this project. If present it uses the system 
 # version of sbt. If there is no system version of sbt it attempts to download
 # sbt locally.
-SBT_VERSION=0.13.16
-URL1=http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/${SBT_VERSION}/sbt-launch.jar
-URL2=http://typesafe.artifactoryonline.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/${SBT_VERSION}/sbt-launch.jar
+SBT_VERSION="1.1.0"
+URL1=http://typesafe.artifactoryonline.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/${SBT_VERSION}/sbt-launch.jar
+URL2=http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt-launch/${SBT_VERSION}/sbt-launch.jar
 JAR=sbt/sbt-launch-${SBT_VERSION}.jar
 
 # Download sbt launch jar if it hasn't been downloaded yet
@@ -46,6 +46,6 @@ if [ ! -f ${JAR} ]; then
 fi
 printf "Launching sbt from ${JAR}\n"
 java \
-  -Xmx1400m -XX:MaxPermSize=1024m -XX:ReservedCodeCacheSize=256m \
+  -Xmx1400m -XX:ReservedCodeCacheSize=256m \
   -jar ${JAR} \
-  "$@"
+"$@"
