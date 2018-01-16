@@ -8,6 +8,7 @@ name := "serving-grpc-scala"
 version := sys.props.getOrElse("appVersion", "dev")
 
 scalaVersion := "2.12.4"
+crossScalaVersions := Seq("2.12.4", "2.11.11")
 
 publishMavenStyle := true
 
