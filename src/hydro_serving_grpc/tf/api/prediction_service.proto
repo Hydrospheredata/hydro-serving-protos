@@ -8,4 +8,3 @@ import "hydro_serving_grpc/tf/api/predict.proto";
 service PredictionService {
     rpc Predict(hydrosphere.tensorflow.serving.PredictRequest) returns (hydrosphere.tensorflow.serving.PredictResponse);
 }
-
