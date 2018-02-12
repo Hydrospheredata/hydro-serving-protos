@@ -14,6 +14,8 @@ crossScalaVersions := Seq("2.11.11", "2.12.4")
 publishMavenStyle := true
 
 libraryDependencies ++= Seq(
+  "org.scalactic" %% "scalactic" % "3.0.4",
+   "org.scalatest" %% "scalatest" % "3.0.4" % "test",
   "com.trueaccord.scalapb" %% "scalapb-runtime" % com.trueaccord.scalapb.compiler.Version.scalapbVersion % "protobuf",
   "io.grpc" % "grpc-netty" % com.trueaccord.scalapb.compiler.Version.grpcJavaVersion,
   "com.trueaccord.scalapb" %% "scalapb-runtime-grpc" % com.trueaccord.scalapb.compiler.Version.scalapbVersion
@@ -51,7 +53,7 @@ pomExtra := <url>https://github.com/Hydrospheredata/hydro-serving-protos</url>
   <developers>
     <developer>
       <id>KineticCookie</id>
-      <name>Bulat Luftin</name>
+      <name>Bulat Lutfullin</name>
       <url>https://github.com/KineticCookie</url>
       <organization>Hydrosphere</organization>
       <organizationUrl>http://hydrosphere.io/</organizationUrl>
