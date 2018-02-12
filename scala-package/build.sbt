@@ -8,8 +8,7 @@ name := "serving-grpc-scala"
 version := sys.props.getOrElse("appVersion", "dev")
 
 scalaVersion := "2.12.4"
-
-crossScalaVersions := Seq("2.11.11", "2.12.4")
+crossScalaVersions := Seq("2.12.4", "2.11.11")
 
 publishMavenStyle := true
 
@@ -38,25 +37,24 @@ publishTo := {
   else
     Some("releases"  at nexus + "service/local/staging/deploy/maven2/")
 }
-pomExtra := <url>https://github.com/Hydrospheredata/hydro-serving-protos</url>
-  <licenses>
-    <license>
-      <name>Apache 2.0 License</name>
-      <url>https://github.com/Hydrospheredata/hydro-serving-protos/blob/master/LICENSE</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-  <scm>
-    <url>https://github.com/Hydrospheredata/hydro-serving-protos.git</url>
-    <connection>https://github.com/Hydrospheredata/hydro-serving-protos.git</connection>
-  </scm>
-  <developers>
-    <developer>
-      <id>KineticCookie</id>
-      <name>Bulat Lutfullin</name>
-      <url>https://github.com/KineticCookie</url>
-      <organization>Hydrosphere</organization>
-      <organizationUrl>http://hydrosphere.io/</organizationUrl>
-    </developer>
-  </developers>
+licenses := Seq(
+  "Apache 2.0 License" -> url("https://github.com/Hydrospheredata/hydro-serving-protos/blob/master/LICENSE")
+)
 
+homepage := Some(url("https://github.com/Hydrospheredata/hydro-serving-protos"))
+
+scmInfo := Some(
+  ScmInfo(
+    url("https://github.com/Hydrospheredata/hydro-serving-protos.git"),
+    "https://github.com/Hydrospheredata/hydro-serving-protos.git"
+  )
+)
+
+developers := List(
+  Developer(
+    id = "KineticCookie",
+    name = "Bulat Lutfullin",
+    url = url("https://github.com/KineticCookie"),
+    email = "lb6557@gmail.com"
+  )
+)

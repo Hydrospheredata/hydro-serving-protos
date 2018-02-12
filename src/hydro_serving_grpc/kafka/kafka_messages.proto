@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package hydrosphere.manager;
+option java_package = "io.hydrosphere.serving.kafka";
+
+import "hydro_serving_grpc/tf/api/predict.proto";
+
+message KafkaError {
+    string source_topic = 1;
+    string consumer_id = 2;
+    string application_id = 3;
+    string stage_id = 4;
+    string error_message = 5;
+    int64 offset = 6;
+    int32 partition = 7;
+    hydrosphere.tensorflow.serving.PredictRequest last_known_request = 8;
+}
+
+message KafkaServingMessage {
+    oneof request_or_error {
+        KafkaError error = 1;
+        hydrosphere.tensorflow.serving.PredictRequest request = 2;
+    }
+    string trace_id = 3;
+}
