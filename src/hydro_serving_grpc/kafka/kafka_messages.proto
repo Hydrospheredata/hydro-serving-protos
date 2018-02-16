@@ -4,6 +4,7 @@ package hydrosphere.manager;
 option java_package = "io.hydrosphere.serving.kafka";
 
 import "hydro_serving_grpc/tf/api/predict.proto";
+import "hydro_serving_grpc/manager/service_descriptor.proto";
 
 message KafkaError {
     string source_topic = 1;
@@ -22,4 +23,12 @@ message KafkaServingMessage {
         hydrosphere.tensorflow.serving.PredictRequest request = 2;
     }
     string trace_id = 3;
+}
+
+message KafkaDebugMessage {
+    string application_id = 1;
+    string stage_id = 2;
+    KafkaServingMessage message = 3;
+
+    reserved 4;//ServiceDescriptor descriptor = 4;
 }

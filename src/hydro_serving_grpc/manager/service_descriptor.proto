@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package hydrosphere.manager;
+option java_package = "io.hydrosphere.serving.manager";
+
+message ServiceDescriptor {
+    int64 model_version_id = 1;
+    int64 runtime_id = 2;
+    int64 environment_id = 3;
+}
