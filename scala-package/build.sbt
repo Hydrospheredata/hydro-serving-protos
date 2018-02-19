@@ -13,6 +13,8 @@ crossScalaVersions := Seq("2.12.4", "2.11.11")
 publishMavenStyle := true
 
 libraryDependencies ++= Seq(
+  "org.scalactic" %% "scalactic" % "3.0.4",
+   "org.scalatest" %% "scalatest" % "3.0.4" % "test",
   "com.trueaccord.scalapb" %% "scalapb-runtime" % com.trueaccord.scalapb.compiler.Version.scalapbVersion % "protobuf",
   "io.grpc" % "grpc-netty" % com.trueaccord.scalapb.compiler.Version.grpcJavaVersion,
   "com.trueaccord.scalapb" %% "scalapb-runtime-grpc" % com.trueaccord.scalapb.compiler.Version.scalapbVersion

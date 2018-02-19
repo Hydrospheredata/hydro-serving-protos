@@ -95,6 +95,10 @@ node("JenkinsOnDemand") {
         sh "make PYTHON=python3 all"
     }
 
+    stage('Test') {
+        sh "make PYTHON=python3 test-scala"
+    }
+
     if (isReleaseJob()) {
         if (currentBuild.result == 'UNSTABLE') {
             currentBuild.result = 'FAILURE'
