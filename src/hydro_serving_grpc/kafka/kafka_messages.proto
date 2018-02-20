@@ -6,14 +6,24 @@ option java_package = "io.hydrosphere.serving.kafka";
 import "hydro_serving_grpc/tf/api/predict.proto";
 
 message KafkaError {
+    string error_message = 5;
+    hydrosphere.tensorflow.serving.PredictRequest last_known_request = 8;
+}
+
+message KafkaMessageLocation {
     string source_topic = 1;
     string consumer_id = 2;
-    string application_id = 3;
-    string stage_id = 4;
-    string error_message = 5;
-    int64 offset = 6;
-    int32 partition = 7;
-    hydrosphere.tensorflow.serving.PredictRequest last_known_request = 8;
+    int64 offset = 3;
+    int32 partition = 4;
+}
+
+message KafkaMessageMeta {
+    string trace_id = 1;
+    string application_id = 2;
+    string stage_id = 3;
+    string stage_name = 4;
+
+    KafkaMessageLocation location = 5;
 }
 
 message KafkaServingMessage {
@@ -21,5 +31,6 @@ message KafkaServingMessage {
         KafkaError error = 1;
         hydrosphere.tensorflow.serving.PredictRequest request = 2;
     }
-    string trace_id = 3;
+
+    KafkaMessageMeta meta = 3;
 }
