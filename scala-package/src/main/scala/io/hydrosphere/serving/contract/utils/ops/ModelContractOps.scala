@@ -11,10 +11,10 @@ trait ModelContractOps {
       )
     }
   }
-}
 
-object ModelContractOps {
   def flatten(modelContract: ModelContract): List[SignatureDescription] = {
     modelContract.signatures.map(ModelSignatureOps.flatten).toList
   }
 }
+
+object ModelContractOps extends ModelContractOps

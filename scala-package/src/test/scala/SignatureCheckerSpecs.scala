@@ -1,8 +1,6 @@
-import io.hydrosphere.serving.contract.model_field.ModelField
 import io.hydrosphere.serving.contract.model_signature.ModelSignature
-import io.hydrosphere.serving.contract.utils.SignatureChecker
-import io.hydrosphere.serving.tensorflow.tensor_info.TensorInfo
-import io.hydrosphere.serving.tensorflow.tensor_shape.TensorShapeProto
+import io.hydrosphere.serving.contract.utils.ContractBuilders
+import io.hydrosphere.serving.contract.utils.ops.ModelSignatureOps
 import io.hydrosphere.serving.tensorflow.types.DataType
 import org.scalatest.WordSpec
 
@@ -13,202 +11,114 @@ class SignatureCheckerSpecs extends WordSpec {
         val sig1 = ModelSignature(
           "sig1",
           List(
-            ModelField("in1", ModelField.InfoOrSubfields.Info(TensorInfo(DataType.DT_STRING, None)))
+            ContractBuilders.simpleTensorModelField("in1", DataType.DT_STRING, None)
           ),
           List(
-            ModelField("out1", ModelField.InfoOrSubfields.Info(TensorInfo(DataType.DT_STRING, None)))
+            ContractBuilders.simpleTensorModelField("out1", DataType.DT_STRING, None)
           )
         )
         val sig2 = ModelSignature(
           "sig2",
           List(
-            ModelField("out1", ModelField.InfoOrSubfields.Info(TensorInfo(DataType.DT_STRING, None)))
+            ContractBuilders.simpleTensorModelField("out1", DataType.DT_STRING, None)
           ),
           List(
-            ModelField("out2", ModelField.InfoOrSubfields.Info(TensorInfo(DataType.DT_STRING, None)))
+            ContractBuilders.simpleTensorModelField("out2", DataType.DT_STRING, None)
           )
         )
-        assert(SignatureChecker.areSequentiallyCompatible(sig1, sig2))
+        assert(ModelSignatureOps.append(sig1, sig2).isDefined)
       }
 
       "two identical signatures (Double[5],Double[5] -> Double[5],Double[5])" in {
         val sig1 = ModelSignature(
           "sig1",
-            ModelField("in1",
-              ModelField.InfoOrSubfields.Info(
-                TensorInfo(
-                  DataType.DT_DOUBLE,
-                  Some(TensorShapeProto(TensorShapeProto.Dim(5) :: Nil))
-                )
-              )
-            ) :: Nil,
-          ModelField("out1",
-            ModelField.InfoOrSubfields.Info(
-              TensorInfo(
-                DataType.DT_DOUBLE,
-                Some(TensorShapeProto(TensorShapeProto.Dim(5) :: Nil))
-              )
-            )
-          ) :: Nil
+          List(
+            ContractBuilders.simpleTensorModelField("in1", DataType.DT_DOUBLE, Some(Seq(5)))
+          ),
+          List(
+            ContractBuilders.simpleTensorModelField("out1", DataType.DT_DOUBLE, Some(Seq(5)))
+          )
         )
         val sig2 = ModelSignature(
           "sig2",
-            ModelField("out1",
-              ModelField.InfoOrSubfields.Info(
-                TensorInfo(
-                  DataType.DT_DOUBLE,
-                  Some(TensorShapeProto(TensorShapeProto.Dim(5) :: Nil))
-                )
-              )
-            ) :: Nil,
-          ModelField("out2",
-            ModelField.InfoOrSubfields.Info(
-              TensorInfo(
-                DataType.DT_DOUBLE,
-                Some(TensorShapeProto(TensorShapeProto.Dim(5) :: Nil))
-              )
-            )
-          ) :: Nil
+          List(
+            ContractBuilders.simpleTensorModelField("out1", DataType.DT_DOUBLE, Some(Seq(5)))
+          ),
+          List(
+            ContractBuilders.simpleTensorModelField("out2", DataType.DT_DOUBLE, Some(Seq(5)))
+
+          )
         )
-        assert(SignatureChecker.areSequentiallyCompatible(sig1, sig2))
+        assert(ModelSignatureOps.append(sig1, sig2).isDefined)
       }
 
       "two compatible signatures (Int32[3] -> Int32[-1])" in {
         val sig1 = ModelSignature(
           "sig1",
-
-          ModelField("in1",
-            ModelField.InfoOrSubfields.Info(
-              TensorInfo(
-                DataType.DT_INT32,
-                Some(TensorShapeProto(TensorShapeProto.Dim(3) :: Nil))
-              )
-            )
-          ) :: Nil,
-
-          ModelField("out1",
-            ModelField.InfoOrSubfields.Info(
-              TensorInfo(
-                DataType.DT_INT32,
-                Some(TensorShapeProto(TensorShapeProto.Dim(3) :: Nil))
-              )
-            )
-          ) :: Nil
+          List(
+            ContractBuilders.simpleTensorModelField("in1", DataType.DT_INT32, Some(Seq(3)))
+          ),
+          List(
+            ContractBuilders.simpleTensorModelField("out1", DataType.DT_INT32, Some(Seq(3)))
+          )
         )
         val sig2 = ModelSignature(
           "sig2",
+          List(
+            ContractBuilders.simpleTensorModelField("out1", DataType.DT_INT32, Some(Seq(-1)))
+          ),
+          List(
+            ContractBuilders.simpleTensorModelField("out2", DataType.DT_INT32, Some(Seq(-1)))
 
-          ModelField("out1",
-            ModelField.InfoOrSubfields.Info(
-              TensorInfo(
-                DataType.DT_INT32,
-                Some(TensorShapeProto(TensorShapeProto.Dim(-1) :: Nil))
-              )
-            )
-          ) :: Nil,
-
-          ModelField("out2",
-            ModelField.InfoOrSubfields.Info(
-              TensorInfo(
-                DataType.DT_INT32,
-                Some(TensorShapeProto(TensorShapeProto.Dim(-1) :: Nil))
-              )
-            )
-          ) :: Nil
+          )
         )
-        assert(SignatureChecker.areSequentiallyCompatible(sig1, sig2))
+        assert(ModelSignatureOps.append(sig1, sig2).isDefined)
       }
 
       "two identical signatures (Double[5, 2] -> Double[5, 2])" in {
         val sig1 = ModelSignature(
           "sig1",
-
-          ModelField("in1",
-            ModelField.InfoOrSubfields.Info(
-              TensorInfo(
-                DataType.DT_INT32,
-                Some(TensorShapeProto(TensorShapeProto.Dim(5) :: TensorShapeProto.Dim(2) :: Nil))
-              )
+          List(
+            ContractBuilders.simpleTensorModelField("in1", DataType.DT_DOUBLE, Some(Seq(5, 2)))
+          ),
+          List(
+            ContractBuilders.simpleTensorModelField("out1", DataType.DT_DOUBLE, Some(Seq(5, 2)))
             )
-          ) :: Nil,
-
-          ModelField("out1",
-            ModelField.InfoOrSubfields.Info(
-              TensorInfo(
-                DataType.DT_INT32,
-                Some(TensorShapeProto(TensorShapeProto.Dim(5) :: TensorShapeProto.Dim(2) :: Nil))
-              )
-            )
-          ) :: Nil
         )
         val sig2 = ModelSignature(
           "sig2",
+          List(
+            ContractBuilders.simpleTensorModelField("out1", DataType.DT_DOUBLE, Some(Seq(5, 2)))
+          ),
+          List(
+            ContractBuilders.simpleTensorModelField("out2", DataType.DT_DOUBLE, Some(Seq(5, 2)))
 
-          ModelField("out1",
-            ModelField.InfoOrSubfields.Info(
-              TensorInfo(
-                DataType.DT_INT32,
-                Some(TensorShapeProto(TensorShapeProto.Dim(5) :: TensorShapeProto.Dim(2) :: Nil))
-              )
-            )
-          ) :: Nil,
-
-          ModelField("out2",
-            ModelField.InfoOrSubfields.Info(
-              TensorInfo(
-                DataType.DT_INT32,
-                Some(TensorShapeProto(TensorShapeProto.Dim(5) :: TensorShapeProto.Dim(2) :: Nil))
-              )
-            )
-          ) :: Nil
+          )
         )
-        assert(SignatureChecker.areSequentiallyCompatible(sig1, sig2))
+        assert(ModelSignatureOps.append(sig1, sig2).isDefined)
       }
 
-      "two identical signatures (Double[5, 2] -> Double[5, -1])" in {
+      "two compatible signatures (Double[5, 2] -> Double[5, -1])" in {
         val sig1 = ModelSignature(
           "sig1",
-
-          ModelField("in1",
-            ModelField.InfoOrSubfields.Info(
-              TensorInfo(
-                DataType.DT_INT32,
-                Some(TensorShapeProto(TensorShapeProto.Dim(5) :: TensorShapeProto.Dim(2) :: Nil))
-              )
-            )
-          ) :: Nil,
-
-          ModelField("out1",
-            ModelField.InfoOrSubfields.Info(
-              TensorInfo(
-                DataType.DT_INT32,
-                Some(TensorShapeProto(TensorShapeProto.Dim(5) :: TensorShapeProto.Dim(2) :: Nil))
-              )
-            )
-          ) :: Nil
+          List(
+            ContractBuilders.simpleTensorModelField("in1", DataType.DT_DOUBLE, Some(Seq(5, 2)))
+          ),
+          List(
+            ContractBuilders.simpleTensorModelField("out1", DataType.DT_DOUBLE, Some(Seq(5, 2)))
+          )
         )
         val sig2 = ModelSignature(
           "sig2",
+          List(
+            ContractBuilders.simpleTensorModelField("out1", DataType.DT_DOUBLE, Some(Seq(5, -1)))
+          ),
+          List(
+            ContractBuilders.simpleTensorModelField("out2", DataType.DT_DOUBLE, Some(Seq(5, -1)))
 
-          ModelField("out1",
-            ModelField.InfoOrSubfields.Info(
-              TensorInfo(
-                DataType.DT_INT32,
-                Some(TensorShapeProto(TensorShapeProto.Dim(5) :: TensorShapeProto.Dim(-1) :: Nil))
-              )
-            )
-          ) :: Nil,
-
-          ModelField("out2",
-            ModelField.InfoOrSubfields.Info(
-              TensorInfo(
-                DataType.DT_INT32,
-                Some(TensorShapeProto(TensorShapeProto.Dim(5) :: TensorShapeProto.Dim(-1) :: Nil))
-              )
-            )
-          ) :: Nil
+          )
         )
-        assert(SignatureChecker.areSequentiallyCompatible(sig1, sig2))
+        assert(ModelSignatureOps.append(sig1, sig2).isDefined)
       }
 
     }
@@ -218,160 +128,106 @@ class SignatureCheckerSpecs extends WordSpec {
         val sig1 = ModelSignature(
           "sig1",
           List(
-            ModelField("in1", ModelField.InfoOrSubfields.Info(TensorInfo(DataType.DT_STRING, None)))
+            ContractBuilders.simpleTensorModelField("in1", DataType.DT_STRING, None)
+          ),
+          List(
+            ContractBuilders.simpleTensorModelField("out1", DataType.DT_STRING, None)
           )
         )
         val sig2 = ModelSignature(
           "sig2",
           List(
-            ModelField("in2", ModelField.InfoOrSubfields.Info(TensorInfo(DataType.DT_INT32, None)))
+            ContractBuilders.simpleTensorModelField("out1", DataType.DT_INT32, None)
+          ),
+          List(
+            ContractBuilders.simpleTensorModelField("out2", DataType.DT_INT32, None)
           )
         )
-        assert(! SignatureChecker.areSequentiallyCompatible(sig1, sig2))
+        assert(ModelSignatureOps.append(sig1, sig2).isEmpty)
       }
 
       "two completely different signatures (String[3] -> String[4])" in {
         val sig1 = ModelSignature(
           "sig1",
-
-          ModelField("in1",
-            ModelField.InfoOrSubfields.Info(
-              TensorInfo(
-                DataType.DT_STRING,
-                Some(TensorShapeProto(TensorShapeProto.Dim(3) :: Nil))
-              )
-            )
-          ) :: Nil,
-
-          ModelField("out1",
-            ModelField.InfoOrSubfields.Info(
-              TensorInfo(
-                DataType.DT_STRING,
-                Some(TensorShapeProto(TensorShapeProto.Dim(3) :: Nil))
-              )
-            )
-          ) :: Nil
+          List(
+            ContractBuilders.simpleTensorModelField("in1", DataType.DT_STRING, Some(Seq(3)))
+          ),
+          List(
+            ContractBuilders.simpleTensorModelField("out1", DataType.DT_STRING, Some(Seq(3)))
+          )
         )
         val sig2 = ModelSignature(
           "sig2",
-
-          ModelField("out1",
-            ModelField.InfoOrSubfields.Info(
-              TensorInfo(
-                DataType.DT_STRING,
-                Some(TensorShapeProto(TensorShapeProto.Dim(4) :: Nil))
-              )
-            )
-          ) :: Nil,
-
-          ModelField("out2",
-            ModelField.InfoOrSubfields.Info(
-              TensorInfo(
-                DataType.DT_STRING,
-                Some(TensorShapeProto(TensorShapeProto.Dim(4) :: Nil))
-              )
-            )
-          ) :: Nil
+          List(
+            ContractBuilders.simpleTensorModelField("out1", DataType.DT_INT32, Some(Seq(4)))
+          ),
+          List(
+            ContractBuilders.simpleTensorModelField("out2", DataType.DT_INT32, Some(Seq(4)))
+          )
         )
-        assert(! SignatureChecker.areSequentiallyCompatible(sig1, sig2))
+        assert(ModelSignatureOps.append(sig1, sig2).isEmpty)
       }
 
       "two completely different signatures (Double[4] -> Double[3])" in {
         val sig1 = ModelSignature(
           "sig1",
-
-          ModelField("in1",
-            ModelField.InfoOrSubfields.Info(
-              TensorInfo(
-                DataType.DT_STRING,
-                Some(TensorShapeProto(TensorShapeProto.Dim(4) :: Nil))
-              )
-            )
-          ) :: Nil,
-
-          ModelField("out1",
-            ModelField.InfoOrSubfields.Info(
-              TensorInfo(
-                DataType.DT_STRING,
-                Some(TensorShapeProto(TensorShapeProto.Dim(4) :: Nil))
-              )
-            )
-          ) :: Nil
+          List(
+            ContractBuilders.simpleTensorModelField("in1", DataType.DT_DOUBLE, Some(Seq(4)))
+          ),
+          List(
+            ContractBuilders.simpleTensorModelField("out1", DataType.DT_DOUBLE, Some(Seq(4)))
+          )
         )
         val sig2 = ModelSignature(
           "sig2",
-
-          ModelField("out1",
-            ModelField.InfoOrSubfields.Info(
-              TensorInfo(
-                DataType.DT_DOUBLE,
-                Some(TensorShapeProto(TensorShapeProto.Dim(3) :: Nil))
-              )
-            )
-          ) :: Nil,
-
-          ModelField("out2",
-            ModelField.InfoOrSubfields.Info(
-              TensorInfo(
-                DataType.DT_DOUBLE,
-                Some(TensorShapeProto(TensorShapeProto.Dim(3) :: Nil))
-              )
-            )
-          ) :: Nil
+          List(
+            ContractBuilders.simpleTensorModelField("out1", DataType.DT_DOUBLE, Some(Seq(3)))
+          ),
+          List(
+            ContractBuilders.simpleTensorModelField("out2", DataType.DT_DOUBLE, Some(Seq(3)))
+          )
         )
-        assert(! SignatureChecker.areSequentiallyCompatible(sig1, sig2))
+        assert(ModelSignatureOps.append(sig1, sig2).isEmpty)
       }
 
       "two signatures when receiver has empty input signature" in {
         val sig1 = ModelSignature(
           "sig1",
-
-          ModelField("in1",
-            ModelField.InfoOrSubfields.Info(
-              TensorInfo(
-                DataType.DT_STRING,
-                Some(TensorShapeProto(TensorShapeProto.Dim(3) :: Nil))
-              )
-            )
-          ) :: Nil,
-
-          ModelField("out1",
-            ModelField.InfoOrSubfields.Info(
-              TensorInfo(
-                DataType.DT_STRING,
-                Some(TensorShapeProto(TensorShapeProto.Dim(3) :: Nil))
-              )
-            )
-          ) :: Nil
+          List(
+            ContractBuilders.simpleTensorModelField("in1", DataType.DT_DOUBLE, Some(Seq(4)))
+          ),
+          List(
+            ContractBuilders.simpleTensorModelField("out1", DataType.DT_DOUBLE, Some(Seq(4)))
+          )
         )
-        val sig2 = ModelSignature()
-        assert(! SignatureChecker.areSequentiallyCompatible(sig1, sig2))
+        val sig2 = ModelSignature(
+          "sig2",
+          List(),
+          List(
+            ContractBuilders.simpleTensorModelField("out2", DataType.DT_DOUBLE, Some(Seq(4)))
+          )
+        )
+        assert(ModelSignatureOps.append(sig1, sig2).isEmpty)
       }
 
       "two signatures when emitter has empty output signature" in {
         val sig1 = ModelSignature(
           "sig1",
-          ModelField("in1",
-            ModelField.InfoOrSubfields.Info(
-              TensorInfo(
-                DataType.DT_STRING,
-                Some(TensorShapeProto(TensorShapeProto.Dim(3) :: Nil))
-              )
-            )
-          ) :: Nil
+          List(
+            ContractBuilders.simpleTensorModelField("in1", DataType.DT_DOUBLE, Some(Seq(4)))
+          ),
+          List()
         )
         val sig2 = ModelSignature(
           "sig2",
-          ModelField("in1",
-            ModelField.InfoOrSubfields.Info(
-              TensorInfo(
-                DataType.DT_STRING,
-                Some(TensorShapeProto(TensorShapeProto.Dim(3) :: Nil))
-              )
-            )
-          ) :: Nil
+          List(
+            ContractBuilders.simpleTensorModelField("in1", DataType.DT_DOUBLE, Some(Seq(4)))
+          ),
+          List(
+            ContractBuilders.simpleTensorModelField("out2", DataType.DT_DOUBLE, Some(Seq(4)))
+          )
         )
-        assert(! SignatureChecker.areSequentiallyCompatible(sig1, sig2))
+        assert(ModelSignatureOps.append(sig1, sig2).isEmpty)
       }
     }
   }

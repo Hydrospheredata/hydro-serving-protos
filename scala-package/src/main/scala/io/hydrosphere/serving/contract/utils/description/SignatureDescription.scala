@@ -2,35 +2,41 @@ package io.hydrosphere.serving.contract.utils.description
 
 import io.hydrosphere.serving.contract.model_field.ModelField
 import io.hydrosphere.serving.contract.model_signature.ModelSignature
-import io.hydrosphere.serving.contract.utils.ContractBuilders
-import io.hydrosphere.serving.tensorflow.tensor_info.TensorInfo
+import io.hydrosphere.serving.tensorflow.tensor_shape.TensorShapeProto
+import io.hydrosphere.serving.tensorflow.types.DataType
+import io.hydrosphere.serving.tensorflow.utils.ops.TensorShapeProtoOps
 
 import scala.collection.mutable
 
 case class SignatureDescription(
   signatureName: String,
-  inputs: List[FieldDescription],
-  outputs: List[FieldDescription]
+  inputs: Seq[FieldDescription],
+  outputs: Seq[FieldDescription]
 ) {
   def toSignature: ModelSignature = SignatureDescription.toSignature(this)
 }
 
 object SignatureDescription {
+
   class Converter() {
 
     sealed trait ANode {
       def name: String
 
-      def toInfoOrDict: ModelField.InfoOrSubfields
+      def shape: Option[Seq[Long]]
+
+      def toTypeOrSubfields: ModelField.TypeOrSubfields
+
+      def shapeProto: Option[TensorShapeProto] = TensorShapeProtoOps.maybeSeqToShape(shape)
     }
 
-    case class FTensor(name: String, tensorInfo: TensorInfo) extends ANode {
-      override def toInfoOrDict: ModelField.InfoOrSubfields = {
-        ModelField.InfoOrSubfields.Info(tensorInfo)
+    case class FTensor(name: String, shape: Option[Seq[Long]], dtype: DataType) extends ANode {
+      override def toTypeOrSubfields = {
+        ModelField.TypeOrSubfields.Dtype(dtype)
       }
     }
 
-    case class FMap(name: String = "", data: mutable.ListBuffer[ANode] = mutable.ListBuffer.empty)
+    case class FMap(name: String = "", shape: Option[Seq[Long]] = None, data: mutable.ListBuffer[ANode] = mutable.ListBuffer.empty)
       extends ANode {
       def getOrUpdate(segment: String, map: FMap): ANode = {
         data.find(_.name == segment) match {
@@ -44,11 +50,11 @@ object SignatureDescription {
 
       def +=(node: ANode): data.type = data += node
 
-      override def toInfoOrDict: ModelField.InfoOrSubfields = {
-        ModelField.InfoOrSubfields.Subfields(
-          ModelField.ComplexField(
+      override def toTypeOrSubfields = {
+        ModelField.TypeOrSubfields.Subfields(
+          ModelField.Subfield(
             data.map { node =>
-              ModelField(node.name, node.toInfoOrDict)
+              ModelField(node.name, node.shapeProto, node.toTypeOrSubfields)
             }
           )
         )
@@ -68,7 +74,8 @@ object SignatureDescription {
         case (tensorName :: Nil) =>
           tree += FTensor(
             tensorName,
-            ContractBuilders.createTensorInfo(field.dataType, field.shape)
+            field.shape,
+            field.dataType
           )
         case (root :: segments) =>
           var last = tree.getOrUpdate(root, FMap(root)).asInstanceOf[FMap]
@@ -82,7 +89,8 @@ object SignatureDescription {
           val lastName = segments.last
           last += FTensor(
             lastName,
-            ContractBuilders.createTensorInfo(field.dataType, field.shape)
+            field.shape,
+            field.dataType
           )
         case Nil =>
           throw new IllegalArgumentException(
@@ -93,7 +101,7 @@ object SignatureDescription {
 
     def result: Seq[ModelField] = {
       tree.data.map { node =>
-        ModelField(node.name, node.toInfoOrDict)
+        ModelField(node.name, node.shapeProto, node.toTypeOrSubfields)
       }
     }
   }
@@ -101,8 +109,8 @@ object SignatureDescription {
   def toSignature(signatureDescription: SignatureDescription): ModelSignature = {
     ModelSignature(
       signatureName = signatureDescription.signatureName,
-      inputs        = SignatureDescription.toFields(signatureDescription.inputs),
-      outputs       = SignatureDescription.toFields(signatureDescription.outputs)
+      inputs = SignatureDescription.toFields(signatureDescription.inputs),
+      outputs = SignatureDescription.toFields(signatureDescription.outputs)
     )
   }
 

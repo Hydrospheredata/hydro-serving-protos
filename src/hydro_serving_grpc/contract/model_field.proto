@@ -3,17 +3,20 @@ syntax = "proto3";
 package hydrosphere.contract;
 option java_package = "io.hydrosphere.serving.contract";
 
-import "hydro_serving_grpc/tf/tensor_info.proto";
+import "hydro_serving_grpc/tf/types.proto";
+import "hydro_serving_grpc/tf/tensor_shape.proto";
 
 message ModelField {
-    message ComplexField {
+    message Subfield {
         repeated ModelField data = 1;
     }
 
-    string field_name = 1;
+    string name = 1;
 
-     oneof info_or_subfields {
-         ComplexField subfields = 2;
-         hydrosphere.tensorflow.TensorInfo info = 3;
+    tensorflow.TensorShapeProto shape = 2;
+
+    oneof type_or_subfields {
+        Subfield subfields = 3;
+         tensorflow.DataType dtype = 4;
     }
 }
