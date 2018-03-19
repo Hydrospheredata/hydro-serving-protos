@@ -1,18 +1,23 @@
 package io.hydrosphere.serving.tensorflow.tensor
 
-case class MapTensor(tensorProto: TensorProto) extends TypedTensor[MapTensorData] {
-  /**
-    * Returns tensor contents from a field as flat `Seq`
-    *
-    * @return flat data `Seq`
-    */
-  override def get: Seq[MapTensorData] = tensorProto.mapVal
+import io.hydrosphere.serving.tensorflow.types.DataType
 
-  /**
-    * Puts data to a field
-    *
-    * @param data data
-    * @return tensor with new data
-    */
-  override def put(data: Seq[MapTensorData]): TensorProto = tensorProto.addAllMapVal(data)
+case class MapTensor(shape: Option[Seq[Long]], data: Seq[MapTensorData]) extends TypedTensor[DataType.DT_MAP.type] {
+  override type Self = MapTensor
+
+  override type DataT = MapTensorData
+
+  override def dtype = DataType.DT_MAP
+
+  override def factory = MapTensor
+}
+
+object MapTensor extends TypedTensorFactory[MapTensor] {
+  override implicit def lens: TensorProtoLens[MapTensor] = new TensorProtoLens[MapTensor] {
+    override def getter: TensorProto => Seq[MapTensorData] = _.mapVal
+
+    override def setter: (TensorProto, Seq[MapTensorData]) => TensorProto = _.withMapVal(_)
+  }
+
+  override def constructor = MapTensor.apply
 }

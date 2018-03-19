@@ -1,8 +1,9 @@
 package io.hydrosphere.serving.tensorflow.tensor
 
-case class UintTensor(tensorProto: TensorProto) extends TypedTensor[Int] {
-  override def get: Seq[Int] = tensorProto.uint32Val
+object UintTensor {
+  def protoLens[T <: IntTensor[_]] = new TensorProtoLens[T] {
+    override def getter: TensorProto => Seq[Int] = _.uint32Val
 
-  override def put(data: Seq[Int]): TensorProto =
-    tensorProto.addAllUint32Val(data)
+    override def setter: (TensorProto, Seq[Int]) => TensorProto = _.withUint32Val(_)
+  }
 }

@@ -4,7 +4,7 @@ import io.hydrosphere.serving.contract.model_contract.ModelContract
 import io.hydrosphere.serving.contract.model_field.ModelField
 import io.hydrosphere.serving.contract.model_field.ModelField.TypeOrSubfields.{Dtype, Empty, Subfields}
 import io.hydrosphere.serving.contract.model_signature.ModelSignature
-import io.hydrosphere.serving.tensorflow.tensor.{MapTensorData, TensorProto, TypedTensor}
+import io.hydrosphere.serving.tensorflow.tensor.{MapTensorData, TensorProto, TypedTensorFactory}
 import io.hydrosphere.serving.tensorflow.tensor_shape.TensorShapeProto
 import io.hydrosphere.serving.tensorflow.types.DataType
 import io.hydrosphere.serving.tensorflow.types.DataType._
@@ -53,16 +53,15 @@ object DataGenerator {
     shape match {
       case Some(sh) =>
         val flatLen = sh.dim.map(_.size.max(1)).product
-        (0L to flatLen).map(_ => generator)
+        (1L to flatLen).map(_ => generator)
       case None => List(generator)
     }
   }
 
   def generateTensor(dtype: DataType, shape: Option[TensorShapeProto]): TensorProto = {
-    val tensor = TensorProto(dtype = dtype, tensorShape = shape)
+    val factory = TypedTensorFactory(dtype)
     val data = generateScalarCollection(dtype, shape)
-    val typedTensor = TypedTensor(tensor)
-    typedTensor.putAny(data).right.get
+    factory.createFromAny(data, shape).right.get.toProto()
   }
 
   def generateField(field: ModelField): Map[String, TensorProto] = {

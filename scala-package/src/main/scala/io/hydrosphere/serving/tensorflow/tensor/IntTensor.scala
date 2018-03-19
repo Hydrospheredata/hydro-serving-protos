@@ -1,8 +1,15 @@
 package io.hydrosphere.serving.tensorflow.tensor
 
-case class IntTensor(tensorProto: TensorProto) extends TypedTensor[Int] {
-  override def get: Seq[Int] = tensorProto.intVal
+import io.hydrosphere.serving.tensorflow.types.DataType
 
-  override def put(data: Seq[Int]): TensorProto =
-    tensorProto.addAllIntVal(data)
+trait IntTensor[T <: DataType] extends TypedTensor[T] {
+  final override type DataT = Int
+}
+
+object IntTensor {
+  def protoLens[T <: IntTensor[_]] = new TensorProtoLens[T] {
+    override def getter: TensorProto => Seq[Int] = _.intVal
+
+    override def setter: (TensorProto, Seq[Int]) => TensorProto = _.withIntVal(_)
+  }
 }

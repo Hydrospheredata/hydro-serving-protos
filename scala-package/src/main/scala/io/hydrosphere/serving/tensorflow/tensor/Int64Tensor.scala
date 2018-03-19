@@ -1,8 +1,23 @@
 package io.hydrosphere.serving.tensorflow.tensor
 
-case class Int64Tensor(tensorProto: TensorProto) extends TypedTensor[Long] {
-  override def get: Seq[Long] = tensorProto.int64Val
+import io.hydrosphere.serving.tensorflow.types.DataType
 
-  override def put(data: Seq[Long]): TensorProto =
-    tensorProto.addAllInt64Val(data)
+case class Int64Tensor(shape: Option[Seq[Long]], data: Seq[Long]) extends TypedTensor[DataType.DT_INT64.type] {
+  override type Self = Int64Tensor
+
+  override type DataT = Long
+
+  override def dtype = DataType.DT_INT64
+
+  override def factory = Int64Tensor
+}
+
+object Int64Tensor extends TypedTensorFactory[Int64Tensor] {
+  override implicit def lens: TensorProtoLens[Int64Tensor] = new TensorProtoLens[Int64Tensor] {
+    override def getter: TensorProto => Seq[Long] = _.int64Val
+
+    override def setter: (TensorProto, Seq[Long]) => TensorProto = _.withInt64Val(_)
+  }
+
+  override def constructor = Int64Tensor.apply
 }

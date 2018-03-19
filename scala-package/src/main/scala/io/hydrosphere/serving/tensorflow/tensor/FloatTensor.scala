@@ -1,8 +1,23 @@
 package io.hydrosphere.serving.tensorflow.tensor
 
-case class FloatTensor(tensorProto: TensorProto) extends TypedTensor[Float] {
-  override def get: Seq[Float] = tensorProto.floatVal
+import io.hydrosphere.serving.tensorflow.types.DataType
 
-  override def put(data: Seq[Float]): TensorProto =
-    tensorProto.addAllFloatVal(data)
+case class FloatTensor(shape: Option[Seq[Long]], data: Seq[Float]) extends TypedTensor[DataType.DT_FLOAT.type] {
+  override type Self = FloatTensor
+
+  override type DataT = Float
+
+  override def dtype = DataType.DT_FLOAT
+
+  override def factory = FloatTensor
+}
+
+object FloatTensor extends TypedTensorFactory[FloatTensor] {
+  override implicit def lens: TensorProtoLens[FloatTensor] = new TensorProtoLens[FloatTensor] {
+    override def getter: TensorProto => Seq[Float] = _.floatVal
+
+    override def setter: (TensorProto, Seq[Float]) => TensorProto = _.withFloatVal(_)
+  }
+
+  override def constructor = FloatTensor.apply
 }

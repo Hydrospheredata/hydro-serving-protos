@@ -1,10 +1,24 @@
 package io.hydrosphere.serving.tensorflow.tensor
 
 import com.google.protobuf.ByteString
+import io.hydrosphere.serving.tensorflow.types.DataType
 
-case class StringTensor(tensorProto: TensorProto) extends TypedTensor[String] {
-  override def get: Seq[String] = tensorProto.stringVal.map(_.toStringUtf8)
+case class StringTensor(shape: Option[Seq[Long]], data: Seq[String]) extends TypedTensor[DataType.DT_STRING.type] {
+  override type Self = StringTensor
 
-  override def put(data: Seq[String]): TensorProto =
-    tensorProto.addAllStringVal(data.map(ByteString.copyFromUtf8))
+  override type DataT = String
+
+  override def dtype = DataType.DT_STRING
+
+  override def factory = StringTensor
+}
+
+object StringTensor extends TypedTensorFactory[StringTensor] {
+  override implicit def lens: TensorProtoLens[StringTensor] = new TensorProtoLens[StringTensor] {
+    override def getter: TensorProto => Seq[String] = _.stringVal.map(_.toStringUtf8)
+
+    override def setter: (TensorProto, Seq[String]) => TensorProto = (t, d) =>  t.withStringVal(d.map(ByteString.copyFromUtf8))
+  }
+
+  override def constructor = StringTensor.apply
 }
