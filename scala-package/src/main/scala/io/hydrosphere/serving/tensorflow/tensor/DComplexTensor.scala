@@ -1,8 +1,9 @@
 package io.hydrosphere.serving.tensorflow.tensor
 
+import io.hydrosphere.serving.tensorflow.TensorShape
 import io.hydrosphere.serving.tensorflow.types.DataType
 
-case class DComplexTensor(shape: Option[Seq[Long]], data: Seq[Double]) extends TypedTensor[DataType.DT_COMPLEX128.type] {
+case class DComplexTensor(shape: TensorShape, data: Seq[Double]) extends TypedTensor[DataType.DT_COMPLEX128.type] {
   override type Self = DComplexTensor
 
   override type DataT = Double

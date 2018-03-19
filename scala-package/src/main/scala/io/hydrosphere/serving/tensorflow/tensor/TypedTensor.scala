@@ -1,23 +1,22 @@
 package io.hydrosphere.serving.tensorflow.tensor
 
+import io.hydrosphere.serving.tensorflow.TensorShape
 import io.hydrosphere.serving.tensorflow.types.DataType
-import io.hydrosphere.serving.tensorflow.utils.ops.TensorShapeProtoOps
 
-
-trait TypedTensor[DTypeT <: DataType] {
+trait TypedTensor[DTypeT] {
   type Self <: TypedTensor[DTypeT]
   type DataT
 
   def data: Seq[Self#DataT]
 
-  def shape: Option[Seq[Long]]
+  def shape: TensorShape
 
-  def dtype: DTypeT
+  def dtype: DataType
 
   def factory: TypedTensorFactory[Self]
 
-  final def toProto(): TensorProto = {
-    val pretensor = TensorProto(dtype, TensorShapeProtoOps.maybeSeqToShape(shape))
+  final def toProto: TensorProto = {
+    val pretensor = TensorProto(dtype, shape.toProto)
     pretensor.update { _ =>
       factory.lens.lens := data
     }

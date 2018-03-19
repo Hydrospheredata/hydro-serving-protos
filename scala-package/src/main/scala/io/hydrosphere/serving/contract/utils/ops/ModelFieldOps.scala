@@ -4,6 +4,7 @@ import io.hydrosphere.serving.contract.utils.description.FieldDescription
 import io.hydrosphere.serving.contract.model_field.ModelField
 import io.hydrosphere.serving.contract.model_field.ModelField.TypeOrSubfields.{Dtype, Empty, Subfields}
 import io.hydrosphere.serving.contract.utils.ContractBuilders
+import io.hydrosphere.serving.tensorflow.TensorShape
 import io.hydrosphere.serving.tensorflow.utils.ops.{DataTypeOps, TensorShapeProtoOps}
 
 trait ModelFieldOps {
@@ -113,12 +114,11 @@ trait ModelFieldOps {
           FieldDescription(
             name,
             value,
-            TensorShapeProtoOps.shapeToList(field.shape)
+            TensorShape.fromProto(field.shape).dims
           )
         )
     }
   }
-
 
   def appendAll(outputs: Seq[ModelField], inputs: Seq[ModelField]): Option[Seq[ModelField]] = {
     val fields = inputs.map { input =>

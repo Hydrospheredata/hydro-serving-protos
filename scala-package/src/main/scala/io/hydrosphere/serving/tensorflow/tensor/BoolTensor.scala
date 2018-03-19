@@ -1,8 +1,9 @@
 package io.hydrosphere.serving.tensorflow.tensor
 
+import io.hydrosphere.serving.tensorflow.TensorShape
 import io.hydrosphere.serving.tensorflow.types.DataType
 
-case class BoolTensor(shape: Option[Seq[Long]], data: Seq[Boolean]) extends TypedTensor[DataType.DT_BOOL.type] {
+case class BoolTensor(shape: TensorShape, data: Seq[Boolean]) extends TypedTensor[DataType.DT_BOOL.type] {
   override type Self = BoolTensor
 
   override type DataT = Boolean

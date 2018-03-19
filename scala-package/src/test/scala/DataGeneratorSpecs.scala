@@ -1,12 +1,14 @@
 import com.google.protobuf.ByteString
 import io.hydrosphere.serving.contract.model_signature.ModelSignature
 import io.hydrosphere.serving.contract.utils.{ContractBuilders, DataGenerator}
-import io.hydrosphere.serving.tensorflow.tensor.{MapTensorData, TensorProto}
+import io.hydrosphere.serving.tensorflow.TensorShape
+import io.hydrosphere.serving.tensorflow.tensor.{MapTensorData, TensorProto, TypedTensorFactory}
 import io.hydrosphere.serving.tensorflow.types.DataType
-import io.hydrosphere.serving.tensorflow.utils.ops.TensorShapeProtoOps
 import org.scalatest.WordSpec
 
 class DataGeneratorSpecs extends WordSpec {
+  val fooString = ByteString.copyFromUtf8("foo")
+
   "DataGenerator" should {
     "generate correct example" when {
       "scalar flat signature" in {
@@ -21,7 +23,13 @@ class DataGeneratorSpecs extends WordSpec {
         )
 
         val expected = Map(
-          "in1" -> TensorProto(dtype = DataType.DT_STRING, tensorShape = None, stringVal = List(ByteString.copyFromUtf8("foo")))
+          "in1" -> TypedTensorFactory.create(
+            TensorProto(
+              dtype = DataType.DT_STRING,
+              tensorShape = None,
+              stringVal = List(fooString)
+            )
+          )
         )
 
         val generated = DataGenerator(sig1).generateInputs
@@ -41,8 +49,20 @@ class DataGeneratorSpecs extends WordSpec {
         )
 
         val expected = Map(
-          "in1" -> TensorProto(dtype = DataType.DT_STRING, tensorShape = Some(TensorShapeProtoOps.seqToShape(List(-1))), stringVal = List(ByteString.copyFromUtf8("foo"))),
-          "in2" -> TensorProto(dtype = DataType.DT_INT32, tensorShape = Some(TensorShapeProtoOps.seqToShape(List(3))), intVal = List(1, 1, 1))
+          "in1" -> TypedTensorFactory.create(
+            TensorProto(
+              dtype = DataType.DT_STRING,
+              tensorShape = TensorShape.vector(-1).toProto,
+              stringVal = List(fooString)
+            )
+          ),
+          "in2" -> TypedTensorFactory.create(
+            TensorProto(
+              dtype = DataType.DT_INT32,
+              tensorShape = TensorShape.vector(3).toProto,
+              intVal = List(1, 1, 1)
+            )
+          )
         )
 
         val generated = DataGenerator(sig1).generateInputs
@@ -68,18 +88,21 @@ class DataGeneratorSpecs extends WordSpec {
         )
 
         val expected = Map(
-          "in1" -> TensorProto(
-            dtype = DataType.DT_MAP,
-            tensorShape = None,
-            mapVal = Seq(
-              MapTensorData(
-                Map(
-                  "a" -> TensorProto(DataType.DT_STRING, None, stringVal = List(ByteString.copyFromUtf8("foo"))),
-                  "b" -> TensorProto(DataType.DT_STRING, None, stringVal = List(ByteString.copyFromUtf8("foo")))
+          "in1" ->
+            TypedTensorFactory.create(
+              TensorProto(
+                dtype = DataType.DT_MAP,
+                tensorShape = None,
+                mapVal = Seq(
+                  MapTensorData(
+                    Map(
+                      "a" -> TensorProto(DataType.DT_STRING, None, stringVal = List(fooString)),
+                      "b" -> TensorProto(DataType.DT_STRING, None, stringVal = List(fooString))
+                    )
+                  )
                 )
               )
             )
-          )
         )
 
         val generated = DataGenerator(sig1).generateInputs
@@ -92,7 +115,7 @@ class DataGeneratorSpecs extends WordSpec {
           List(
             ContractBuilders.complexField(
               "in1",
-              TensorShapeProtoOps.maybeSeqToShape(Some(Seq(3))),
+              TensorShape.vector(3).toProto,
               Seq(
                 ContractBuilders.simpleTensorModelField("a", DataType.DT_STRING, None),
                 ContractBuilders.simpleTensorModelField("b", DataType.DT_STRING, None)
@@ -105,26 +128,28 @@ class DataGeneratorSpecs extends WordSpec {
         )
 
         val expected = Map(
-          "in1" -> TensorProto(
-            dtype = DataType.DT_MAP,
-            tensorShape = None,
-            mapVal = Seq(
-              MapTensorData(
-                Map(
-                  "a" -> TensorProto(DataType.DT_STRING, None, stringVal = List(ByteString.copyFromUtf8("foo"))),
-                  "b" -> TensorProto(DataType.DT_STRING, None, stringVal = List(ByteString.copyFromUtf8("foo")))
-                )
-              ),
-              MapTensorData(
-                Map(
-                  "a" -> TensorProto(DataType.DT_STRING, None, stringVal = List(ByteString.copyFromUtf8("foo"))),
-                  "b" -> TensorProto(DataType.DT_STRING, None, stringVal = List(ByteString.copyFromUtf8("foo")))
-                )
-              ),
-              MapTensorData(
-                Map(
-                  "a" -> TensorProto(DataType.DT_STRING, None, stringVal = List(ByteString.copyFromUtf8("foo"))),
-                  "b" -> TensorProto(DataType.DT_STRING, None, stringVal = List(ByteString.copyFromUtf8("foo")))
+          "in1" -> TypedTensorFactory.create(
+            TensorProto(
+              dtype = DataType.DT_MAP,
+              tensorShape = TensorShape.vector(3).toProto,
+              mapVal = Seq(
+                MapTensorData(
+                  Map(
+                    "a" -> TensorProto(DataType.DT_STRING, None, stringVal = List(fooString)),
+                    "b" -> TensorProto(DataType.DT_STRING, None, stringVal = List(fooString))
+                  )
+                ),
+                MapTensorData(
+                  Map(
+                    "a" -> TensorProto(DataType.DT_STRING, None, stringVal = List(fooString)),
+                    "b" -> TensorProto(DataType.DT_STRING, None, stringVal = List(fooString))
+                  )
+                ),
+                MapTensorData(
+                  Map(
+                    "a" -> TensorProto(DataType.DT_STRING, None, stringVal = List(fooString)),
+                    "b" -> TensorProto(DataType.DT_STRING, None, stringVal = List(fooString))
+                  )
                 )
               )
             )

@@ -1,8 +1,9 @@
 package io.hydrosphere.serving.tensorflow.tensor
 
+import io.hydrosphere.serving.tensorflow.TensorShape
 import io.hydrosphere.serving.tensorflow.types.DataType
 
-case class FloatTensor(shape: Option[Seq[Long]], data: Seq[Float]) extends TypedTensor[DataType.DT_FLOAT.type] {
+case class FloatTensor(shape: TensorShape, data: Seq[Float]) extends TypedTensor[DataType.DT_FLOAT.type] {
   override type Self = FloatTensor
 
   override type DataT = Float

@@ -1,16 +1,15 @@
 package io.hydrosphere.serving.tensorflow.tensor
 
 import io.hydrosphere.serving.contract.utils.validation.{InvalidFieldData, UnsupportedFieldTypeError, ValidationError}
-import io.hydrosphere.serving.tensorflow.tensor_shape.TensorShapeProto
+import io.hydrosphere.serving.tensorflow.TensorShape
 import io.hydrosphere.serving.tensorflow.types.DataType
 import io.hydrosphere.serving.tensorflow.types.DataType._
-import io.hydrosphere.serving.tensorflow.utils.ops.TensorShapeProtoOps
 
 trait TypedTensorFactory[TensorT <: TypedTensor[_]] {
 
   implicit def lens: TensorProtoLens[TensorT]
 
-  def constructor: (Option[Seq[Long]], Seq[TensorT#DataT]) => TensorT
+  def constructor: (TensorShape, Seq[TensorT#DataT]) => TensorT
 
   /**
     * Tries to convert `data` to tensor-specific type.
@@ -27,18 +26,18 @@ trait TypedTensorFactory[TensorT <: TypedTensor[_]] {
   }
 
   final def empty: TensorT = {
-    constructor(None, Seq.empty)
+    constructor(TensorShape.scalar, Seq.empty)
   }
 
   final def create(
     data: Seq[TensorT#DataT],
-    shape: Option[Seq[Long]]
+    shape: TensorShape
   ): TensorT = {
     constructor(shape, data)
   }
 
   final def fromProto(proto: TensorProto): TensorT = {
-    constructor(TensorShapeProtoOps.shapeToList(proto.tensorShape), lens.lens.get(proto))
+    constructor(TensorShape.fromProto(proto.tensorShape), lens.lens.get(proto))
   }
 
   /**
@@ -50,10 +49,10 @@ trait TypedTensorFactory[TensorT <: TypedTensor[_]] {
     */
   final def createFromAny(
     data: Seq[Any],
-    shape: Option[TensorShapeProto]
-  ): Either[ValidationError, TensorT] = {
-    val tensorProto = TensorProto(dtype = empty.dtype.asInstanceOf[DataType], tensorShape = shape)
-    castData(data).right.map { converted =>
+    shape: TensorShape
+  ): Option[TensorT] = {
+    val tensorProto = TensorProto(dtype = empty.dtype, tensorShape = shape.toProto)
+    castData(data).right.toOption.map { converted =>
       val newTensorProto = tensorProto.update(_ => lens.lens := converted)
       fromProto(newTensorProto)
     }

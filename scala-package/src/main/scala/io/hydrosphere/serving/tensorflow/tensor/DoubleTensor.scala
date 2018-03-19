@@ -1,8 +1,9 @@
 package io.hydrosphere.serving.tensorflow.tensor
 
+import io.hydrosphere.serving.tensorflow.TensorShape
 import io.hydrosphere.serving.tensorflow.types.DataType
 
-case class DoubleTensor(shape: Option[Seq[Long]], data: Seq[Double]) extends TypedTensor[DataType.DT_DOUBLE.type] {
+case class DoubleTensor(shape: TensorShape, data: Seq[Double]) extends TypedTensor[DataType.DT_DOUBLE.type] {
   override type Self = DoubleTensor
 
   override type DataT = Double

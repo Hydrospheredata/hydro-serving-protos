@@ -1,9 +1,10 @@
 package io.hydrosphere.serving.tensorflow.tensor
 
 import com.google.protobuf.ByteString
+import io.hydrosphere.serving.tensorflow.TensorShape
 import io.hydrosphere.serving.tensorflow.types.DataType
 
-case class StringTensor(shape: Option[Seq[Long]], data: Seq[String]) extends TypedTensor[DataType.DT_STRING.type] {
+case class StringTensor(shape: TensorShape, data: Seq[String]) extends TypedTensor[DataType.DT_STRING.type] {
   override type Self = StringTensor
 
   override type DataT = String

@@ -39,34 +39,6 @@ trait TensorShapeProtoOps {
       }
     }
   }
-
-  def shapeToList(tensorShapeProto: Option[TensorShapeProto]): Option[List[Long]] = {
-    tensorShapeProto.map { shape =>
-      shape.dim.map { dim =>
-        dim.size
-      }.toList
-    }
-  }
-
-  def seqToShape(dims: Seq[Long], unknownRank: Boolean = false): TensorShapeProto = {
-    TensorShapeProto(
-      dim = dims.map { d =>
-        TensorShapeProto.Dim(d)
-      },
-      unknownRank = unknownRank
-    )
-  }
-
-  def maybeSeqToShape(maybeDims: Option[Seq[Long]], unknownRank: Boolean = false): Option[TensorShapeProto] = {
-    maybeDims.map { dims =>
-      seqToShape(dims, unknownRank)
-    }
-  }
-
-  def unknownRankShape(): TensorShapeProto = {
-    TensorShapeProto(unknownRank = true)
-  }
-
 }
 
 object TensorShapeProtoOps extends TensorShapeProtoOps

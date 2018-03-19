@@ -1,6 +1,7 @@
 package io.hydrosphere.serving.contract.utils
 
 import io.hydrosphere.serving.contract.model_field.ModelField
+import io.hydrosphere.serving.tensorflow.TensorShape
 import io.hydrosphere.serving.tensorflow.tensor_shape.TensorShapeProto
 import io.hydrosphere.serving.tensorflow.types.DataType
 import io.hydrosphere.serving.tensorflow.utils.ops.TensorShapeProtoOps
@@ -34,7 +35,7 @@ object ContractBuilders {
   ): ModelField = {
     ModelField(
       name,
-      TensorShapeProtoOps.maybeSeqToShape(shape, unknownRank),
+      TensorShape(shape, unknownRank).toProto,
       ModelField.TypeOrSubfields.Dtype(dataType)
     )
   }

@@ -1,8 +1,9 @@
 package io.hydrosphere.serving.tensorflow.tensor
 
+import io.hydrosphere.serving.tensorflow.TensorShape
 import io.hydrosphere.serving.tensorflow.types.DataType
 
-case class Int16Tensor(shape: Option[Seq[Long]], data: Seq[Int]) extends IntTensor[DataType.DT_INT16.type] {
+case class Int16Tensor(shape: TensorShape, data: Seq[Int]) extends IntTensor[DataType.DT_INT16.type] {
   override type Self = Int16Tensor
 
   override def dtype = DataType.DT_INT16

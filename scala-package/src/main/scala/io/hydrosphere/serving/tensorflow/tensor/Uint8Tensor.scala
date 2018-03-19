@@ -1,8 +1,9 @@
 package io.hydrosphere.serving.tensorflow.tensor
 
+import io.hydrosphere.serving.tensorflow.TensorShape
 import io.hydrosphere.serving.tensorflow.types.DataType
 
-case class Uint8Tensor(shape: Option[Seq[Long]], data: Seq[Int]) extends IntTensor[DataType.DT_UINT8.type] {
+case class Uint8Tensor(shape: TensorShape, data: Seq[Int]) extends IntTensor[DataType.DT_UINT8.type] {
   override type Self = Uint8Tensor
 
   override def dtype = DataType.DT_UINT8

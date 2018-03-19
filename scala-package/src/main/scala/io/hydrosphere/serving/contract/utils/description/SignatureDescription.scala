@@ -2,6 +2,7 @@ package io.hydrosphere.serving.contract.utils.description
 
 import io.hydrosphere.serving.contract.model_field.ModelField
 import io.hydrosphere.serving.contract.model_signature.ModelSignature
+import io.hydrosphere.serving.tensorflow.TensorShape
 import io.hydrosphere.serving.tensorflow.tensor_shape.TensorShapeProto
 import io.hydrosphere.serving.tensorflow.types.DataType
 import io.hydrosphere.serving.tensorflow.utils.ops.TensorShapeProtoOps
@@ -27,7 +28,7 @@ object SignatureDescription {
 
       def toTypeOrSubfields: ModelField.TypeOrSubfields
 
-      def shapeProto: Option[TensorShapeProto] = TensorShapeProtoOps.maybeSeqToShape(shape)
+      def shapeProto: Option[TensorShapeProto] = TensorShape.fromSeq(shape).toProto
     }
 
     case class FTensor(name: String, shape: Option[Seq[Long]], dtype: DataType) extends ANode {

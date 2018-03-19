@@ -1,8 +1,9 @@
 package io.hydrosphere.serving.tensorflow.tensor
 
+import io.hydrosphere.serving.tensorflow.TensorShape
 import io.hydrosphere.serving.tensorflow.types.DataType
 
-case class SComplexTensor(shape: Option[Seq[Long]], data: Seq[Float]) extends TypedTensor[DataType.DT_COMPLEX64.type] {
+case class SComplexTensor(shape: TensorShape, data: Seq[Float]) extends TypedTensor[DataType.DT_COMPLEX64.type] {
   override type Self = SComplexTensor
 
   override type DataT = Float

@@ -1,8 +1,9 @@
 package io.hydrosphere.serving.tensorflow.tensor
 
+import io.hydrosphere.serving.tensorflow.TensorShape
 import io.hydrosphere.serving.tensorflow.types.DataType
 
-case class Uint32Tensor(shape: Option[Seq[Long]], data: Seq[Int]) extends IntTensor[DataType.DT_UINT32.type] {
+case class Uint32Tensor(shape: TensorShape, data: Seq[Int]) extends IntTensor[DataType.DT_UINT32.type] {
   override type Self = Uint32Tensor
 
   override def dtype = DataType.DT_UINT32

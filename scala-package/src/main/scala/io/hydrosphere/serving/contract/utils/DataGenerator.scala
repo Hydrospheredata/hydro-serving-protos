@@ -4,17 +4,17 @@ import io.hydrosphere.serving.contract.model_contract.ModelContract
 import io.hydrosphere.serving.contract.model_field.ModelField
 import io.hydrosphere.serving.contract.model_field.ModelField.TypeOrSubfields.{Dtype, Empty, Subfields}
 import io.hydrosphere.serving.contract.model_signature.ModelSignature
-import io.hydrosphere.serving.tensorflow.tensor.{MapTensorData, TensorProto, TypedTensorFactory}
-import io.hydrosphere.serving.tensorflow.tensor_shape.TensorShapeProto
+import io.hydrosphere.serving.tensorflow.TensorShape
+import io.hydrosphere.serving.tensorflow.tensor._
 import io.hydrosphere.serving.tensorflow.types.DataType
 import io.hydrosphere.serving.tensorflow.types.DataType._
 
 class DataGenerator(val modelApi: ModelSignature) {
-  def generateInputs: Map[String, TensorProto] = {
+  def generateInputs: Map[String, TypedTensor[_]] = {
     modelApi.inputs.flatMap(DataGenerator.generateField).toMap
   }
 
-  def generateOutputs: Map[String, TensorProto] = {
+  def generateOutputs: Map[String, TypedTensor[_]] = {
     modelApi.outputs.flatMap(DataGenerator.generateField).toMap
   }
 }
@@ -26,7 +26,7 @@ object DataGenerator {
     modelContract.signatures.find(_.signatureName == signature).map(DataGenerator.apply)
   }
 
-  def generateScalarData(dataType: DataType): Any = {
+  def generateScalarData[T <: DataType](dataType: T): Any = {
     dataType match {
       case DT_FLOAT | DT_COMPLEX64   => 1.0F
       case DT_DOUBLE | DT_COMPLEX128 => 1.0D
@@ -39,48 +39,46 @@ object DataGenerator {
 
       case DT_INVALID =>
         throw new IllegalArgumentException(
-          s"Can't convert data to DT_INVALID  has an invalid dtype"
+          s"Can't convert data to DT_INVALID"
         )
       case x => throw new IllegalArgumentException(s"Cannot process Tensor with $x dtype") // refs
     }
   }
 
-  def generateScalarCollection(dataType: DataType, shape: Option[TensorShapeProto]): Seq[Any] = {
-    createFlatTensor(shape, generateScalarData(dataType))
-  }
-
-  def createFlatTensor[T](shape: Option[TensorShapeProto], generator: => T): Seq[T] = {
-    shape match {
+  def createFlatTensor[T](shape: TensorShape, generator: => T): Seq[T] = {
+    shape.dims match {
       case Some(sh) =>
-        val flatLen = sh.dim.map(_.size.max(1)).product
+        val flatLen = sh.map(_.max(1)).product
         (1L to flatLen).map(_ => generator)
       case None => List(generator)
     }
   }
 
-  def generateTensor(dtype: DataType, shape: Option[TensorShapeProto]): TensorProto = {
+  def generateTensor(shape: TensorShape, dtype: DataType): Option[TypedTensor[_]] = {
     val factory = TypedTensorFactory(dtype)
-    val data = generateScalarCollection(dtype, shape)
-    factory.createFromAny(data, shape).right.get.toProto()
+    val data = createFlatTensor(shape, generateScalarData(dtype))
+    val s = factory.createFromAny(data, shape)
+    println(s.map(_.toProto))
+    s
   }
 
-  def generateField(field: ModelField): Map[String, TensorProto] = {
-    val tensor = field.typeOrSubfields match {
-      case Empty       => TensorProto()
-      case Dtype(value) => generateTensor(value, field.shape)
-      case Subfields(value) => generateNestedTensor(field.shape, value)
+  def generateField(field: ModelField): Map[String, TypedTensor[_]] = {
+    val shape = TensorShape.fromProto(field.shape)
+    val fieldValue = field.typeOrSubfields match {
+      case Empty => None
+      case Dtype(value) => generateTensor(shape, value)
+      case Subfields(value) => generateNestedTensor(shape, value)
     }
-    Map(field.name -> tensor)
+    fieldValue.map(x => field.name -> x).toMap
   }
 
-  private def generateNestedTensor(shape: Option[TensorShapeProto], value: ModelField.Subfield) = {
-    val tensor = TensorProto(dtype = DataType.DT_MAP)
+  private def generateNestedTensor(shape: TensorShape, value: ModelField.Subfield): Option[MapTensor] = {
     val map = generateMap(value)
     val tensorData = createFlatTensor(shape, map)
-    tensor.withMapVal(tensorData)
+    Some(MapTensor(shape, tensorData))
   }
 
-  private def generateMap(value: ModelField.Subfield): MapTensorData = {
-    MapTensorData(value.data.flatMap(generateField).toMap)
+  private def generateMap(value: ModelField.Subfield): Map[String, TypedTensor[_]] = {
+    value.data.flatMap(generateField).toMap
   }
 }

@@ -1,8 +1,9 @@
 package io.hydrosphere.serving.tensorflow.tensor
 
+import io.hydrosphere.serving.tensorflow.TensorShape
 import io.hydrosphere.serving.tensorflow.types.DataType
 
-case class Int64Tensor(shape: Option[Seq[Long]], data: Seq[Long]) extends TypedTensor[DataType.DT_INT64.type] {
+case class Int64Tensor(shape: TensorShape, data: Seq[Long]) extends TypedTensor[DataType.DT_INT64.type] {
   override type Self = Int64Tensor
 
   override type DataT = Long

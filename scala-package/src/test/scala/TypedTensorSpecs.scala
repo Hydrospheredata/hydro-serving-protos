@@ -1,20 +1,18 @@
 import com.google.protobuf.ByteString
-import io.hydrosphere.serving.contract.model_field.ModelField
-import io.hydrosphere.serving.contract.model_field.ModelField.{Subfield, TypeOrSubfields}
 import io.hydrosphere.serving.contract.utils.DataGenerator
+import io.hydrosphere.serving.tensorflow.TensorShape
 import io.hydrosphere.serving.tensorflow.tensor._
 import io.hydrosphere.serving.tensorflow.types.DataType
-import io.hydrosphere.serving.tensorflow.utils.ops.TensorShapeProtoOps
 import org.scalatest.WordSpec
 
 class TypedTensorSpecs extends WordSpec {
-  val shape = TensorShapeProtoOps.maybeSeqToShape(Some(Seq(2,2)))
+  val shape = TensorShape.mat(2, 2)
 
   def test[TFactory <: TypedTensorFactory[_ <: TypedTensor[_ <: DataType]]]
   (factory: TFactory) = {
     factory.getClass.getSimpleName in {
-      val tensor = DataGenerator.generateTensor(factory.empty.dtype, shape)
-      assert(tensor === factory.fromProto(tensor).toProto())
+      val tensor = DataGenerator.generateTensor(shape, factory.empty.dtype)
+      assert(tensor.get === factory.fromProto(tensor.get.toProto))
     }
   }
 
@@ -65,7 +63,7 @@ class TypedTensorSpecs extends WordSpec {
         )
       )
 
-      assert(TypedTensorFactory.create(expected).toProto() === expected)
+      assert(TypedTensorFactory.create(expected).toProto === expected)
     }
   }
 }
