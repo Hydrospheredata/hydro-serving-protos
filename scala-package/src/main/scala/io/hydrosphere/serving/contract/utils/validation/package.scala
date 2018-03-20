@@ -11,7 +11,7 @@ package object validation {
 
   class SignatureMissingError(val expectedSignature: String, val modelContract: ModelContract)
     extends ValidationError(
-      s"Couldn't find '$expectedSignature' signature in '${modelContract.modelName} model contract'"
+      s"Couldn't find '$expectedSignature' signature among [${modelContract.signatures.map(_.signatureName)}] signatures"
     ) {}
 
   class SignatureValidationError(
@@ -26,7 +26,7 @@ package object validation {
 
   class ComplexFieldValidationError(val suberrors: Seq[ValidationError], val field: ModelField)
     extends ValidationError(
-      s"Errors while validating subfields for '${field.fieldName}' field: ${suberrors.mkString("\n")}"
+      s"Errors while validating subfields for '${field.name}' field: ${suberrors.mkString("\n")}"
     )
 
   class IncompatibleFieldTypeError(val field: String, val expectedType: DataType)

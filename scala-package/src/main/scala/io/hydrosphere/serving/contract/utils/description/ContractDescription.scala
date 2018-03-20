@@ -3,7 +3,7 @@ package io.hydrosphere.serving.contract.utils.description
 import io.hydrosphere.serving.contract.model_contract.ModelContract
 
 case class ContractDescription(
-  signatures: List[SignatureDescription]
+  signatures: Seq[SignatureDescription]
 ) {
   def toContract: ModelContract = ContractDescription.toContract(this)
 }

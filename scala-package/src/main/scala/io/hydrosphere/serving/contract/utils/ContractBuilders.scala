@@ -1,37 +1,18 @@
 package io.hydrosphere.serving.contract.utils
 
 import io.hydrosphere.serving.contract.model_field.ModelField
-import io.hydrosphere.serving.tensorflow.tensor_info.TensorInfo
+import io.hydrosphere.serving.tensorflow.TensorShape
 import io.hydrosphere.serving.tensorflow.tensor_shape.TensorShapeProto
 import io.hydrosphere.serving.tensorflow.types.DataType
+import io.hydrosphere.serving.tensorflow.utils.ops.TensorShapeProtoOps
 
 object ContractBuilders {
-  def createUnknownTensorShape(): TensorShapeProto = {
-    TensorShapeProto(unknownRank = true)
-  }
-
-  def createTensorShape(dims: Seq[Long], unknownRank: Boolean = false): TensorShapeProto = {
-    TensorShapeProto(
-      dim = dims.map { d =>
-        TensorShapeProto.Dim(d)
-      },
-      unknownRank = unknownRank
-    )
-  }
-
-  def createTensorInfo(
-    dataType: DataType,
-    shape: Option[Seq[Long]],
-    unknownRank: Boolean = false
-  ): TensorInfo = {
-    TensorInfo(dataType, shape.map(s => createTensorShape(s, unknownRank)))
-  }
-
-  def complexField(name: String, subFields: Seq[ModelField]): ModelField = {
+  def complexField(name: String, shape: Option[TensorShapeProto], subFields: Seq[ModelField]): ModelField = {
     ModelField(
       name,
-      ModelField.InfoOrSubfields.Subfields(
-        ModelField.ComplexField(
+      shape,
+      ModelField.TypeOrSubfields.Subfields(
+        ModelField.Subfield(
           subFields
         )
       )
@@ -43,7 +24,7 @@ object ContractBuilders {
     dataType: DataType,
     shape: Option[TensorShapeProto]
   ): ModelField = {
-    ModelField(name, ModelField.InfoOrSubfields.Info(TensorInfo(dataType, shape)))
+    ModelField(name, shape, ModelField.TypeOrSubfields.Dtype(dataType))
   }
 
   def simpleTensorModelField(
@@ -54,7 +35,8 @@ object ContractBuilders {
   ): ModelField = {
     ModelField(
       name,
-      ModelField.InfoOrSubfields.Info(createTensorInfo(dataType, shape, unknownRank))
+      TensorShape(shape, unknownRank).toProto,
+      ModelField.TypeOrSubfields.Dtype(dataType)
     )
   }
 }

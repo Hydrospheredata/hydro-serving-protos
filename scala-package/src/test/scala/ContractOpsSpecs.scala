@@ -4,8 +4,10 @@ import io.hydrosphere.serving.contract.model_signature.ModelSignature
 import io.hydrosphere.serving.contract.utils.ContractBuilders
 import io.hydrosphere.serving.contract.utils.description.{ContractDescription, FieldDescription, SignatureDescription}
 import io.hydrosphere.serving.contract.utils.description._
+import io.hydrosphere.serving.contract.utils.ops.ModelSignatureOps
 import io.hydrosphere.serving.tensorflow.tensor.TensorProto
 import io.hydrosphere.serving.tensorflow.types.DataType
+import io.hydrosphere.serving.tensorflow.utils.ops.TensorShapeProtoOps
 import org.scalatest.WordSpec
 
 
@@ -48,7 +50,7 @@ class ContractOpsSpecs extends WordSpec {
             )
           )
 
-          assert(sig1 +++ sig2 === expectedSig)
+          assert(ModelSignatureOps.merge(sig1, sig2) === expectedSig)
         }
 
         "inputs are overlapping and compatible" in {
@@ -82,7 +84,7 @@ class ContractOpsSpecs extends WordSpec {
             )
           )
 
-          assert(sig1 +++ sig2 === expectedSig)
+          assert(ModelSignatureOps.merge(sig1, sig2) === expectedSig)
         }
       }
 
@@ -107,7 +109,7 @@ class ContractOpsSpecs extends WordSpec {
             )
           )
 
-          assertThrows[IllegalArgumentException](sig1 +++ sig2)
+          assertThrows[IllegalArgumentException](ModelSignatureOps.merge(sig1, sig2))
         }
 
         "outputs overlap is conflicting" in {
@@ -130,7 +132,7 @@ class ContractOpsSpecs extends WordSpec {
             )
           )
 
-          assertThrows[IllegalArgumentException](sig1 +++ sig2)
+          assertThrows[IllegalArgumentException](ModelSignatureOps.merge(sig1, sig2))
         }
       }
     }
@@ -155,7 +157,7 @@ class ContractOpsSpecs extends WordSpec {
             ContractBuilders.simpleTensorModelField("out2", DataType.DT_INT32, Some(List(3)))
           )
         )
-        val contract = ModelContract("test", List(sig1, sig2))
+        val contract = ModelContract("test", Seq(sig1, sig2))
 
         val expected = ContractDescription(
           List(
@@ -189,6 +191,7 @@ class ContractOpsSpecs extends WordSpec {
           List(
             ContractBuilders.complexField(
               "in",
+              None,
               Seq(
                 ContractBuilders.simpleTensorModelField("in1", DataType.DT_STRING, None),
                 ContractBuilders.simpleTensorModelField("in2", DataType.DT_INT32, None)
@@ -198,6 +201,7 @@ class ContractOpsSpecs extends WordSpec {
           List(
             ContractBuilders.complexField(
               "out",
+              None,
               Seq(
                 ContractBuilders.simpleTensorModelField("out1", DataType.DT_DOUBLE, Some(List(-1))),
                 ContractBuilders.simpleTensorModelField("out2", DataType.DT_INT32, None)
@@ -214,7 +218,7 @@ class ContractOpsSpecs extends WordSpec {
             ContractBuilders.simpleTensorModelField("out2", DataType.DT_INT32, Some(List(3)))
           )
         )
-        val contract = ModelContract("test", List(sig1, sig2))
+        val contract = ModelContract("test", Seq(sig1, sig2))
 
         val expected = ContractDescription(
           List(
@@ -275,6 +279,7 @@ class ContractOpsSpecs extends WordSpec {
           List(
             ContractBuilders.complexField(
               "in",
+              None,
               Seq(
                 ContractBuilders.simpleTensorModelField("in1", DataType.DT_STRING, None),
                 ContractBuilders.simpleTensorModelField("in2", DataType.DT_INT32, None)
@@ -284,10 +289,10 @@ class ContractOpsSpecs extends WordSpec {
           List(
             ContractBuilders.complexField(
               "out",
+              None,
               Seq(
                 ContractBuilders.simpleTensorModelField("out1", DataType.DT_DOUBLE, Some(List(-1))),
                 ContractBuilders.simpleTensorModelField("out2", DataType.DT_INT32, None)
-
               )
             )
           )
