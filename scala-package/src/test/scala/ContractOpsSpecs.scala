@@ -1,13 +1,9 @@
-import com.google.protobuf.ByteString
 import io.hydrosphere.serving.contract.model_contract.ModelContract
 import io.hydrosphere.serving.contract.model_signature.ModelSignature
 import io.hydrosphere.serving.contract.utils.ContractBuilders
 import io.hydrosphere.serving.contract.utils.description.{ContractDescription, FieldDescription, SignatureDescription}
-import io.hydrosphere.serving.contract.utils.description._
 import io.hydrosphere.serving.contract.utils.ops.ModelSignatureOps
-import io.hydrosphere.serving.tensorflow.tensor.TensorProto
 import io.hydrosphere.serving.tensorflow.types.DataType
-import io.hydrosphere.serving.tensorflow.utils.ops.TensorShapeProtoOps
 import org.scalatest.WordSpec
 
 
@@ -18,6 +14,35 @@ class ContractOpsSpecs extends WordSpec {
   "ContractOps" can {
     "merge" should {
       "success" when {
+        "empty and non-empty" in {
+          val sig1 = ModelSignature(
+            "sig1",
+            List.empty,
+            List.empty
+          )
+          val sig2 = ModelSignature(
+            "sig2",
+            List(
+              ContractBuilders.simpleTensorModelField("in2", DataType.DT_INT32, None)
+            ),
+            List(
+              ContractBuilders.simpleTensorModelField("out2", DataType.DT_INT32, Some(List(3)))
+            )
+          )
+
+          val expectedSig = ModelSignature(
+            "sig1&sig2",
+            List(
+              ContractBuilders.simpleTensorModelField("in2", DataType.DT_INT32, None)
+            ),
+            List(
+              ContractBuilders.simpleTensorModelField("out2", DataType.DT_INT32, Some(List(3)))
+            )
+          )
+
+          assert(ModelSignatureOps.merge(sig1, sig2) === expectedSig)
+        }
+
         "signatures don't overlap" in {
           val sig1 = ModelSignature(
             "sig1",
