@@ -4,16 +4,17 @@ import io.hydrosphere.serving.contract.utils.description.{ContractDescription, S
 import io.hydrosphere.serving.contract.model_contract.ModelContract
 
 trait ModelContractOps {
+
   implicit class ModelContractPumped(modelContract: ModelContract) {
     def flatten: ContractDescription = {
-      ContractDescription(
-        ModelContractOps.flatten(modelContract)
-      )
+      ModelContractOps.flatten(modelContract)
     }
   }
 
-  def flatten(modelContract: ModelContract): List[SignatureDescription] = {
-    modelContract.signatures.map(ModelSignatureOps.flatten).toList
+  def flatten(modelContract: ModelContract): ContractDescription = {
+    ContractDescription(
+      modelContract.signatures.map(ModelSignatureOps.flatten).toList
+    )
   }
 }
 
