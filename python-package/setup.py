@@ -19,4 +19,5 @@ setup(
         'License :: OSI Approved :: Apache Software License',
         'Programming Language :: Python'
     ),
+    test_suite='tests'
 )
