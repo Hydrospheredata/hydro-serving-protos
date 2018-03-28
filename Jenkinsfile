@@ -96,7 +96,7 @@ node("JenkinsOnDemand") {
     }
 
     stage('Test') {
-        sh "make PYTHON=python3 test-scala"
+        sh "make PYTHON=python3 test"
     }
 
     if (isReleaseJob()) {
