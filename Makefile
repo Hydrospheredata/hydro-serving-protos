@@ -30,7 +30,10 @@ ifeq ($(INSTALL_PY_REQ), true)
 	pip install -r python-package/requirements.txt
 endif
 
-test: test-scala
+test: test-python test-scala
+
+test-python:
+	cd python-package && $(PYTHON) tests/__init__.py
 
 test-scala:
 	cd scala-package && ./sbt/sbt -Dsbt.override.build.repos=true -Dsbt.repository.config=project/repositories -DappVersion=$(VERSION) compile test
