@@ -14,3 +14,5 @@ from hydro_serving_grpc.tf.api.prediction_service_pb2_grpc import *
 from hydro_serving_grpc.kafka.kafka_messages_pb2 import *
 
 from hydro_serving_grpc.manager.applications_pb2 import *
+
+import hydro_serving_grpc.onnx
