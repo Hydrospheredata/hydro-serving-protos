@@ -15,9 +15,10 @@ publishMavenStyle := true
 libraryDependencies ++= Seq(
   "org.scalactic" %% "scalactic" % "3.0.4",
    "org.scalatest" %% "scalatest" % "3.0.4" % "test",
-  "com.thesamet.scalapb" %% "scalapb-runtime" % com.trueaccord.scalapb.compiler.Version.scalapbVersion % "protobuf",
+  "com.thesamet.scalapb" %% "scalapb-runtime" % com.trueaccord.scalapb.compiler.Version.scalapbVersion,
   "io.grpc" % "grpc-netty" % com.trueaccord.scalapb.compiler.Version.grpcJavaVersion,
-  "com.thesamet.scalapb" %% "scalapb-runtime-grpc" % com.trueaccord.scalapb.compiler.Version.scalapbVersion % "protobuf"
+  "com.thesamet.scalapb" %% "scalapb-runtime-grpc" % com.trueaccord.scalapb.compiler.Version.scalapbVersion,
+  "com.google.api.grpc" % "googleapis-common-protos" % "0.0.3" % "protobuf"
 )
 
 PB.protoSources in Compile := Seq(
