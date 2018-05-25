@@ -34,4 +34,10 @@ message PredictRequest {
 message PredictResponse {
     // Output tensors.
     map<string, hydrosphere.tensorflow.TensorProto> outputs = 1;
+
+    //Effective Model Specification used to process PredictRequest.
+    //ModelSpec model_spec = 2;
+    reserved 2;
+
+    map<string, hydrosphere.tensorflow.TensorProto> internal_info = 101;
 }

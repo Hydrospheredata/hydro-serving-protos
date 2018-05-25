@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package hydrosphere.monitoring;
+option java_package = "io.hydrosphere.serving.monitoring";
+
+import "google/protobuf/empty.proto";
+import "hydro_serving_grpc/tf/api/predict.proto";
+
+message ExecutionError{
+    string error_message = 1;
+}
+
+message ExecutionMetadata{
+    int64 applicationId = 1;
+    string stage_id = 2;
+    int64 modelId = 3;
+    int64 modelVersionId = 4;
+}
+
+message ExecutionInformation{
+    hydrosphere.tensorflow.serving.PredictRequest request = 1;
+
+    oneof response_or_error {
+        ExecutionError error = 2;
+        hydrosphere.tensorflow.serving.PredictResponse response = 3;
+    }
+}
+
+service MonitoringService {
+    rpc Analyze(ExecutionInformation) returns (google.protobuf.Empty);
+}
