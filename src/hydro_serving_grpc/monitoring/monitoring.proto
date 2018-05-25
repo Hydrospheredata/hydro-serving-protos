@@ -11,19 +11,22 @@ message ExecutionError{
 }
 
 message ExecutionMetadata{
-    int64 applicationId = 1;
+    int64 application_id = 1;
     string stage_id = 2;
-    int64 modelId = 3;
-    int64 modelVersionId = 4;
+    int64 model_id = 3;
+    int64 modelVersion_id = 4;
+    string signature_name = 5;
+    string request_id = 6;
+    string application_request_id = 7;
 }
 
 message ExecutionInformation{
     hydrosphere.tensorflow.serving.PredictRequest request = 1;
-
     oneof response_or_error {
         ExecutionError error = 2;
         hydrosphere.tensorflow.serving.PredictResponse response = 3;
     }
+    ExecutionMetadata metadata = 4;
 }
 
 service MonitoringService {
