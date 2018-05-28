@@ -13,11 +13,10 @@ message ExecutionError{
 message ExecutionMetadata{
     int64 application_id = 1;
     string stage_id = 2;
-    int64 model_id = 3;
-    int64 modelVersion_id = 4;
-    string signature_name = 5;
-    string request_id = 6;
-    string application_request_id = 7;
+    int64 modelVersion_id = 3;
+    string signature_name = 4;
+    string request_id = 5;
+    string application_request_id = 6;
 }
 
 message ExecutionInformation{
