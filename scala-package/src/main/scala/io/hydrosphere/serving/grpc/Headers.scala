@@ -29,10 +29,45 @@ object Headers {
     override val name: String = "x-serving-kafka-produce-topic"
   }
 
+  object XRequestId extends Header {
+    override val name: String = "x-request-id"
+  }
+
+  object XOtSpanContext extends Header {
+    override val name: String = "x-ot-span-context"
+  }
+
+  object XB3TraceId extends Header {
+    override val name: String = "x-b3-traceid"
+  }
+
+  object XB3SpanId extends Header {
+    override val name: String = "x-b3-spanid"
+  }
+
+  object XB3ParentSpanId extends Header {
+    override val name: String = "x-b3-parentspanid"
+  }
+
+  object XB3Sampled extends Header {
+    override val name: String = "x-b3-sampled"
+  }
+
+  object XB3Flags extends Header {
+    override val name: String = "x-b3-flags"
+  }
+
   val all: Seq[Header] = Seq(
     XServingKafkaProduceTopic,
     XEnvoyUpstreamServiceTime,
-    XServingModelVersionId
+    XServingModelVersionId,
+    XRequestId,
+    XOtSpanContext,
+    XB3TraceId,
+    XB3SpanId,
+    XB3ParentSpanId,
+    XB3Sampled,
+    XB3Flags
   )
 
   def interceptors: Seq[HeaderClientServerInterceptor] = all.map(_.interceptor)
