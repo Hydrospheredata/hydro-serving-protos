@@ -18,6 +18,7 @@ message ExecutionMetadata{
     string request_id = 5;
     string application_request_id = 6;
     string application_namespace =7;
+    string model_name = 8;
 }
 
 message ExecutionInformation{
