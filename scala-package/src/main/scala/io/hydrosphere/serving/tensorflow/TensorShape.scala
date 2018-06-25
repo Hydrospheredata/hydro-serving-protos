@@ -2,36 +2,51 @@ package io.hydrosphere.serving.tensorflow
 
 import io.hydrosphere.serving.tensorflow.tensor_shape.TensorShapeProto
 
-case class TensorShape(dims: Option[Seq[Long]], unknownRank: Boolean = false) {
-  def toProto: Option[TensorShapeProto] = {
-    dims.map { shapeDims =>
-      TensorShapeProto(
-        dim = shapeDims.map(TensorShapeProto.Dim.apply(_)),
-        unknownRank = unknownRank
-      )
-    }
-  }
+/**
+  * Generic Tensor shape.
+  */
+sealed trait TensorShape {
+  /**
+    * Convert TensorShape to the field value in TensorProto
+    * @return
+    */
+  def toProto: Option[TensorShapeProto]
 }
 
 object TensorShape {
-  def scalar: TensorShape = TensorShape(None)
+  def apply(tensorShapeProto: Option[TensorShapeProto]): TensorShape = {
+    tensorShapeProto match {
+      case Some(shape) => Dims(shape.dim.map(_.size))
+      case None => AnyDims()
+    }
+  }
 
-  def vector(size: Long) = TensorShape(Some(Seq(size)))
+  /**
+    * Missing Tensor shape. Could be anything.
+    */
+  case class AnyDims() extends TensorShape {
+    override def toProto: Option[TensorShapeProto] = None
+  }
 
-  def mat(dims: Long*) = TensorShape(Some(dims))
-
-  def fromProto(protoShape: Option[TensorShapeProto]): TensorShape = {
-    TensorShape(
-      dims = protoShape.map { shape =>
-        shape.dim.map(_.size)
-      },
-      unknownRank = protoShape.exists(_.unknownRank)
+  /**
+    * Specified Tensor shape.
+    * @param dims if empty - then it's scalar value, if 1 element - vector, if 2 - matrix and so on.
+    * @param unknownRank field for compatibility with TF
+    */
+  case class Dims(dims: Seq[Long], unknownRank: Boolean = false) extends TensorShape {
+    override def toProto: Option[TensorShapeProto] = Some(
+      TensorShapeProto(
+        dim = dims.map(TensorShapeProto.Dim.apply(_)),
+        unknownRank = unknownRank
+      )
     )
   }
 
-  def fromSeq(dims: Option[Seq[Long]]): TensorShape = {
-    TensorShape(
-      dims = dims
-    )
-  }
+  def any = AnyDims()
+
+  def scalar = Dims(Seq.empty)
+
+  def vector(size: Long) = Dims(Seq(size))
+
+  def mat(dims: Long*) = Dims(dims)
 }

@@ -1,6 +1,5 @@
 package io.hydrosphere.serving.tensorflow.tensor
 
-import io.hydrosphere.serving.contract.utils.validation.{InvalidFieldData, UnsupportedFieldTypeError, ValidationError}
 import io.hydrosphere.serving.tensorflow.TensorShape
 import io.hydrosphere.serving.tensorflow.types.DataType
 import io.hydrosphere.serving.tensorflow.types.DataType._
@@ -17,11 +16,11 @@ trait TypedTensorFactory[TensorT <: TypedTensor[_]] {
     * @param data target data
     * @return converted data or error
     */
-  final def castData(data: Seq[Any]): Either[ValidationError, Seq[TensorT#DataT]] = {
+  final def castData(data: Seq[Any]): Either[Exception, Seq[TensorT#DataT]] = {
     try {
       Right(data.map(_.asInstanceOf[TensorT#DataT]))
     } catch {
-      case ex: ClassCastException => Left(new InvalidFieldData(ex.getClass))
+      case ex: ClassCastException => Left(new IllegalArgumentException(ex.getClass.toString))
     }
   }
 
@@ -37,7 +36,7 @@ trait TypedTensorFactory[TensorT <: TypedTensor[_]] {
   }
 
   final def fromProto(proto: TensorProto): TensorT = {
-    constructor(TensorShape.fromProto(proto.tensorShape), lens.lens.get(proto))
+    constructor(TensorShape(proto.tensorShape), lens.lens.get(proto))
   }
 
   /**
@@ -85,7 +84,7 @@ object TypedTensorFactory {
 
       case DT_MAP => MapTensor
 
-      case x => throw new UnsupportedFieldTypeError(x)
+      case x => throw new IllegalArgumentException(s"Unsupported DataType $x")
     }
   }
 
