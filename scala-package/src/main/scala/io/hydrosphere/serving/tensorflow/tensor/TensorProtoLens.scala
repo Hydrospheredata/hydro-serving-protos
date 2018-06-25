@@ -1,6 +1,6 @@
 package io.hydrosphere.serving.tensorflow.tensor
 
-import com.trueaccord.lenses.Lens
+import scalapb.lenses.Lens
 
 trait TensorProtoLens[T <: TypedTensor[_]] {
   def getter: TensorProto => Seq[T#DataT]
