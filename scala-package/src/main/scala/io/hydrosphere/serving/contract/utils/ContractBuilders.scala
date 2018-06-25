@@ -6,7 +6,10 @@ import io.hydrosphere.serving.tensorflow.tensor_shape.TensorShapeProto
 import io.hydrosphere.serving.tensorflow.types.DataType
 
 object ContractBuilders {
-  def complexField(name: String, shape: Option[TensorShapeProto], subFields: Seq[ModelField]): ModelField = {
+  def complexField(
+    name: String,
+    shape: Option[TensorShapeProto],
+    subFields: Seq[ModelField]): ModelField = {
     ModelField(
       name,
       shape,
@@ -21,16 +24,14 @@ object ContractBuilders {
   def rawTensorModelField(
     name: String,
     dataType: DataType,
-    shape: Option[TensorShapeProto]
-  ): ModelField = {
+    shape: Option[TensorShapeProto]): ModelField = {
     ModelField(name, shape, ModelField.TypeOrSubfields.Dtype(dataType))
   }
 
   def simpleTensorModelField(
     name: String,
     dataType: DataType,
-    shape: TensorShape,
-  ): ModelField = {
+    shape: TensorShape): ModelField = {
     ModelField(
       name,
       shape.toProto,
