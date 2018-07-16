@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package hydrosphere.manager;
+option java_package = "io.hydrosphere.serving.manager.grpc";
+
+enum DataProfileType {
+    NONE = 0;
+
+    CATEGORICAL = 1;
+    NOMINAL = 11;
+    ORIDNAL = 12;
+
+    NUMERICAL = 2;
+    CONTINUOUS = 21;
+    INTERVAL = 22;
+    RATIO = 23;
+
+    IMAGE = 3;
+    MUSIC = 4;
+    TEXT = 5;
+}
