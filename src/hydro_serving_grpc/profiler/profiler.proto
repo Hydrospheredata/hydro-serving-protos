@@ -4,8 +4,9 @@ package hydrosphere.profiler;
 option java_package = "io.hydrosphere.serving.profiler";
 
 import "hydro_serving_grpc/monitoring/monitoring.proto";
+import "google/protobuf/empty.proto";
 
 service DataProfilerService {
-  rpc Analyze(ExecutionInformation) returns (google.protobuf.Empty);
+  rpc Analyze(hydrosphere.monitoring.ExecutionInformation) returns (google.protobuf.Empty);
 }
 
