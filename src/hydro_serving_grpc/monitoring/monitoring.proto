@@ -4,6 +4,7 @@ package hydrosphere.monitoring;
 option java_package = "io.hydrosphere.serving.monitoring";
 
 import "google/protobuf/empty.proto";
+import "hydro_serving_grpc/monitoring/data_profile_types.proto";
 import "hydro_serving_grpc/tf/api/predict.proto";
 
 message ExecutionError{
@@ -19,9 +20,10 @@ message ExecutionMetadata{
     string application_request_id = 6;
     string application_namespace =7;
     string model_name = 8;
+    map<string, DataProfileType> data_types = 9;
 }
 
-message ExecutionInformation{
+message ExecutionInformation {
     hydrosphere.tensorflow.serving.PredictRequest request = 1;
     oneof response_or_error {
         ExecutionError error = 2;
@@ -31,5 +33,5 @@ message ExecutionInformation{
 }
 
 service MonitoringService {
-    rpc Analyze(ExecutionInformation) returns (google.protobuf.Empty);
+    rpc Analyze (ExecutionInformation) returns (google.protobuf.Empty);
 }
