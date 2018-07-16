@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-package hydrosphere.manager;
-option java_package = "io.hydrosphere.serving.manager.grpc";
+package hydrosphere.monitoring;
+option java_package = "io.hydrosphere.serving.monitoring";
 
 enum DataProfileType {
     NONE = 0;
@@ -16,6 +16,7 @@ enum DataProfileType {
     RATIO = 23;
 
     IMAGE = 3;
-    MUSIC = 4;
-    TEXT = 5;
+    VIDEO = 4;
+    AUDIO = 5;
+    TEXT = 6;
 }
