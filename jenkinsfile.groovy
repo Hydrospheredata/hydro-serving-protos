@@ -1,11 +1,22 @@
 def checkoutSource(gitCredentialId, organization, repository) {
     withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: gitCredentialId, usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
-        git url: "https://github.com/${organization}/${repository}.git", branch: env.BRANCH_NAME, credentialsId: gitCredentialId
+        git url: "https://github.com/${organization}/${repository}.git", credentialsId: gitCredentialId
         sh """
             git config --global push.default simple
             git config --global user.name '${GIT_USERNAME}'
             git config --global user.email '${GIT_USERNAME}'
         """
+        if (env.CHANGE_ID) {
+            sh """
+             git fetch origin +refs/pull/*/head:refs/remotes/origin/pr/*
+             git checkout pr/\$(echo ${env.BRANCH_NAME} | cut -d - -f 2)
+             git merge origin/${env.CHANGE_TARGET}
+       """
+        } else {
+            sh """
+            git checkout ${env.BRANCH_NAME}
+        """
+        }
     }
 }
 
@@ -20,12 +31,15 @@ def isReleaseJob() {
 }
 
 def generateTagComment(releaseVersion) {
-    commitsList = sh(returnStdout: true, script: "git log --pretty=\"%B\n\r (%an)\" -1").trim()
+    commitsList = sh(
+        returnStdout: true,
+            script: "git log `git tag --sort=-taggerdate | head -1`..HEAD --pretty=\"@%an %h %B\""
+    ).trim()
     return "${commitsList}"
 }
 
 def createReleaseInGithub(gitCredentialId, organization, repository, releaseVersion, message) {
-    bodyMessage = message.replaceAll("\n", "<br />").replace("\r", "")
+    bodyMessage = message.replaceAll("\r", "").replaceAll("\n", "<br/>").replaceAll("<br/><br/>", "<br/>")
     withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: gitCredentialId, usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
         def request = """
             {
@@ -71,7 +85,7 @@ def calculateNextDevVersion(releaseVersion) {
 node("JenkinsOnDemand") {
     def repository = 'hydro-serving-protos'
     def organization = 'Hydrospheredata'
-    def gitCredentialId = 'HydrospheredataGithubAccessKey'
+    def gitCredentialId = 'HydroRobot_AccessToken'
 
     stage('Checkout') {
         deleteDir()
