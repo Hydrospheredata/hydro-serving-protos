@@ -29,7 +29,7 @@ def buildFunction={
 pipelineCommon(
         repository,
         false, //needSonarQualityGate,
-        [""],
+        [],
         {},//collectTestResults, do nothing
         buildAndPublishReleaseFunction,
         buildFunction,
