@@ -9,8 +9,8 @@ def buildAndPublishReleaseFunction={
 
     def curVersion = getVersion()
     dir("${env.WORKSPACE}/scala-package") {
-        sh "./sbt/sbt -DappVersion=${curVersion} 'set pgpPassphrase := Some(Array())' +publishSigned"
-        sh "./sbt/sbt -DappVersion=${curVersion} 'sonatypeReleaseAll'"
+        sh "sbt -DappVersion=${curVersion} 'set pgpPassphrase := Some(Array())' +publishSigned"
+        sh "sbt -DappVersion=${curVersion} 'sonatypeReleaseAll'"
     }
 
     sh 'sudo pip3 install twine'
