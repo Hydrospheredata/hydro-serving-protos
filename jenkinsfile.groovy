@@ -7,7 +7,7 @@ def buildAndPublishReleaseFunction={
     sh "make PYTHON=python3 all"
     sh "make PYTHON=python3 test"
 
-    def curVersion = currentVersion()
+    def curVersion = getVersion()
     dir("${env.WORKSPACE}/scala-package") {
         sh "./sbt/sbt -DappVersion=${curVersion} 'set pgpPassphrase := Some(Array())' +publishSigned"
         sh "./sbt/sbt -DappVersion=${curVersion} 'sonatypeReleaseAll'"
