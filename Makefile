@@ -12,7 +12,7 @@ GRPC_FILES = $(shell find src -name '*_service.proto')
 all: scala python
 
 scala:
-	cd scala-package && ./sbt/sbt -Dsbt.override.build.repos=true -Dsbt.repository.config=project/repositories -DappVersion=$(VERSION) +package
+	cd scala-package && sbt -Dsbt.override.build.repos=true -Dsbt.repository.config=project/repositories -DappVersion=$(VERSION) +package
 
 python: python_wheel
 
@@ -36,7 +36,7 @@ test-python:
 	cd python-package && $(PYTHON) setup.py test
 
 test-scala:
-	cd scala-package && ./sbt/sbt -Dsbt.override.build.repos=true -Dsbt.repository.config=project/repositories -DappVersion=$(VERSION) compile test
+	cd scala-package && sbt -Dsbt.override.build.repos=true -Dsbt.repository.config=project/repositories -DappVersion=$(VERSION) compile test
 
 clean: clean_scala clean_py
 
