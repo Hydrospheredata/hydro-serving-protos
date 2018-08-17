@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package hydrosphere.manager;
+option java_package = "io.hydrosphere.serving.manager.grpc";
+
+import "hydro_serving_grpc/contract/model_contract.proto";
+import "hydro_serving_grpc/contract/model_signature.proto";
+import "hydro_serving_grpc/monitoring/data_profile_types.proto";
+
+message Model {
+    int64 id = 1;
+    string name = 2;
+}
+
+message Runtime {
+    int64 id = 1;
+    string name = 2;
+    string version = 3;
+}
+
+message ModelVersion {
+    int64 id = 1;
+    string image_name = 3;
+    string image_tag = 4;
+    Model model = 5;
+    hydrosphere.contract.ModelContract contract = 6;
+    map<string, hydrosphere.monitoring.DataProfileType> data_types = 7;
+}
+
+message Environment {
+    int64 id = 1;
+    string name = 2;
+}
