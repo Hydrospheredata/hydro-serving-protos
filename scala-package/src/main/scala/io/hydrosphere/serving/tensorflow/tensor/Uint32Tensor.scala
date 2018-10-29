@@ -12,7 +12,11 @@ case class Uint32Tensor(shape: TensorShape, data: Seq[Int]) extends IntTensor[Da
 }
 
 object Uint32Tensor extends TypedTensorFactory[Uint32Tensor] {
-  override implicit def lens: TensorProtoLens[Uint32Tensor] = UintTensor.protoLens[Uint32Tensor]
+  override implicit def lens: TensorProtoLens[Uint32Tensor] = new TensorProtoLens[Uint32Tensor] {
+    override def getter: TensorProto => Seq[Int] = _.uint32Val
+
+    override def setter: (TensorProto, Seq[Int]) => TensorProto = _.withUint32Val(_)
+  }
 
   override def constructor = Uint32Tensor.apply
 }

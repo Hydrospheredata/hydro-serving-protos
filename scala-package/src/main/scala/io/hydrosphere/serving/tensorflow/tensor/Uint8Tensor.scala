@@ -12,7 +12,7 @@ case class Uint8Tensor(shape: TensorShape, data: Seq[Int]) extends IntTensor[Dat
 }
 
 object Uint8Tensor extends TypedTensorFactory[Uint8Tensor] {
-  override implicit def lens: TensorProtoLens[Uint8Tensor] = UintTensor.protoLens[Uint8Tensor]
+  override implicit def lens: TensorProtoLens[Uint8Tensor] = IntTensor.protoLens[Uint8Tensor]
 
   override def constructor = Uint8Tensor.apply
 }

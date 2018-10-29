@@ -12,7 +12,7 @@ case class Uint16Tensor(shape: TensorShape, data: Seq[Int]) extends IntTensor[Da
 }
 
 object Uint16Tensor extends TypedTensorFactory[Uint16Tensor] {
-  override implicit def lens: TensorProtoLens[Uint16Tensor] = UintTensor.protoLens[Uint16Tensor]
+  override implicit def lens: TensorProtoLens[Uint16Tensor] = IntTensor.protoLens[Uint16Tensor]
 
   override def constructor = Uint16Tensor.apply
 }
