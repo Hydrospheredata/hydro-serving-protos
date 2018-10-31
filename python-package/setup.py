@@ -11,7 +11,7 @@ setup(
     description='hydro-serving-protos',
     url='https://github.com/Hydrospheredata/hydro-serving-protos',
     packages=find_packages(),
-    install_requires=['protobuf>=3.3.0', 'grpcio>=1.7.0'],
+    install_requires=['protobuf>=3.6.1', 'grpcio>=1.7.0'],
     zip_safe=True,
     license='Apache 2.0',
     classifiers=(
