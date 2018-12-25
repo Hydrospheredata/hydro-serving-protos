@@ -4,7 +4,7 @@ package hydrosphere.manager;
 option java_package = "io.hydrosphere.serving.manager.grpc";
 
 import "hydro_serving_grpc/contract/model_contract.proto";
-import "src/hydro_serving_grpc/manager/data_profile_types.proto";
+import "hydro_serving_grpc/manager/data_profile_types.proto";
 
 message Model {
     int64 id = 1;
