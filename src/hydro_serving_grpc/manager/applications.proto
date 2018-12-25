@@ -9,17 +9,14 @@ import "hydro_serving_grpc/contract/model_signature.proto";
 import "hydro_serving_grpc/monitoring/data_profile_types.proto";
 
 message ExecutionService {
-    Runtime runtime = 1;
-    ModelVersion model_version = 2;
-    Environment environment = 3;
-    int32 weight = 4;
+    ModelVersion model_version = 1;
+    int32 weight = 2;
 }
 
 message ExecutionStage {
     string stage_id = 1;
     hydrosphere.contract.ModelSignature signature = 2;
-    map<string, hydrosphere.monitoring.DataProfileType> data_types = 3;
-    repeated ExecutionService services = 4;
+    repeated ExecutionService services = 3;
 }
 
 message ExecutionGraph {
