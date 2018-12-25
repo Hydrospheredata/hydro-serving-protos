@@ -4,6 +4,7 @@ package hydrosphere.manager;
 
 option java_package = "io.hydrosphere.serving.manager";
 
+import "google/protobuf/empty.proto";
 import "hydro_serving_grpc/manager/entities.proto";
 
 

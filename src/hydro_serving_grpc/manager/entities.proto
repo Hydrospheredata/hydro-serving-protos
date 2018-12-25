@@ -4,7 +4,7 @@ package hydrosphere.manager;
 option java_package = "io.hydrosphere.serving.manager.grpc";
 
 import "hydro_serving_grpc/contract/model_contract.proto";
-import "hydro_serving_grpc/monitoring/data_profile_types.proto";
+import "src/hydro_serving_grpc/manager/data_profile_types.proto";
 
 message Model {
     int64 id = 1;
@@ -24,7 +24,7 @@ message ModelVersion {
     HostSelector selector = 5;
     Model model = 6;
     hydrosphere.contract.ModelContract contract = 7;
-    map<string, hydrosphere.monitoring.DataProfileType> data_types = 8;
+    map<string, hydrosphere.manager.DataProfileType> data_types = 8;
     DockerImage image = 31;
     string image_sha = 32;
     DockerImage runtime = 33;
