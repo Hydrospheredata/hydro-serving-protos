@@ -4,7 +4,6 @@ package hydrosphere.monitoring;
 option java_package = "io.hydrosphere.serving.monitoring";
 
 import "google/protobuf/empty.proto";
-import "hydro_serving_grpc/monitoring/data_profile_types.proto";
 import "hydro_serving_grpc/tf/api/predict.proto";
 
 message ExecutionError{

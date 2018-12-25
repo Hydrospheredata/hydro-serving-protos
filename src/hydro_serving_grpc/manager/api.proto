@@ -8,6 +8,6 @@ import "hydro_serving_grpc/manager/entities.proto";
 
 
 service ManagerService {
-    rpc GetAllVersions () returns (stream hydrosphere.manager.ModelVersion);
+    rpc GetAllVersions (google.protobuf.Empty) returns (stream hydrosphere.manager.ModelVersion);
     rpc GetVersion (int64) returns (hydrosphere.manager.ModelVersion);
 }
