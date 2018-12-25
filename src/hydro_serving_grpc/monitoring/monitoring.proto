@@ -20,7 +20,7 @@ message ExecutionMetadata{
     string application_request_id = 6;
     string application_namespace =7;
     string model_name = 8;
-    map<string, DataProfileType> data_types = 9;
+    reserved 9;
 }
 
 message ExecutionInformation {

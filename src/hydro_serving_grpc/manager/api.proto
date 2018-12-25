@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package hydrosphere.manager;
+
+option java_package = "io.hydrosphere.serving.manager";
+
+import "hydro_serving_grpc/manager/entities.proto";
+
+
+service ManagerService {
+    rpc GetAllVersions () returns (stream hydrosphere.manager.ModelVersion);
+    rpc GetVersion (int64) returns (hydrosphere.manager.ModelVersion);
+}
