@@ -1,10 +1,8 @@
 syntax = "proto3";
 
-package hydrosphere.monitoring;
-option java_package = "io.hydrosphere.serving.monitoring";
+package hydrosphere.manager;
+option java_package = "io.hydrosphere.serving.manager";
 
-
-//TODO move to manager package
 enum DataProfileType {
     NONE = 0;
 

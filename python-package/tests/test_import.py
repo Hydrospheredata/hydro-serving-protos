@@ -10,6 +10,6 @@ class ImportTest(unittest.TestCase):
         a = hsg.onnx.TensorProto()
         print(type(a))
 
-    def test_monitoring_import_check(self):
-        from hydro_serving_grpc.monitoring import DataProfileType
+    def test_types_import_check(self):
+        from hydro_serving_grpc.manager import DataProfileType
         print(DataProfileType.keys())

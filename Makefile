@@ -26,7 +26,7 @@ python_grpc: python_proto | py_requirements
 	$(PYTHON) -m grpc_tools.protoc -I $(PROTOS_PATH) --python_out=$(PY_WORK_PATH) --grpc_python_out=$(PY_WORK_PATH) $(GRPC_FILES)
 
 python_proto:
-	$(PROTOC) -I $(PROTOS_PATH) --python_out=$(PY_WORK_PATH) $(PROTO_FILES)
+	$(PYTHON) -m grpc_tools.protoc -I $(PROTOS_PATH) --python_out=$(PY_WORK_PATH) $(PROTO_FILES)
 
 py_requirements:
 ifeq ($(INSTALL_PY_REQ), true)
