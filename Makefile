@@ -14,6 +14,9 @@ all: scala python
 scala:
 	cd scala-package && sbt -Dsbt.override.build.repos=true -Dsbt.repository.config=project/repositories -DappVersion=$(VERSION) +package
 
+scala_publish_local:
+	cd scala-package && sbt -Dsbt.override.build.repos=true -Dsbt.repository.config=project/repositories -DappVersion=$(VERSION) +publishLocal
+
 python: python_wheel
 
 python_wheel: python_grpc
