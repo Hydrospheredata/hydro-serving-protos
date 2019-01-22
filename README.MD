@@ -1,3 +1,6 @@
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.hydrosphere/serving-grpc-scala_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.hydrosphere/serving-grpc-scala_2.12)
+[![PyPI version](https://badge.fury.io/py/hydro-serving-grpc.svg)](https://badge.fury.io/py/hydro-serving-grpc)
+
 # hydro-serving-protos
 This repository constains `.proto` messages definitions that are commonly used in 
 [hydro-serving](https://github.com/Hydrospheredata/hydro-serving)
