@@ -8,13 +8,13 @@ sealed trait ColumnShaper {
   def shape(data: Seq[JsValue]): JsValue
 }
 
-case class AnyShaper() extends ColumnShaper {
+case object AnyShaper extends ColumnShaper {
   override def shape(data: Seq[JsValue]): JsValue = {
-    data.headOption.getOrElse(JsObject.empty)
+    JsArray(data.toVector)
   }
 }
 
-case class ScalarShaper() extends ColumnShaper {
+case object ScalarShaper extends ColumnShaper {
   override def shape(data: Seq[JsValue]): JsValue = {
     data.headOption.getOrElse(JsObject.empty)
   }
@@ -56,8 +56,8 @@ case class DimShaper(dims: Seq[Long]) extends ColumnShaper {
 object ColumnShaper {
   def apply(tensorShape: TensorShape): ColumnShaper = {
     tensorShape match {
-      case AnyDims() => AnyShaper()
-      case Dims(dims, _) if dims.isEmpty => ScalarShaper()
+      case AnyDims() => AnyShaper
+      case Dims(dims, _) if dims.isEmpty => ScalarShaper
       case Dims(dims, _) => DimShaper(dims)
     }
   }
