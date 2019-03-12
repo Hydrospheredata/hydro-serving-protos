@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package hydrosphere.discovery;
+option java_package = "io.hydrosphere.serving.discovery";
+
+import "hydro_serving_grpc/contract/model_contract.proto";
+import "hydro_serving_grpc/contract/model_signature.proto";
+
+message Servable {
+    string host = 1;
+    int32  port = 2;
+    int32  weight = 3;
+}
+
+message Stage {
+    string stage_id = 1; 
+    hydrosphere.contract.ModelSignature signature = 2;
+    repeated Servable servable = 3;
+}
+
+message ServingApp {
+    int64 id = 1;
+    string name = 2;
+    hydrosphere.contract.ModelContract contract = 3;
+    repeated Stage pipeline = 4;
+}
+
+message WatchRequest {}
+
+message WatchResponse {
+  repeated ServingApp apps = 1;
+}
+
+service ServingDiscovery {
+  rpc watch(WatchRequest) returns (stream WatchResponse);
+}
