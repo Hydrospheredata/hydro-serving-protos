@@ -4,13 +4,13 @@ import io.hydrosphere.serving.tensorflow.TensorShape.{AnyDims, Dims}
 import io.hydrosphere.serving.tensorflow.tensor.{TensorProto, TypedTensor, TypedTensorFactory}
 
 object TensorUtil {
-  def verifyShape[T](tensor: TypedTensor[T]): HResult[TypedTensor[T]] = {
+  def verifyShape[T](tensor: TypedTensor[T]): Option[TypedTensor[T]] = {
     tensor.shape match {
-      case AnyDims() => Result.ok(tensor)
-      case Dims(tensorDims, _) if tensorDims.isEmpty => Result.ok(tensor)
+      case AnyDims => Some(tensor)
+      case Dims(tensorDims, _) if tensorDims.isEmpty => Some(tensor)
       case Dims(tensorDims, _) =>
         if (tensorDims.isEmpty && tensor.data.length <= 1) {
-          Result.ok(tensor)
+          Some(tensor)
         } else {
           val reverseTensorDimIter = tensorDims.reverseIterator
 
@@ -39,15 +39,15 @@ object TensorUtil {
           if (isShapeOk) {
             val rawTensor = tensor.toProto.copy(tensorShape = Dims(actualDims).toProto)
             val result = tensor.factory.fromProto(rawTensor)
-            Result.ok(result)
+            Some(result)
           } else {
-            Result.clientError(s"Invalid shape $tensorDims for data ${tensor.data}")
+            None
           }
         }
     }
   }
 
-  def verifyShape(tensor: TensorProto): HResult[TensorProto] = {
-    verifyShape(TypedTensorFactory.create(tensor)).right.map(_.toProto)
+  def verifyShape(tensor: TensorProto): Option[TensorProto] = {
+    verifyShape(TypedTensorFactory.create(tensor)).map(_.toProto)
   }
 }

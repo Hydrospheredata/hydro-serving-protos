@@ -48,15 +48,18 @@ case class DimShaper(dims: Seq[Long]) extends ColumnShaper {
         JsArray(res.toVector)
       }
     } // def shapeGrouped
-
-    shapeGrouped(0, 0)
+    if (data.isEmpty) {
+      JsArray.empty
+    } else {
+      shapeGrouped(0, 0)
+    }
   }
 }
 
 object ColumnShaper {
   def apply(tensorShape: TensorShape): ColumnShaper = {
     tensorShape match {
-      case AnyDims() => AnyShaper
+      case AnyDims => AnyShaper
       case Dims(dims, _) if dims.isEmpty => ScalarShaper
       case Dims(dims, _) => DimShaper(dims)
     }

@@ -17,20 +17,21 @@ object TensorShape {
   def apply(tensorShapeProto: Option[TensorShapeProto]): TensorShape = {
     tensorShapeProto match {
       case Some(shape) => Dims(shape.dim.map(_.size))
-      case None => AnyDims()
+      case None => AnyDims
     }
   }
 
   /**
     * Missing Tensor shape. Could be anything.
     */
-  case class AnyDims() extends TensorShape {
+  case object AnyDims extends TensorShape {
     override def toProto: Option[TensorShapeProto] = None
   }
 
   /**
     * Specified Tensor shape.
-    * @param dims if empty - then it's scalar value, if 1 element - vector, if 2 - matrix and so on.
+    *
+    * @param dims        if empty - then it's scalar value, if 1 element - vector, if 2 - matrix and so on.
     * @param unknownRank field for compatibility with TF
     */
   case class Dims(dims: Seq[Long], unknownRank: Boolean = false) extends TensorShape {
@@ -42,11 +43,11 @@ object TensorShape {
     )
   }
 
-  def any = AnyDims()
+  def any: TensorShape = AnyDims
 
-  def scalar = Dims(Seq.empty)
+  def scalar: TensorShape = Dims(Seq.empty)
 
-  def vector(size: Long) = Dims(Seq(size))
+  def vector(size: Long): TensorShape = Dims(Seq(size))
 
-  def mat(dims: Long*) = Dims(dims)
+  def mat(dims: Long*): TensorShape = Dims(dims)
 }

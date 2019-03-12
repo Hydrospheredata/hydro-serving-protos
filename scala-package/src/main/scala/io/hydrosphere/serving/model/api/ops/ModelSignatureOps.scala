@@ -1,38 +1,35 @@
 package io.hydrosphere.serving.model.api.ops
 
-import io.hydrosphere.serving.contract.model_field.ModelField
 import io.hydrosphere.serving.contract.model_signature.ModelSignature
-import io.hydrosphere.serving.model.api.description.SignatureDescription
+import io.hydrosphere.serving.model.api.MergeError
 
 trait ModelSignatureOps {
-  def merge(signature1: ModelSignature, signature2: ModelSignature): ModelSignature = {
-    val mergedIns = ModelFieldOps.mergeAll(signature1.inputs, signature2.inputs)
-    val mergedOuts = ModelFieldOps.mergeAll(signature1.outputs, signature2.outputs)
-    ModelSignature(
-      s"${signature1.signatureName}&${signature2.signatureName}",
-      mergedIns,
-      mergedOuts
-    )
+  def merge(signature1: ModelSignature, signature2: ModelSignature) = {
+    for {
+      mergedIns <- ModelFieldOps.mergeAll(signature1.inputs, signature2.inputs).right
+      mergedOuts <- ModelFieldOps.mergeAll(signature1.outputs, signature2.outputs).right
+    } yield {
+      ModelSignature(
+        s"${signature1.signatureName}&${signature2.signatureName}",
+        mergedIns,
+        mergedOuts
+      )
+    }
   }
 
-  def flatten(modelSignature: ModelSignature): SignatureDescription = {
-    val inputs = ModelFieldOps.flatten(modelSignature.inputs)
-    val outputs = ModelFieldOps.flatten(modelSignature.outputs)
-    SignatureDescription(modelSignature.signatureName, inputs, outputs)
-  }
-
-  def append(head: ModelSignature, tail: ModelSignature): Option[ModelSignature] = {
+  def append(head: ModelSignature, tail: ModelSignature): Either[Seq[MergeError], ModelSignature] = {
     if (tail.inputs.isEmpty) {
-      None
+      Left(Seq(MergeError.fieldNotFound("No fields provided")))
     } else {
-      val maybeFields: Option[Seq[ModelField]] = ModelFieldOps.appendAll(head.outputs, tail.inputs)
-      maybeFields.map { _ =>
-        ModelSignature(
-          s"${head.signatureName}>${tail.signatureName}",
-          head.inputs,
-          tail.outputs
-        )
-      }
+      ModelFieldOps.appendAll(head.outputs, tail.inputs)
+        .right
+        .map { _ =>
+          ModelSignature(
+            s"${head.signatureName}>${tail.signatureName}",
+            head.inputs,
+            tail.outputs
+          )
+        }
     }
   }
 }

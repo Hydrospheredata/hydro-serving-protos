@@ -5,6 +5,7 @@ option java_package = "io.hydrosphere.serving.contract";
 
 import "hydro_serving_grpc/tf/types.proto";
 import "hydro_serving_grpc/tf/tensor_shape.proto";
+import "hydro_serving_grpc/contract/data_profile_types.proto";
 
 message ModelField {
     message Subfield {
@@ -17,6 +18,8 @@ message ModelField {
 
     oneof type_or_subfields {
         Subfield subfields = 3;
-         tensorflow.DataType dtype = 4;
+        tensorflow.DataType dtype = 4;
     }
+
+    DataProfileType profile = 10;
 }
