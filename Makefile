@@ -12,15 +12,15 @@ GRPC_FILES = $(shell find src -name '*_service.proto')
 all: scala python
 
 scala:
-	cd scala-package && sbt -Dsbt.override.build.repos=true -Dsbt.repository.config=project/repositories -DappVersion=$(VERSION) +package
+	cd scala-package && sbt +package
 
 scala_publish_local:
-	cd scala-package && sbt -Dsbt.override.build.repos=true -Dsbt.repository.config=project/repositories -DappVersion=$(VERSION) +publishLocal
+	cd scala-package && sbt +publishLocal
 
 python: python_wheel
 
 python_wheel: python_grpc
-	cd $(PY_WORK_PATH) && env VERSION=$(VERSION) $(PYTHON) setup.py bdist_wheel
+	cd $(PY_WORK_PATH) && $(PYTHON) setup.py bdist_wheel
 
 python_grpc: python_proto | py_requirements
 	$(PYTHON) -m grpc_tools.protoc -I $(PROTOS_PATH) --python_out=$(PY_WORK_PATH) --grpc_python_out=$(PY_WORK_PATH) $(GRPC_FILES)
@@ -39,7 +39,7 @@ test-python:
 	cd python-package && $(PYTHON) setup.py test
 
 test-scala:
-	cd scala-package && sbt -Dsbt.override.build.repos=true -Dsbt.repository.config=project/repositories -DappVersion=$(VERSION) compile test
+	cd scala-package && sbt compile test
 
 clean: clean_scala clean_py
 

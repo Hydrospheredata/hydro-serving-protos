@@ -24,12 +24,12 @@ case class TensorExampleGenerator(modelApi: ModelSignature) {
 
 object TensorExampleGenerator {
   def generatePayload(contract: ModelContract, signature: String): Option[JsObject] = {
-    TensorExampleGenerator.forContract(contract, signature)
+    TensorExampleGenerator.forPredict(contract)
       .map(x => TensorJsonLens.mapToJson(x.inputs))
   }
 
-  def forContract(modelContract: ModelContract, signature: String): Option[TensorExampleGenerator] = {
-    modelContract.signatures.find(_.signatureName == signature).map(TensorExampleGenerator.apply)
+  def forPredict(modelContract: ModelContract): Option[TensorExampleGenerator] = {
+    modelContract.predict.map(TensorExampleGenerator.apply)
   }
 
   def generateScalarData[T <: DataType](dataType: T): Any = {
