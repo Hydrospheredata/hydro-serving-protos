@@ -19,18 +19,24 @@ message Stage {
 }
 
 message ServingApp {
-    int64 id = 1;
+    string id = 1;
     string name = 2;
     hydrosphere.contract.ModelContract contract = 3;
     repeated Stage pipeline = 4;
 }
 
-message WatchRequest {}
-
-message WatchResponse {
+message FetchReq {}
+message FetchResp {
   repeated ServingApp apps = 1;
 }
 
+message WatchReq {}
+message WatchResp {
+  repeated string removedIds = 1;
+  repeated ServingApp added = 2; 
+}
+
 service ServingDiscovery {
-  rpc watch(WatchRequest) returns (stream WatchResponse);
+  rpc watch(stream WatchReq) returns (stream WatchResp);
+  rpc fetch(FetchReq) returns (FetchResp);
 }
