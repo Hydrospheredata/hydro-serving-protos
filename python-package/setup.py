@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
-import os
 
-version = os.getenv('VERSION')
+with open("../version") as v:
+    version = v.read()
 setup(
     name='hydro_serving_grpc',
     version=version,

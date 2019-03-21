@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package hydrosphere.manager;
+package hydrosphere.contract;
 option java_package = "io.hydrosphere.serving.manager";
 
 enum DataProfileType {
@@ -8,7 +8,7 @@ enum DataProfileType {
 
     CATEGORICAL = 1;
     NOMINAL = 11;
-    ORIDNAL = 12;
+    ORDINAL = 12;
 
     NUMERICAL = 2;
     CONTINUOUS = 21;

@@ -1,7 +1,7 @@
 package io.hydrosphere.serving.model.api.tensor_builder
 
 import io.hydrosphere.serving.contract.model_field.ModelField
-import io.hydrosphere.serving.model.api.validation._
+import io.hydrosphere.serving.model.api.ValidationError
 import io.hydrosphere.serving.tensorflow.TensorShape
 import io.hydrosphere.serving.tensorflow.tensor._
 import io.hydrosphere.serving.tensorflow.types.DataType
@@ -19,7 +19,7 @@ class InfoFieldBuilder(val field: ModelField, val dataType: DataType) {
       case num: JsNumber => process(Seq(num))
       case bool: JsBoolean => process(Seq(bool))
       // invalid
-      case _ => Left(new IncompatibleFieldTypeError(field.name, dataType))
+      case _ => Left(ValidationError.IncompatibleFieldTypeError(field.name, dataType))
     }
   }
 
@@ -45,7 +45,7 @@ class InfoFieldBuilder(val field: ModelField, val dataType: DataType) {
   def toTensor[T <: TypedTensor[_]](factory: TypedTensorFactory[T], flatData: Seq[Any]): Either[ValidationError, T] = {
     factory.createFromAny(flatData, TensorShape(field.shape)) match {
       case Some(tensor) => Right(tensor)
-      case None => Left(new ValidationError(s"Can't create a tensor with $dataType type and ${field.shape} shape for [$flatData]") {})
+      case None => Left(ValidationError.IncompatibleFieldTypeError(field.name, dataType))
     }
   }
 

@@ -11,5 +11,5 @@ class ImportTest(unittest.TestCase):
         print(type(a))
 
     def test_types_import_check(self):
-        from hydro_serving_grpc.manager import DataProfileType
+        from hydro_serving_grpc.contract.data_profile_types_pb2 import DataProfileType
         print(DataProfileType.keys())

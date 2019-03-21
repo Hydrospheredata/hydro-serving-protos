@@ -23,15 +23,13 @@ case class TensorExampleGenerator(modelApi: ModelSignature) {
 }
 
 object TensorExampleGenerator {
-  def generatePayload(contract: ModelContract, signature: String): HResult[JsObject] = {
-    TensorExampleGenerator.forContract(contract, signature) match {
-      case Some(generator) => Result.ok(TensorJsonLens.mapToJson(generator.inputs))
-      case None => Result.clientError(s"Can't find '$signature' signature in contract")
-    }
+  def generatePayload(contract: ModelContract, signature: String): Option[JsObject] = {
+    TensorExampleGenerator.forPredict(contract)
+      .map(x => TensorJsonLens.mapToJson(x.inputs))
   }
 
-  def forContract(modelContract: ModelContract, signature: String): Option[TensorExampleGenerator] = {
-    modelContract.signatures.find(_.signatureName == signature).map(TensorExampleGenerator.apply)
+  def forPredict(modelContract: ModelContract): Option[TensorExampleGenerator] = {
+    modelContract.predict.map(TensorExampleGenerator.apply)
   }
 
   def generateScalarData[T <: DataType](dataType: T): Any = {
@@ -55,7 +53,7 @@ object TensorExampleGenerator {
 
   def createFlatTensor[T](shape: TensorShape, generator: => T): Seq[T] = {
     shape match {
-      case AnyDims() => List(generator)
+      case AnyDims => List(generator)
       case Dims(dims, _) if dims.isEmpty => List(generator)
       case Dims(dims, _) =>
         val flatLen = dims.map(_.max(1)).product

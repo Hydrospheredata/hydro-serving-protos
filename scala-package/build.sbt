@@ -1,11 +1,8 @@
 import sbt.Keys._
 
-lazy val appVersion = settingKey[String]("Version")
-
-
 organization := "io.hydrosphere"
 name := "serving-grpc-scala"
-version := sys.props.getOrElse("appVersion", "dev")
+version := IO.read(file("../version"))
 
 scalaVersion := "2.12.4"
 crossScalaVersions := Seq("2.12.4", "2.11.12")

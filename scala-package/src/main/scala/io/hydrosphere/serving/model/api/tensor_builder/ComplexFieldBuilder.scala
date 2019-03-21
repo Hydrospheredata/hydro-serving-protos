@@ -1,7 +1,8 @@
 package io.hydrosphere.serving.model.api.tensor_builder
 
 import io.hydrosphere.serving.contract.model_field.ModelField
-import io.hydrosphere.serving.model.api.validation._
+import io.hydrosphere.serving.model.api.ValidationError
+import io.hydrosphere.serving.model.api.ValidationError.{FieldMissingError, IncompatibleFieldTypeError}
 import io.hydrosphere.serving.tensorflow.TensorShape
 import io.hydrosphere.serving.tensorflow.tensor.MapTensor
 import io.hydrosphere.serving.tensorflow.types.DataType
@@ -30,7 +31,7 @@ class ComplexFieldBuilder(val modelField: ModelField, val subfields: Seq[ModelFi
       case obj: JsObject =>
         val a = subfields.map { field =>
           obj.getFields(field.name).headOption match {
-            case None => Left(new FieldMissingError(field.name))
+            case None => Left(FieldMissingError(field.name))
 
             case Some(fieldData) =>
               val fieldValidator = new ModelFieldBuilder(field)
@@ -52,7 +53,7 @@ class ComplexFieldBuilder(val modelField: ModelField, val subfields: Seq[ModelFi
           )
         }
 
-      case _ => Left(Seq(new IncompatibleFieldTypeError(modelField.name, DataType.DT_MAP)))
+      case _ => Left(Seq(IncompatibleFieldTypeError(modelField.name, DataType.DT_MAP)))
     }
   }
 

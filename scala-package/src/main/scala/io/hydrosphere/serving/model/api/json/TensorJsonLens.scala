@@ -10,7 +10,7 @@ trait TensorJsonLens[T <: TypedTensor[_]] {
   final def get(tensor: T): Seq[JsValue] = tensor.data.map(convert)
 
   final def toJson(tensor: T): JsValue = {
-    val vTensor = TensorUtil.verifyShape(tensor.asInstanceOf[TypedTensor[_]]).right.get.asInstanceOf[T]
+    val vTensor = TensorUtil.verifyShape(tensor.asInstanceOf[TypedTensor[_]]).get.asInstanceOf[T]
     val shaper = ColumnShaper(vTensor.shape)
     shaper.shape(get(vTensor))
   }
@@ -39,4 +39,3 @@ object TensorJsonLens {
     )
   }
 }
-
