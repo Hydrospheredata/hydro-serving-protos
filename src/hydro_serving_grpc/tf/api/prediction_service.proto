@@ -9,9 +9,8 @@ import "hydro_serving_grpc/tf/api/predict.proto";
 message StatusResponse {
     enum ServiceStatus {
         UNKNOWN = 0;
-        INITIALIZING = 1;
-        SERVING = 2;
-        NOT_SERVING = 3;
+        SERVING = 1;
+        NOT_SERVING = 2;
     }
     ServiceStatus status = 1;
     string message = 2;
