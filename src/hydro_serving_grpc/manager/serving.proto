@@ -3,37 +3,20 @@ syntax = "proto3";
 package hydrosphere.discovery;
 option java_package = "io.hydrosphere.serving.discovery";
 
+import "hydro_serving_grpc/manager/entities.proto";
 import "hydro_serving_grpc/contract/model_contract.proto";
 import "hydro_serving_grpc/contract/model_signature.proto";
 
-message Servable {
-    string host = 1;
-    int32  port = 2;
-    int32  weight = 3;
-}
-
-message Stage {
-    string stage_id = 1; 
-    hydrosphere.contract.ModelSignature signature = 2;
-    repeated Servable servable = 3;
-}
-
-message ServingApp {
-    string id = 1;
-    string name = 2;
-    hydrosphere.contract.ModelContract contract = 3;
-    repeated Stage pipeline = 4;
-}
 
 message FetchReq {}
 message FetchResp {
-  repeated ServingApp apps = 1;
+  repeated hydrosphere.manager.ServingApp apps = 1;
 }
 
 message WatchReq {}
 message WatchResp {
   repeated string removedIds = 1;
-  repeated ServingApp added = 2; 
+  repeated hydrosphere.manager.ServingApp added = 2;
 }
 
 service ServingDiscovery {

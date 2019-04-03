@@ -4,6 +4,7 @@ package hydrosphere.manager;
 option java_package = "io.hydrosphere.serving.manager.grpc";
 
 import "hydro_serving_grpc/contract/model_contract.proto";
+import "hydro_serving_grpc/contract/model_signature.proto";
 
 message Model {
     int64 id = 1;
@@ -31,4 +32,24 @@ message ModelVersion {
 message HostSelector {
     int64 id = 1;
     string name = 2;
+}
+
+message Servable {
+    string host = 1;
+    int32 port = 2;
+    int32 weight = 3;
+    ModelVersion model_version = 4;
+}
+
+message Stage {
+    string stage_id = 1;
+    hydrosphere.contract.ModelSignature signature = 2;
+    repeated Servable servable = 3;
+}
+
+message ServingApp {
+    string id = 1;
+    string name = 2;
+    hydrosphere.contract.ModelContract contract = 3;
+    repeated Stage pipeline = 4;
 }
