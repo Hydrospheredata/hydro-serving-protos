@@ -2,6 +2,8 @@ from setuptools import setup, find_packages
 
 with open("../version") as v:
     version = v.read()
+pkgs = find_packages(exclude=["tests"])
+print("found packages", pkgs)
 setup(
     name='hydro_serving_grpc',
     version=version,
@@ -10,7 +12,7 @@ setup(
     long_description='hydro-serving-protos',
     description='hydro-serving-protos',
     url='https://github.com/Hydrospheredata/hydro-serving-protos',
-    packages=find_packages(),
+    packages=pkgs,
     install_requires=['protobuf>=3.6.1', 'grpcio>=1.7.0'],
     zip_safe=True,
     license='Apache 2.0',

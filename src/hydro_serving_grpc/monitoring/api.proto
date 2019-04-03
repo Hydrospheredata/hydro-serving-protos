@@ -5,29 +5,7 @@ option java_package = "io.hydrosphere.serving.monitoring";
 
 import "google/protobuf/empty.proto";
 import "hydro_serving_grpc/tf/api/predict.proto";
-
-message ExecutionError{
-    string error_message = 1;
-}
-
-message TraceData {
-    int64 ts = 1;
-    int64 uid = 2;
-}
-
-//TODO use Application from Manager package
-message ExecutionMetadata{
-    int64 application_id = 1;
-    string stage_id = 2;
-    int64 modelVersion_id = 3;
-    string signature_name = 4;
-    string request_id = 5;
-    string application_request_id = 6;
-    string application_namespace =7;
-    string model_name = 8;
-    reserved 9;
-    TraceData trace_data = 10;
-}
+import "hydro_serving_grpc/monitoring/metadata.proto";
 
 message ExecutionInformation {
     hydrosphere.tensorflow.serving.PredictRequest request = 1;
