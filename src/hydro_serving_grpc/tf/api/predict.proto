@@ -6,6 +6,7 @@ option java_package = "io.hydrosphere.serving.tensorflow.api";
 
 import "hydro_serving_grpc/tf/tensor.proto";
 import "hydro_serving_grpc/tf/api/model.proto";
+import "hydro_serving_grpc/monitoring/metadata.proto";
 
 // PredictRequest specifies which TensorFlow model to run, as well as
 // how inputs are mapped to tensors and how outputs are filtered before
@@ -39,5 +40,9 @@ message PredictResponse {
     //ModelSpec model_spec = 2;
     reserved 2;
 
+    // Various internal information, that could be useful
     map<string, hydrosphere.tensorflow.TensorProto> internal_info = 101;
+
+    // If request was tracked, this message would contain tracking info.
+    hydrosphere.monitoring.TraceData trace_data = 102;
 }
