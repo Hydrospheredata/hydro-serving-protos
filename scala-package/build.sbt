@@ -2,7 +2,7 @@ import sbt.Keys._
 
 organization := "io.hydrosphere"
 name := "serving-grpc-scala"
-version := IO.read(file("../version"))
+version := IO.read(file("../version")).trim
 
 scalaVersion := "2.12.4"
 crossScalaVersions := Seq("2.12.8", "2.11.12")
