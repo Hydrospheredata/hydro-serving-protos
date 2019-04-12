@@ -32,6 +32,9 @@ message RangeRequest{
     uint64 from = 1;
     uint64 till = 2;
     string folder = 3;
+    bool reverse = 4;
+    uint64 maxMessages = 5;
+    uint64 maxBytes = 6;
 }
 
 service Timemachine {
