@@ -12,12 +12,18 @@ from hydro_serving_grpc.timemachine.reqstore_service_pb2 import *
 
 class ReqstoreClient:
 
-    def __init__(self, host:str, port:int):
-        self.host = host
-        self.port = port
-        self.channel = grpc.insecure_channel('{}:{}'.format(self.host, self.port), 
-            options=[('grpc.max_send_message_length', 1024*1024*1024), ('grpc.max_receive_message_length', 1024*1024*1024)]
-        )
+    def __init__(self, host_and_port:str, insecure):
+        self.host_and_port = host_and_port
+
+        opt = options=[('grpc.max_send_message_length', 1024*1024*1024),
+                       ('grpc.max_receive_message_length', 1024*1024*1024)]
+
+        if(insecure):
+            self.channel = grpc.insecure_channel(host_and_port, opt)
+        else:
+            creds = grpc.ssl_channel_credentials()
+            self.channel = grpc.secure_channel(host_and_port, creds, opt)
+
         self.stub = TimemachineStub(self.channel)
 
     def save(self, folder:str, data:bytes, useWAL:bool = False):
