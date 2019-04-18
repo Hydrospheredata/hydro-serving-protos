@@ -148,7 +148,7 @@ class Entry:
         self.__response = BinaryHelper.decode_response(bio.read(response_size))
 
     def __repr__(self):
-        return f"Entry(uid={self.uid})"
+        return "Entry(uid={})".format(self.uid)
 
 
 class TsRecord:
@@ -157,8 +157,4 @@ class TsRecord:
         self.entries = entries
 
     def __repr__(self):
-        return f"Record(ts={self.ts}, entries={self.entries})"
-
-
-def join_entries(records: [TsRecord]):
-    return list(chain(*[item.entries for item in records]))
+        return "TsRecord(ts={}, entries={})".format(self.ts, self.entries)
