@@ -1,23 +1,23 @@
-import unittest
-from hydro_serving_grpc.timemachine.reqstore_client import *
-import base64
-import grpc
-import numpy as np
-import hydro_serving_grpc as hs
+# import unittest
+# from hydro_serving_grpc.timemachine.reqstore_client import *
+# import base64
+# import grpc
+# import numpy as np
+# import hydro_serving_grpc as hs
 
 
-class TMTest(unittest.TestCase):
+# class TMTest(unittest.TestCase):
 #
 #     coded_string = 'FZI/124VNZwAAAAAAAAAAAAAACwAAAAVAAAADwEKEgoDd3RmEgIIARoHZmRmZGZkZgAAAAMBqgYHCgNrZXkSABWSP9dyhmkMAAAAAAAAAAEAAAAsAAAAFQAAAA8BChIKA3d0ZhICCAEaB2ZkZmRmZGYAAAADAaoGBwoDa2V5EgAVkj/XcrLGFAAAAAAAAAACAAAALAAAABUAAAAPAQoSCgN3dGYSAggBGgdmZGZkZmRmAAAAAwGqBgcKA2tleRIAFZI/13LXOhwAAAAAAAAAAwAAACwAAAAVAAAADwEKEgoDd3RmEgIIARoHZmRmZGZkZgAAAAMBqgYHCgNrZXkSABWSP9dzCEUwAAAAAAAAAAQAAAAsAAAAFQAAAA8BChIKA3d0ZhICCAEaB2ZkZmRmZGYAAAADAaoGBwoDa2V5EgAVkj/Xcy2UwAAAAAAAAAAFAAAALAAAABUAAAAPAQoSCgN3dGYSAggBGgdmZGZkZmRmAAAAAwGqBgcKA2tleRIAFZI/13NTSLQAAAAAAAAABgAAACwAAAAVAAAADwEKEgoDd3RmEgIIARoHZmRmZGZkZgAAAAMBqgYHCgNrZXkSABWSP9dzfEQcAAAAAAAAAAcAAAAsAAAAFQAAAA8BChIKA3d0ZhICCAEaB2ZkZmRmZGYAAAADAaoGBwoDa2V5EgAVkj/Xc6Wu2AAAAAAAAAAIAAAALAAAABUAAAAPAQoSCgN3dGYSAggBGgdmZGZkZmRmAAAAAwGqBgcKA2tleRIAFZI/13PJOUgAAAAAAAAACQAAACwAAAAVAAAADwEKEgoDd3RmEgIIARoHZmRmZGZkZgAAAAMBqgYHCgNrZXkSAA=='
 #     decoded_string = base64.b64decode(coded_string)
 #
-    def test_e2e(self):
-        client = ReqstoreHttpClient("https://dev.k8s.hydrosphere.io/reqstore")
-        data = client.getRange(0, 1854897851804888100, "45", "40", "false")
-        print(len(data))
-        for record in data:
-            for entry in record.entries:
-                print(entry.response)
+    # def test_e2e(self):
+    #     client = ReqstoreHttpClient("https://dev.k8s.hydrosphere.io/reqstore")
+    #     data = client.getRange(0, 1854897851804888100, "45", "40", "false")
+    #     print(len(data))
+    #     for record in data:
+    #         for entry in record.entries:
+    #             print(entry.response)
     #
 #         client = ReqstoreClient("dev.k8s.hydrosphere.io:443", False)
 #         folder = "newFolder"
