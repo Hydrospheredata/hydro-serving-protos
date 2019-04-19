@@ -7,7 +7,21 @@ from google.protobuf import text_encoding
 
 from hydro_serving_grpc.timemachine.reqstore_service_pb2_grpc import *
 from hydro_serving_grpc.timemachine.reqstore_service_pb2 import *
+from hydro_serving_grpc.monitoring.metadata_pb2 import ExecutionError
+import requests
 
+
+class ReqstoreHttpClient:
+    def __init__(self, host_and_port:str):
+        self.host_and_port = host_and_port
+
+
+    def getRange(self, from_ts, to_ts,  folder:str, limit, reverse):
+        url = u'{0}/{1}/get'.format(self.host_and_port, folder)
+        r = requests.get(url, stream=True, params={"from": from_ts, "to": to_ts, "maxMessages": limit, "reverse": reverse})
+        content = r.content
+        records = BinaryHelper.decode_records(content)
+        return records
 
 
 class ReqstoreClient:
@@ -95,12 +109,13 @@ class BinaryHelper:
         size = len(data)
         records = []
         while size > 0:
-            length = BinaryHelper.read_int(bio)
             ts = BinaryHelper.read_long(bio)
             unique = BinaryHelper.read_long(bio)
-            body = BytesIO(bio.read(length))
+            length = BinaryHelper.read_int(bio)
+            body = bio.read(length)
             entries = BinaryHelper.decode_entry(unique, body)
             records.append(TsRecord(ts, entries))
+            print("records size is {} - {} - 4 - 8 - 8".format(size, length))
             size = size - length - 4 - 8 - 8
         return records
 
@@ -112,12 +127,14 @@ class BinaryHelper:
     def decode_response(data: bytes):
         bio = BytesIO(data)
         offset = BinaryHelper.read_int(bio)
-        data = BytesIO(bio.read())
+        respData = BytesIO(bio.read())
 
         if offset == 2:
-            return BinaryHelper.read_message(bio, hs.ExecutionError())
+            error = BinaryHelper.read_message(respData, ExecutionError())
+            return error
         elif offset == 3:
-            return BinaryHelper.read_message(data, hs.PredictResponse())
+            result = BinaryHelper.read_message(respData, hs.PredictResponse())
+            return result
         raise UnicodeDecodeError
 
 class Entry:
