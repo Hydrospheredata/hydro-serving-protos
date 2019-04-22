@@ -115,7 +115,6 @@ class BinaryHelper:
             body = bio.read(length)
             entries = BinaryHelper.decode_entry(unique, body)
             records.append(TsRecord(ts, entries))
-            print("records size is {} - {} - 4 - 8 - 8".format(size, length))
             size = size - length - 4 - 8 - 8
         return records
 
