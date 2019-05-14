@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 with open("../version") as v:
     version = v.read()
-pkgs = find_packages(exclude=["tests"])
+pkgs = find_packages(exclude=["tests", "tests.*"])
 print("found packages", pkgs)
 setup(
     name='hydro_serving_grpc',
