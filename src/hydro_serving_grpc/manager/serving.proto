@@ -5,8 +5,6 @@ option java_package = "io.hydrosphere.serving.discovery";
 
 import "google/protobuf/empty.proto";
 import "hydro_serving_grpc/manager/entities.proto";
-import "hydro_serving_grpc/contract/model_contract.proto";
-import "hydro_serving_grpc/contract/model_signature.proto";
 
 message WatchResp {
   repeated string removedIds = 1;
