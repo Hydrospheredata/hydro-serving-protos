@@ -39,6 +39,7 @@ message Servable {
     int32 port = 2;
     int32 weight = 3;
     ModelVersion model_version = 4;
+    string name = 5;
 }
 
 message Stage {

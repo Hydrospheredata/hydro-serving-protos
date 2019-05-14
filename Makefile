@@ -14,7 +14,7 @@ all: scala python
 scala:
 	cd scala-package && sbt +package
 
-scala_publish_local:
+scala_publish_local: scala
 	cd scala-package && sbt +publishLocal
 
 python: python_wheel
