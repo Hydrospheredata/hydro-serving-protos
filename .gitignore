@@ -1,2 +1,8 @@
 # Created by .ignore support plugin (hsz.mobi)
 .idea
+/typescript-package/coverage/
+/typescript-package/coverage/*
+/typescript-package/dist/
+/typescript-package/dist/*
+/typescript-package/node_modules/
+/typescript-package/node_modules/*
