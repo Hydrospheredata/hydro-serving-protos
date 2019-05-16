@@ -6,7 +6,7 @@ PROTOC = protoc
 PROTOS_PATH = src
 PY_WORK_PATH = python-package
 PROTO_FILES := $(shell find src -name '*.proto')
-GRPC_FILES = $(shell find src -name '*_service.proto')
+GRPC_FILES = $(shell find src -name '*.proto')
 
 
 all: scala python
