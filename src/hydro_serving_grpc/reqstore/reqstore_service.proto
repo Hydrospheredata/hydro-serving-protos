@@ -37,10 +37,28 @@ message RangeRequest{
     uint64 maxBytes = 6;
 }
 
+message TotalSubsampleRequest{
+    uint32 amount = 1;
+}
+
+message PeriodSubsampleRequest{
+    uint32 amount = 1;
+    uint64 from = 2;
+    uint64 till = 3;
+}
+
+message SubsampleRequest{
+    oneof request {
+      TotalSubsampleRequest totalRequest = 1;
+      PeriodSubsampleRequest periodRequest = 2;
+    }
+}
+
 service Timemachine {
     rpc Save(SaveRequest) returns (ID) {}
     rpc Get(GetRequest) returns (Data) {}
     rpc GetRange(RangeRequest) returns (stream Data) {}
+    rpc GetSubsample(SubsampleRequest) returns (stream Data) {}
 }
 
 
