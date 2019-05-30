@@ -6,3 +6,5 @@
 /typescript-package/dist/*
 /typescript-package/node_modules/
 /typescript-package/node_modules/*
+/.vscode/
+/hydro-serving-protos/

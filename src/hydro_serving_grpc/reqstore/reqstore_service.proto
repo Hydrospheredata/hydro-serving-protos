@@ -40,12 +40,14 @@ message RangeRequest{
 
 message TotalSubsampleRequest{
     uint32 amount = 1;
+    string folder = 2;
 }
 
 message PeriodSubsampleRequest{
     uint32 amount = 1;
-    uint64 from = 2;
-    uint64 till = 3;
+    string folder = 2;
+    uint64 from = 3;
+    uint64 till = 4;
 }
 
 message SubsampleRequest{
