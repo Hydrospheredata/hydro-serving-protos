@@ -21,6 +21,7 @@ message SaveRequest {
     string folder = 1;
     bool useWAL = 2;
     bytes data = 3;
+    uint64 timestamp = 4;
 }
 
 message GetRequest{
@@ -49,14 +50,14 @@ message PeriodSubsampleRequest{
 message SubsampleRequest{
     uint32 amount = 1;
     string folder = 2;
-    uint32 batchSize = 3;
+    uint32 batch_size = 3;
     SubsampleRequestType type = 4;
 }
 
 message SubsampleRequestType{
     oneof request {
-      TotalSubsampleRequest totalRequest = 1;
-      PeriodSubsampleRequest periodRequest = 2;
+      TotalSubsampleRequest total_request = 1;
+      PeriodSubsampleRequest period_request = 2;
     }
 }
 
