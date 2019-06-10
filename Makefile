@@ -5,7 +5,6 @@ PYTHON = python
 PROTOC = protoc
 PROTOS_PATH = src
 PY_WORK_PATH = python-package
-PROTO_FILES := $(shell find src -name '*.proto')
 GRPC_FILES = $(shell find src -name '*.proto')
 
 
@@ -22,11 +21,8 @@ python: python_wheel
 python_wheel: python_grpc
 	cd $(PY_WORK_PATH) && $(PYTHON) setup.py bdist_wheel
 
-python_grpc: python_proto | py_requirements
+python_grpc: py_requirements
 	$(PYTHON) -m grpc_tools.protoc -I $(PROTOS_PATH) --python_out=$(PY_WORK_PATH) --grpc_python_out=$(PY_WORK_PATH) $(GRPC_FILES)
-
-python_proto:
-	$(PYTHON) -m grpc_tools.protoc -I $(PROTOS_PATH) --python_out=$(PY_WORK_PATH) $(PROTO_FILES)
 
 py_requirements:
 ifeq ($(INSTALL_PY_REQ), true)
