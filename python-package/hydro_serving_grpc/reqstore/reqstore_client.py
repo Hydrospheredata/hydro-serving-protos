@@ -5,8 +5,8 @@ from functools import reduce
 import hydro_serving_grpc as hs
 from google.protobuf import text_encoding
 
-from hydro_serving_grpc.timemachine.reqstore_service_pb2_grpc import *
-from hydro_serving_grpc.timemachine.reqstore_service_pb2 import *
+from hydro_serving_grpc.reqstore.reqstore_service_pb2_grpc import *
+from hydro_serving_grpc.reqstore.reqstore_service_pb2 import *
 from hydro_serving_grpc.monitoring.metadata_pb2 import ExecutionError
 import requests
 
@@ -46,6 +46,14 @@ class ReqstoreClient:
         req.useWAL = useWAL
         req.data = data
         return self.stub.Save(req)
+
+    def subsampling(self, folder:str, amount:num, batch_size:num):
+        req = SubsampleRequest()
+        req.amount = num
+        req.folder = folder
+        req.batch_size = batch_size
+
+        self.stub.GetSubsample(req)
 
     def get(self, folder:str, timestamp, unique):
         req = GetRequest(
