@@ -3,10 +3,6 @@ syntax = "proto3";
 package hydrosphere.reqstore;
 option java_package = "io.hydrosphere.reqstore";
 
-message Empty{
-
-}
-
 message ID {
     uint64 timestamp = 1;
     uint64 unique = 2;
