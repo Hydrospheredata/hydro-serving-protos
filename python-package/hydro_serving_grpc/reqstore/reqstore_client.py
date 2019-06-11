@@ -47,13 +47,35 @@ class ReqstoreClient:
         req.data = data
         return self.stub.Save(req)
 
-    def subsampling(self, folder:str, amount:num, batch_size:num):
-        req = SubsampleRequest()
-        req.amount = num
-        req.folder = folder
-        req.batch_size = batch_size
+    def subsampling(self, folder:str, amount, from_ts = 0, till_ts = 0, batch_size = 100):
+        type_ = None
+        if(from_ts == 0 and till_ts == 0):
+            type_ = SubsampleRequestType(
+                total_request = TotalSubsampleRequest()
+            )
+        else:
+            type_ = SubsampleRequestType(
+                period_request = PeriodSubsampleRequest(
+                    from_ = from_ts,
+                    till = till_ts
+                )
+            )
 
-        self.stub.GetSubsample(req)
+        req = SubsampleRequest(
+            amount = amount,
+            folder = folder,
+            batch_size = batch_size,
+            type = type_
+        )
+
+        iter = self.stub.GetSubsample(req)
+
+        for data in iter:
+            yield TsRecord(
+                ts = data.id.timestamp,
+                entries = BinaryHelper.decode_entry(data.id.unique, data.data)
+            )
+
 
     def get(self, folder:str, timestamp, unique):
         req = GetRequest(
