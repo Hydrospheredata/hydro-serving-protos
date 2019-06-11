@@ -63,6 +63,3 @@ service Timemachine {
     rpc GetRange(RangeRequest) returns (stream Data) {}
     rpc GetSubsample(SubsampleRequest) returns (stream Data) {}
 }
-
-
-
