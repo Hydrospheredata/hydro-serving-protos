@@ -6,11 +6,17 @@ option java_package = "io.hydrosphere.serving.discovery";
 import "google/protobuf/empty.proto";
 import "hydro_serving_grpc/manager/entities.proto";
 
-message WatchResp {
+message ApplicationDiscoveryEvent {
   repeated string removedIds = 1;
   repeated hydrosphere.manager.ServingApp added = 2;
 }
 
+message ServableDiscoveryEvent {
+  repeated string removedIdx = 1;
+  repeated hydrosphere.manager.Servable added = 2;
+}
+
 service ServingDiscovery {
-  rpc watch(stream google.protobuf.Empty) returns (stream WatchResp);
+  rpc WatchApplications(stream google.protobuf.Empty) returns (stream ApplicationDiscoveryEvent);
+  rpc WatchServables(stream google.protobuf.Empty) returns (stream ServableDiscoveryEvent);
 }

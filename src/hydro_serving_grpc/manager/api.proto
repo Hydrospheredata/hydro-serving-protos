@@ -11,7 +11,26 @@ message GetVersionRequest {
     int64 id = 1;
 }
 
+message ModelVersionIdentifier {
+    string name = 1;
+    int64 version = 2;
+}
+
+message DeployServableRequest {
+    oneof model_version {
+        int64 version_id = 1;
+	ModelVersionIdentifier fullname = 2;
+    }
+}
+
+message RemoveServableRequest {
+    string servable_name = 1;
+}
+
 service ManagerService {
     rpc GetAllVersions (google.protobuf.Empty) returns (stream hydrosphere.manager.ModelVersion);
     rpc GetVersion (GetVersionRequest) returns (hydrosphere.manager.ModelVersion);
+    
+    rpc DeployServable(DeployServableRequest) returns (stream hydrosphere.manager.Servable);
+    rpc RemoveServable(RemoveServableRequest) returns (hydrosphere.manager.Servable);
 }
