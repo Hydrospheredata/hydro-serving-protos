@@ -57,6 +57,13 @@ message Stage {
     repeated Servable servable = 3;
 }
 
+message KafkaStreaming {
+    string consumer_id = 1;
+    string source_topic = 2;
+    string destination_topic = 3;
+    string error_topic = 4;
+}
+
 message ServingApp {
     enum ApplicationStatus {
         FAILED = 0;
@@ -69,4 +76,5 @@ message ServingApp {
     repeated Stage pipeline = 4;
     ApplicationStatus status = 5;
     string status_message = 6;
+    repeated KafkaStreaming streaming_params = 7;
 }
