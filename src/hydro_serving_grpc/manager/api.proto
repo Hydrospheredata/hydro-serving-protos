@@ -19,8 +19,19 @@ message ModelVersionIdentifier {
 message DeployServableRequest {
     oneof model_version {
         int64 version_id = 1;
-	ModelVersionIdentifier fullname = 2;
+	    ModelVersionIdentifier fullname = 2;
     }
+    map<string, string> metadata = 3;
+}
+
+message ServableFilter {
+    string name = 1;
+    int64 version_id = 2;
+    map<string, string> metadata = 3;
+}
+
+message GetServablesRequest {
+    ServableFilter filter = 1;
 }
 
 message RemoveServableRequest {
@@ -32,5 +43,6 @@ service ManagerService {
     rpc GetVersion (GetVersionRequest) returns (hydrosphere.manager.ModelVersion);
     
     rpc DeployServable(DeployServableRequest) returns (stream hydrosphere.manager.Servable);
+    rpc GetServables(GetServablesRequest) returns (stream hydrosphere.manager.Servable);
     rpc RemoveServable(RemoveServableRequest) returns (hydrosphere.manager.Servable);
 }

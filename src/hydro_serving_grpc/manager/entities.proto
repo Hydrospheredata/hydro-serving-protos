@@ -27,13 +27,13 @@ message ModelVersion {
     DockerImage image = 31;
     string image_sha = 32;
     DockerImage runtime = 33;
+    map<string, string> metadata = 34;
 }
 
 message HostSelector {
     int64 id = 1;
     string name = 2;
 }
-
 
 message Servable {
     enum ServableStatus {
@@ -49,6 +49,7 @@ message Servable {
     string name = 5;
     ServableStatus status = 6;
     string status_message = 7;
+    map<string, string> metadata = 8;
 }
 
 message Stage {
@@ -69,4 +70,5 @@ message ServingApp {
     repeated Stage pipeline = 4;
     ApplicationStatus status = 5;
     string status_message = 6;
+    map<string, string> metadata = 7;
 }
