@@ -1,7 +1,7 @@
 INSTALL_PY_REQ = false
 VERSION := $(shell cat version)
 BASE_DIR := $(shell pwd)
-PYTHON = python
+PYTHON = python3
 PROTOC = protoc
 PROTOS_PATH = src
 PY_WORK_PATH = python-package
@@ -48,3 +48,6 @@ clean_py:
 
 clean_scala:
 	rm -rf scala-package/target
+
+install_python:
+	$(PYTHON) -m pip install python-package/dist/*

@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package hydrosphere.writer;
+option java_package = "io.hydrosphere.writer";
+
+import "google/protobuf/empty.proto";
+
+
+message WriteOneRequest {
+    int64 model_version = 1;
+    string feature = 2;
+    bool check = 3;
+    int64 timestamp = 4;
+    int64 uid = 5;
+    double value = 6;
+    string description = 7;
+}
+
+message WriteManyRequest {
+    repeated int64 model_version = 1;
+    repeated string feature = 2;
+    repeated bool check = 3;
+    repeated int64 timestamp = 4;
+    repeated int64 uid = 5;
+    repeated double value = 6;
+    repeated string description = 7;
+}
+
+service Writer {
+    rpc WriteOne(WriteOneRequest) returns (google.protobuf.Empty) {}
+    rpc WriteMany(WriteManyRequest) returns (google.protobuf.Empty) {}
+}
