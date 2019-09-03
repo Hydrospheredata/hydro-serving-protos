@@ -17,13 +17,7 @@ message WriteOneRequest {
 }
 
 message WriteManyRequest {
-    repeated int64 model_version = 1;
-    repeated string feature = 2;
-    repeated bool check = 3;
-    repeated int64 timestamp = 4;
-    repeated int64 uid = 5;
-    repeated double value = 6;
-    repeated string description = 7;
+    repeated WriteOneRequest requests = 1;
 }
 
 service Writer {
