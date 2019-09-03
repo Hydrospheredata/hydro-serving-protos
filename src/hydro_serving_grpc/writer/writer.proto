@@ -4,16 +4,16 @@ package hydrosphere.writer;
 option java_package = "io.hydrosphere.writer";
 
 import "google/protobuf/empty.proto";
+import "hydro_serving_grpc/monitoring/metadata.proto";
 
 
 message WriteOneRequest {
     int64 model_version = 1;
-    string feature = 2;
-    bool check = 3;
-    int64 timestamp = 4;
-    int64 uid = 5;
-    double value = 6;
-    string description = 7;
+    hydrosphere.monitoring.TraceData trace_data = 2;
+    string feature = 3;
+    double value = 4;
+    string description = 6;
+    bool check = 7;
 }
 
 message WriteManyRequest {
