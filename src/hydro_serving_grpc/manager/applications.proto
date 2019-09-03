@@ -36,4 +36,5 @@ message Application {
     ExecutionGraph execution_graph = 4;
     repeated KafkaStreaming kafka_streaming = 5;
     string namespace = 6;
+    map<string, string> metadata = 7;
 }
