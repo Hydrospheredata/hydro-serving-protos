@@ -1,5 +1,6 @@
 # Created by .ignore support plugin (hsz.mobi)
 .idea
+.metals
 /typescript-package/coverage/
 /typescript-package/coverage/*
 /typescript-package/dist/
