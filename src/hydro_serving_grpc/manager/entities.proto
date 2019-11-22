@@ -72,3 +72,29 @@ message ServingApp {
     string status_message = 6;
     map<string, string> metadata = 7;
 }
+
+message ThresholdConfig {
+    enum CmpOp {
+        EQ = 0;
+        NOT_EQ = 1;
+        GREATER = 2;
+        LESS = 3;
+        GREATER_EQ = 4;
+        LESS_EQ = 5;
+    }
+    double value = 1;
+    CmpOp comparison = 2;
+}
+
+message CustomModelMetric {
+    int64 monitor_model_id = 1;
+    ThresholdConfig threshold = 2; 
+    Servable servable = 3;
+}
+
+message MetricSpec {
+    string id = 1;
+    string name = 2;
+    int64 model_version_id = 3;
+    CustomModelMetric custom_model_config = 4;
+}
