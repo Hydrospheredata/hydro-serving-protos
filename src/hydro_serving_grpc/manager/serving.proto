@@ -16,7 +16,13 @@ message ServableDiscoveryEvent {
   repeated hydrosphere.manager.Servable added = 2;
 }
 
+message MetricSpecDiscoveryEvent {
+  repeated string removedIdx = 1;
+  repeated hydrosphere.manager.MetricSpec added = 3;
+}
+
 service ServingDiscovery {
   rpc WatchApplications(stream google.protobuf.Empty) returns (stream ApplicationDiscoveryEvent);
   rpc WatchServables(stream google.protobuf.Empty) returns (stream ServableDiscoveryEvent);
+  rpc WatchMetricSpec(stream google.protobuf.Empty) returns (stream MetricSpecDiscoveryEvent);
 }
