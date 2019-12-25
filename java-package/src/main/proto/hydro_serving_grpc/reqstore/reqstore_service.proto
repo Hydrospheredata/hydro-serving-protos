@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package hydrosphere.reqstore;
+option java_package = "io.hydrosphere.reqstore";
+
+message ID {
+    uint64 timestamp = 1;
+    uint64 unique = 2;
+}
+
+message Data{
+    ID id = 1;
+    bytes data = 2;
+}
+
+message SaveRequest {
+    string folder = 1;
+    bool useWAL = 2;
+    bytes data = 3;
+    uint64 timestamp = 4;
+}
+
+message GetRequest{
+    uint64 timestamp = 1;
+    uint64 unique = 2;
+    string folder = 3;
+}
+
+message RangeRequest{
+    uint64 from = 1;
+    uint64 till = 2;
+    string folder = 3;
+    bool reverse = 4;
+    uint64 maxMessages = 5;
+    uint64 maxBytes = 6;
+}
+
+message TotalSubsampleRequest{
+}
+
+message PeriodSubsampleRequest{
+    uint64 from = 1;
+    uint64 till = 2;
+}
+
+message SubsampleRequest{
+    uint32 amount = 1;
+    string folder = 2;
+    uint32 batch_size = 3;
+    SubsampleRequestType type = 4;
+}
+
+message SubsampleRequestType{
+    oneof request {
+      TotalSubsampleRequest total_request = 1;
+      PeriodSubsampleRequest period_request = 2;
+    }
+}
+
+service Timemachine {
+    rpc Save(SaveRequest) returns (ID) {}
+    rpc Get(GetRequest) returns (Data) {}
+    rpc GetRange(RangeRequest) returns (stream Data) {}
+    rpc GetSubsample(SubsampleRequest) returns (stream Data) {}
+}

@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package hydrosphere.contract;
+option java_package = "io.hydrosphere.serving.manager";
+
+enum DataProfileType {
+    NONE = 0;
+
+    CATEGORICAL = 1;
+    NOMINAL = 11;
+    ORDINAL = 12;
+
+    NUMERICAL = 2;
+    CONTINUOUS = 21;
+    INTERVAL = 22;
+    RATIO = 23;
+
+    IMAGE = 3;
+    VIDEO = 4;
+    AUDIO = 5;
+    TEXT = 6;
+}

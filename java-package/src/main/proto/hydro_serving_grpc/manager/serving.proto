@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package hydrosphere.discovery;
+option java_package = "io.hydrosphere.serving.discovery";
+
+import "google/protobuf/empty.proto";
+import "hydro_serving_grpc/manager/entities.proto";
+
+message ApplicationDiscoveryEvent {
+  repeated string removedIds = 1;
+  repeated hydrosphere.manager.ServingApp added = 2;
+}
+
+message ServableDiscoveryEvent {
+  repeated string removedIdx = 1;
+  repeated hydrosphere.manager.Servable added = 2;
+}
+
+message MetricSpecDiscoveryEvent {
+  repeated string removedIdx = 1;
+  repeated hydrosphere.manager.MetricSpec added = 3;
+}
+
+service ServingDiscovery {
+  rpc WatchApplications(stream google.protobuf.Empty) returns (stream ApplicationDiscoveryEvent);
+  rpc WatchServables(stream google.protobuf.Empty) returns (stream ServableDiscoveryEvent);
+  rpc WatchMetricSpec(stream google.protobuf.Empty) returns (stream MetricSpecDiscoveryEvent);
+}

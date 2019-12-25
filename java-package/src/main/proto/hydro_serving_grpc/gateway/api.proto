@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package hydrosphere.serving.gateway;
+option cc_enable_arenas = true;
+option java_package = "io.hydrosphere.serving.gateway";
+
+import "hydro_serving_grpc/tf/tensor.proto";
+import "hydro_serving_grpc/tf/api/model.proto";
+import "hydro_serving_grpc/monitoring/metadata.proto";
+import "hydro_serving_grpc/tf/api/predict.proto";
+
+message ExecutorIdentifier {
+    oneof executor_id {
+        string servable_name = 1;
+	string application_name = 2;
+    }
+}
+
+message ReplayRequest {
+    string servable_name = 1;
+    map<string, hydrosphere.tensorflow.TensorProto> data = 2;
+    hydrosphere.monitoring.TraceData origin_td = 3;
+}
+
+message ServablePredictRequest {
+    string servable_name = 1;
+    map<string, hydrosphere.tensorflow.TensorProto> data = 2;
+}
+
+// Extensions to the PredictionService API for a gateway
+service GatewayService {
+    // Makes prediction with specified date
+    rpc ReplayModel (ReplayRequest) returns (hydrosphere.tensorflow.serving.PredictResponse);
+    
+    // Send prediction request to specified servable.Sends data to shadow.
+    rpc PredictServable (ServablePredictRequest) returns (hydrosphere.tensorflow.serving.PredictResponse);
+    
+     // Makes prediction but doesn't send it to shadow
+    rpc ShadowlessPredictServable (ServablePredictRequest) returns (hydrosphere.tensorflow.serving.PredictResponse);
+}

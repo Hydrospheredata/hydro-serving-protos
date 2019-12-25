@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package hydrosphere.monitoring;
+option java_package = "io.hydrosphere.serving.monitoring";
+
+import "google/protobuf/timestamp.proto";
+
+message ExecutionError{
+    string error_message = 1;
+}
+
+message TraceData {
+    int64 ts = 1;
+    int64 uid = 2;
+}
+
+message ApplicationInfo {
+    int64 application_id = 1;
+    string stage_id = 2;
+}
+
+message ExecutionMetadata {
+    int64 modelVersion_id = 1;
+    string signature_name = 2;
+    string request_id = 3;
+    string model_name = 4;
+    int64 model_version = 5;
+    double latency = 6;
+    TraceData trace_data = 7;
+    ApplicationInfo app_info = 8;
+    TraceData origin_trace_data = 9;
+}

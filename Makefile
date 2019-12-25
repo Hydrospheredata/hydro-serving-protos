@@ -8,13 +8,42 @@ PY_WORK_PATH = python-package
 GRPC_FILES = $(shell find src -name '*.proto')
 
 
+# Common
+# ------
+
 all: scala python
+clean: clean_scala clean_py
+test: test_python test_scala
+
+# Scala 
+# -----
 
 scala:
 	cd scala-package && sbt +package
 
+test_scala:
+	cd scala-package && sbt compile test
+
 scala_publish_local: scala
 	cd scala-package && sbt +publishLocal
+
+clean_scala:
+	rm -rf scala-package/target
+
+# Java 
+# ----
+
+java: java_prepare java_build
+	@echo Compiling java package
+
+java_prepare:
+	cp -R src/ java-package/src/main/proto
+
+java_build:
+	cd java-package && ./gradlew build
+
+# Python
+# ------
 
 python: python_wheel
 
@@ -29,15 +58,8 @@ ifeq ($(INSTALL_PY_REQ), true)
 	pip install -r python-package/requirements.txt
 endif
 
-test: test-python test-scala
-
-test-python:
+test_python:
 	cd python-package && $(PYTHON) setup.py test
-
-test-scala:
-	cd scala-package && sbt compile test
-
-clean: clean_scala clean_py
 
 clean_py:
 	find python-package -name '*_pb2.py' -delete
@@ -45,6 +67,3 @@ clean_py:
 	rm -rf python-package/build
 	rm -rf python-package/dist
 	rm -rf python-package/hydro_serving_grpc.egg-info
-
-clean_scala:
-	rm -rf scala-package/target
