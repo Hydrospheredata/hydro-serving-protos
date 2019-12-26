@@ -11,8 +11,8 @@ GRPC_FILES = $(shell find src -name '*.proto')
 # Common
 # ------
 
-all: scala python
-clean: clean_scala clean_py
+all: scala python java
+clean: clean_scala clean_py clean_java
 test: test_python test_scala
 
 # Scala 
@@ -37,10 +37,15 @@ java: java_prepare java_build
 	@echo Compiling java package
 
 java_prepare:
+	mkdir -p java-package/src/main/proto
 	cp -R src/ java-package/src/main/proto
 
 java_build:
 	cd java-package && ./gradlew build
+
+clean_java: 
+	rm -rf java-package/build
+	rm -rf java-package/src
 
 # Python
 # ------
