@@ -14,3 +14,16 @@ make [language]
 ```
 to run codegen for specified languages. If `language` is omitted, then it builds bindings 
 for every supported language.
+
+## Prerequisites
+### Java
+Create a file `gradle.properties` in `java-package` with the following content:
+
+```properties
+signing.keyId=PublicKeyShortId
+signing.password=KeyPassword
+signing.secretKeyRingFile=PathToPrivateKeyring
+
+ossrhUsername=JiraUsername
+ossrhPassword=JiraPassword
+```
