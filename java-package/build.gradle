@@ -9,6 +9,13 @@
 plugins {
     id 'java-library'
     id 'com.google.protobuf' version '0.8.8'
+    id 'maven'
+    id 'signing'
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
 repositories {
@@ -20,6 +27,10 @@ dependencies {
     implementation 'io.grpc:grpc-protobuf:1.26.0'
     implementation 'io.grpc:grpc-stub:1.26.0'
 }
+
+group = "io.hydrosphere"
+archivesBaseName = "serving-grpc-java"
+version = "0.1.0"
 
 protobuf {
   protoc {
@@ -35,4 +46,59 @@ protobuf {
       grpc {}
     }
   }
+}
+
+signing {
+    sign configurations.archives
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+            pom.project {
+                name 'serving-grpc-java'
+                packaging 'jar'
+                // optionally artifactId can be defined here
+                description 'Hydroserving GRPC api impl for Java'
+                url 'https://hydrosphere.io/'
+
+                scm {
+                    url 'https://github.com/Hydrospheredata/hydro-serving-protos/'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'tidylobster'
+                        name 'Ilnur Garifullin'
+                        email 'igarifullin@provectus.com'
+                    }
+                    developer {
+                        id 'KineticCookie'
+                        name 'Bulat Lutfullin'
+                        email 'blutfullin@hydrosphere.io'
+                    }
+                }
+            }
+        }
+    }
 }

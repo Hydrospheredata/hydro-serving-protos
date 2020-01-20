@@ -33,19 +33,17 @@ clean_scala:
 # Java 
 # ----
 
-java: java_prepare java_build
+java: java_build
 	@echo Compiling java package
 
-java_prepare:
-	mkdir -p java-package/src/main/proto
-	cp -R src/ java-package/src/main/proto
-
 java_build:
-	cd java-package && ./gradlew build
+	cd java-package && ./gradlew clean build
+
+java_publish:
+    cd java-package && ./gradlew uploadArchives
 
 clean_java: 
 	rm -rf java-package/build
-	rm -rf java-package/src
 
 # Python
 # ------
