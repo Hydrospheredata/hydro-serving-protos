@@ -2,28 +2,35 @@ def repository = 'hydro-serving-protos'
 
 
 def buildAndPublishReleaseFunction={
-    sh "sudo pip3 install --upgrade pip"
-    sh "sudo pip3 install -r ${env.WORKSPACE}/python-package/requirements.txt"
-    sh "make PYTHON=python3 all"
-    sh "make PYTHON=python3 test"
+    configFileProvider([configFile(fileId: 'PYPIDeployConfiguration', targetLocation: 'python-package/.pypirc', variable: 'PYPI_SETTINGS')]) {
+        sh """#!/bin/bash
+            python3 -m venv venv
+            source venv/bin/activate
+            pip install wheel~=0.34.2
+            pip install twine 
+            pip install -r ${env.WORKSPACE}/python-package/requirements.txt &&
+            make PYTHON=python3 all &&
+            make PYTHON=python3 test &&
+            python -m twine upload --config-file ${env.WORKSPACE}/python-package/.pypirc -r pypi ${env.WORKSPACE}/python-package/dist/*
+        """
+    }
 
     def curVersion = getVersion()
     dir("${env.WORKSPACE}/scala-package") {
         sh "sbt -DappVersion=${curVersion} 'set pgpPassphrase := Some(Array())' +publishSigned"
         sh "sbt -DappVersion=${curVersion} 'sonatypeReleaseAll'"
     }
-
-    sh 'sudo pip3 install twine'
-    configFileProvider([configFile(fileId: 'PYPIDeployConfiguration', targetLocation: 'python-package/.pypirc', variable: 'PYPI_SETTINGS')]) {
-        sh "twine upload --config-file ${env.WORKSPACE}/python-package/.pypirc -r pypi ${env.WORKSPACE}/python-package/dist/*"
-    }
 }
 
 def buildFunction={
-    sh "sudo pip3 install --upgrade pip"
-    sh "sudo pip3 install -r ${env.WORKSPACE}/python-package/requirements.txt"
-    sh "make PYTHON=python3 all"
-    sh "make PYTHON=python3 test"
+    sh """#!/bin/bash
+        python3 -m venv venv
+        source venv/bin/activate
+        pip install wheel~=0.34.2
+        pip install -r ${env.WORKSPACE}/python-package/requirements.txt &&
+        make all &&
+        make test
+    """
 }
 
 pipelineCommon(
