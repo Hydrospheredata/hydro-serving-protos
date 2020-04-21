@@ -7,10 +7,10 @@ def buildAndPublishReleaseFunction={
             python3 -m venv venv
             source venv/bin/activate
             pip install wheel~=0.34.2
-            pip install twine
-            pip install -r ${env.WORKSPACE}/python-package/requirements.txt
-            make PYTHON=python3 all
-            make PYTHON=python3 test
+            pip install twine 
+            pip install -r ${env.WORKSPACE}/python-package/requirements.txt &&
+            make PYTHON=python3 all &&
+            make PYTHON=python3 test &&
             python -m twine upload --config-file ${env.WORKSPACE}/python-package/.pypirc -r pypi ${env.WORKSPACE}/python-package/dist/*
         """
     }
@@ -27,8 +27,8 @@ def buildFunction={
         python3 -m venv venv
         source venv/bin/activate
         pip install wheel~=0.34.2
-        pip install -r ${env.WORKSPACE}/python-package/requirements.txt
-        make all
+        pip install -r ${env.WORKSPACE}/python-package/requirements.txt &&
+        make all &&
         make test
     """
 }
