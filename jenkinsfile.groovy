@@ -16,9 +16,12 @@ def buildAndPublishReleaseFunction={
     }
 
     def curVersion = getVersion()
-    dir("${env.WORKSPACE}/scala-package") {
-        sh "sbt -DappVersion=${curVersion} 'set pgpPassphrase := Some(Array())' +publishSigned"
-        sh "sbt -DappVersion=${curVersion} 'sonatypeReleaseAll'"
+    withCredentials([file(credentialsId: 'SonatypeSigningKey', variable: 'SONATYPE_KEY_PATH')]) {
+        sh "gpg --import ${SONATYPE_KEY_PATH}"
+        dir("${env.WORKSPACE}/scala-package") {
+            sh "sbt -DappVersion=${curVersion} 'set pgpPassphrase := Some(Array())' +publishSigned"
+            sh "sbt -DappVersion=${curVersion} 'sonatypeReleaseAll'"
+        }
     }
 }
 
