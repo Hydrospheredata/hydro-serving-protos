@@ -8,19 +8,18 @@ message ModelStatusRequest {
   int64 model_version_id = 1;
 }
 
+enum AutoODState {
+  PENDING = 0;
+  STARTED = 1;
+  SELECTING_MODEL = 2;
+  SELECTING_PARAMETERS = 3;
+  DEPLOYING = 4;
+  SUCCESS = 5;
+  FAILED = 6;
+  NOT_SUPPORTED = 7;
+}
+
 message ModelStatus {
-
-  enum AutoODState {
-    PENDING = 0;
-    STARTED = 1;
-    SELECTING_MODEL = 2;
-    SELECTING_PARAMETERS = 3;
-    DEPLOYING = 4;
-    SUCCESS = 5;
-    FAILED = 6;
-    NOT_SUPPORTED = 7;
-  }
-
   AutoODState state = 1;
   string description = 2;
 }
