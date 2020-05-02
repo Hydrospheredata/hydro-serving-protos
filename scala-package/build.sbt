@@ -1,21 +1,21 @@
 import sbt.Keys._
+enablePlugins(Fs2Grpc)
 
 organization := "io.hydrosphere"
 name := "serving-grpc-scala"
 version := IO.read(file("../version")).trim
 
-scalaVersion := "2.12.4"
-crossScalaVersions := Seq("2.12.8", "2.11.12")
+scalaVersion := "2.13.2"
+crossScalaVersions := Seq("2.13.2", "2.12.11")
 
 publishMavenStyle := true
 
 libraryDependencies ++= Seq(
-  "org.scalactic" %% "scalactic" % "3.0.4",
-  "org.scalatest" %% "scalatest" % "3.0.4" % "test",
-  "io.spray" %% "spray-json" % "1.3.4" % "provided",
-  "com.thesamet.scalapb" %% "scalapb-runtime" % com.trueaccord.scalapb.compiler.Version.scalapbVersion,
-  "io.grpc" % "grpc-netty" % com.trueaccord.scalapb.compiler.Version.grpcJavaVersion,
-  "com.thesamet.scalapb" %% "scalapb-runtime-grpc" % com.trueaccord.scalapb.compiler.Version.scalapbVersion,
+  "org.scalatest" %% "scalatest" % "3.1.1" % "test",
+//  "io.spray" %% "spray-json" % "1.3.4" % "provided",
+  "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion,
+  "io.grpc" % "grpc-netty" % scalapb.compiler.Version.grpcJavaVersion,
+  "com.thesamet.scalapb" %% "scalapb-runtime-grpc" % scalapb.compiler.Version.scalapbVersion,
   "com.google.api.grpc" % "googleapis-common-protos" % "0.0.3" % "protobuf"
 )
 
