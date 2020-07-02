@@ -16,6 +16,10 @@ message DockerImage {
     string tag = 2;
 }
 
+message MessageConfig {
+    int64 id = 1;
+}
+
 message ModelVersion {
     int64 id = 1;
     int64 version = 2;
@@ -28,6 +32,7 @@ message ModelVersion {
     string image_sha = 32;
     DockerImage runtime = 33;
     map<string, string> metadata = 34;
+    MessageConfig message_config = 35;
 }
 
 message HostSelector {
