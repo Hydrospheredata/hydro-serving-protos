@@ -16,8 +16,8 @@ message DockerImage {
     string tag = 2;
 }
 
-message MessageConfig {
-    int64 id = 1;
+message MonitoringConfiguration {
+    uint32 batch_size = 1;
 }
 
 message ModelVersion {
@@ -32,7 +32,7 @@ message ModelVersion {
     string image_sha = 32;
     DockerImage runtime = 33;
     map<string, string> metadata = 34;
-    MessageConfig message_config = 35;
+    MonitoringConfiguration monitoring_configuration = 35;
 }
 
 message HostSelector {
