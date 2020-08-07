@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package hydrosphere.vis;
+option java_package = "io.hydrosphere.serving.vis";
+
+message RefitRequest {
+    int64 model_version_id = 1;
+    bool refit_transformer = 2;
+}
+
+message RefitResponse {
+    int32 code = 1;
+    string message = 2;
+}
+
+service VisService {
+    rpc RefitModel (RefitRequest) returns (RefitResponse){}
+}
