@@ -3,9 +3,9 @@ import io.hydrosphere.serving.contract.utils.ContractBuilders
 import io.hydrosphere.serving.model.api.ops.ModelSignatureOps
 import io.hydrosphere.serving.tensorflow.TensorShape
 import io.hydrosphere.serving.tensorflow.types.DataType
-import org.scalatest.WordSpec
+import org.scalatest.wordspec.AnyWordSpec
 
-class SignatureCheckerSpec extends WordSpec {
+class SignatureCheckerSpec extends AnyWordSpec {
   "SignatureChecker" should {
     "accept connection" when {
       "two identical signatures (String,String -> String,String)" in {
