@@ -1,10 +1,10 @@
 import io.hydrosphere.serving.model.api.json.TensorJsonLens
 import io.hydrosphere.serving.tensorflow.TensorShape
 import io.hydrosphere.serving.tensorflow.tensor.DoubleTensor
-import org.scalatest.FunSpec
+import org.scalatest.funspec.AnyFunSpec
 import spray.json.{JsArray, JsNumber}
 
-class JsonConverterSpec extends FunSpec {
+class JsonConverterSpec extends AnyFunSpec {
   describe("Json Tensor converters") {
     it("should convert tensor without dims") {
       val t1 = DoubleTensor(TensorShape.any, Seq(1, 2, 3, 4))

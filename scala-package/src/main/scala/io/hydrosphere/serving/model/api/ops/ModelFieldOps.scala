@@ -80,7 +80,7 @@ trait ModelFieldOps {
           .getOrElse(Left(Seq(IncompatibleShapes(first, second))))
           .right
         mergedType <- mergeTypeOrSubfields(first, second).right
-      } yield ModelField(first.name, mergedShape.toProto, first.profile, mergedType)
+      } yield ModelField(first.name, mergedShape.toProto, mergedType, first.profile)
     } else {
       Left(Seq(NamesAreDifferent(first, second)))
     }
