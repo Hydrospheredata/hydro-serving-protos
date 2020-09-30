@@ -35,7 +35,7 @@ object TensorJsonLens {
 
   def mapToJson(tensors: Map[String, TypedTensor[_]]): JsObject = {
     JsObject(
-      tensors.mapValues(toJson)
+      tensors.mapValues(toJson).toMap
     )
   }
 }
