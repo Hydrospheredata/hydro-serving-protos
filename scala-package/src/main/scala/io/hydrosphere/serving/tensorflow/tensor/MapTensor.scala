@@ -17,13 +17,13 @@ object MapTensor extends TypedTensorFactory[MapTensor] {
   override implicit def lens: TensorProtoLens[MapTensor] = new TensorProtoLens[MapTensor] {
     override def getter: TensorProto => Seq[Map[String, TypedTensor[_]]] = { tensor =>
       tensor.mapVal.map {
-        _.subtensors.mapValues(TypedTensorFactory.create)
+        _.subtensors.mapValues(TypedTensorFactory.create).toMap
       }
     }
 
     override def setter: (TensorProto, Seq[Map[String, TypedTensor[_]]]) => TensorProto = { (tensor, maps) =>
       val protoMaps = maps.map { tensorMap =>
-        MapTensorData(tensorMap.mapValues(_.toProto))
+        MapTensorData(tensorMap.mapValues(_.toProto).toMap)
       }
       tensor.withMapVal(protoMaps)
     }

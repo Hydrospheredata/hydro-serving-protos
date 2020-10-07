@@ -1,9 +1,9 @@
 import io.hydrosphere.serving.model.api.json.ColumnShaper
 import io.hydrosphere.serving.tensorflow.TensorShape
-import org.scalatest.FunSpec
+import org.scalatest.funspec.AnyFunSpec
 import spray.json.{JsArray, JsNumber}
 
-class ColumnShaperSpec extends FunSpec{
+class ColumnShaperSpec extends AnyFunSpec{
   describe("ColumnShaper") {
     it("should shape any-shape tensor") {
       val data = Seq(1,2,3,4,5,6,7,8,9,10).map(JsNumber.apply)

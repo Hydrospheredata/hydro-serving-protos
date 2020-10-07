@@ -30,12 +30,12 @@ class InfoFieldBuilder(val field: ModelField, val dataType: DataType) {
     }
     val factory = TypedTensorFactory(dataType)
     val convertedData = factory match {
-      case FloatTensor | SComplexTensor => reshapedData.map(_.asInstanceOf[JsNumber].value.floatValue())
-      case DoubleTensor | DComplexTensor => reshapedData.map(_.asInstanceOf[JsNumber].value.doubleValue())
-      case Uint64Tensor | Int64Tensor => reshapedData.map(_.asInstanceOf[JsNumber].value.longValue())
+      case FloatTensor | SComplexTensor => reshapedData.map(_.asInstanceOf[JsNumber].value.floatValue)
+      case DoubleTensor | DComplexTensor => reshapedData.map(_.asInstanceOf[JsNumber].value.doubleValue)
+      case Uint64Tensor | Int64Tensor => reshapedData.map(_.asInstanceOf[JsNumber].value.longValue)
       case Int8Tensor | Uint8Tensor |
            Int16Tensor | Uint16Tensor |
-           Int32Tensor | Uint32Tensor => reshapedData.map(_.asInstanceOf[JsNumber].value.intValue())
+           Int32Tensor | Uint32Tensor => reshapedData.map(_.asInstanceOf[JsNumber].value.intValue)
       case StringTensor => reshapedData.map(_.asInstanceOf[JsString].value)
       case BoolTensor => reshapedData.map(_.asInstanceOf[JsBoolean].value)
     }

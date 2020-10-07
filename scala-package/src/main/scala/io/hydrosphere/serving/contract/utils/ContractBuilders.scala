@@ -15,12 +15,12 @@ object ContractBuilders {
     ModelField(
       name,
       shape,
-      profile,
       ModelField.TypeOrSubfields.Subfields(
         ModelField.Subfield(
           subFields
         )
-      )
+      ),
+      profile
     )
   }
 
@@ -29,7 +29,7 @@ object ContractBuilders {
     dataType: DataType,
     shape: Option[TensorShapeProto],
     profile: DataProfileType = DataProfileType.NONE): ModelField = {
-    ModelField(name, shape, profile, ModelField.TypeOrSubfields.Dtype(dataType))
+    ModelField(name, shape, ModelField.TypeOrSubfields.Dtype(dataType), profile)
   }
 
   def simpleTensorModelField(
@@ -40,8 +40,8 @@ object ContractBuilders {
     ModelField(
       name,
       shape.toProto,
-      profile,
-      ModelField.TypeOrSubfields.Dtype(dataType)
+      ModelField.TypeOrSubfields.Dtype(dataType),
+      profile
     )
   }
 }

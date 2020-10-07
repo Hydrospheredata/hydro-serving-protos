@@ -3,10 +3,10 @@ import io.hydrosphere.serving.contract.utils.ContractBuilders
 import io.hydrosphere.serving.model.api.ops.ModelSignatureOps
 import io.hydrosphere.serving.tensorflow.TensorShape
 import io.hydrosphere.serving.tensorflow.types.DataType
-import org.scalatest.WordSpec
+import org.scalatest.wordspec.AnyWordSpec
 
 
-class ContractOpsSpec extends WordSpec {
+class ContractOpsSpec extends AnyWordSpec {
 
   "ContractOps" can {
     "merge" should {

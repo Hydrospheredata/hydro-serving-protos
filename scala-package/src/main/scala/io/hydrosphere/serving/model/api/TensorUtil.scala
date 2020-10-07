@@ -23,7 +23,7 @@ object TensorUtil {
           while (isShapeOk && reverseTensorDimIter.hasNext) {
             val currentDim = reverseTensorDimIter.next()
             val subCount = dimLen.toDouble / currentDim.toDouble
-            if (subCount.isWhole()) { // ok
+            if (subCount.isWhole) { // ok
               dimLen = subCount.toInt
               if (subCount < 0) {
                 actualDims(actualDimId) = dimLen.abs
