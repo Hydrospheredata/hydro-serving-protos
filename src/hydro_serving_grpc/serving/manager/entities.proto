@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+package hydrosphere.serving.manager;
+option java_package = "io.hydrosphere.serving.proto.manager";
+
+import "hydro_serving_grpc/serving/contract/signature.proto";
+
+message DockerImage {
+    string name = 1;
+    string tag = 2;
+}
+
+message MonitoringConfiguration {
+    uint32 batch_size = 1;
+}
+
+enum ModelVersionStatus {
+    Failed = 0;
+    Success = 1;
+    Building = 2;
+}
+
+message ModelVersion {
+    int64 id = 1;
+    string name = 6;
+    int64 version = 2;
+    ModelVersionStatus status = 4;
+    serving.contract.ModelSignature signature = 7;
+    DockerImage image = 31;
+    string image_sha = 32;
+    DockerImage runtime = 33;
+    map<string, string> metadata = 34;
+    MonitoringConfiguration monitoring_configuration = 35;
+    string depconfig_name = 36;
+}
+
+message Servable {
+    enum ServableStatus {
+        NOT_SERVING = 0;
+        NOT_AVAILABlE = 1;
+        STARTING = 2;
+        SERVING = 3;
+    }
+    string host = 1;
+    int32 port = 2;
+    int32 weight = 3;
+    ModelVersion model_version = 4;
+    string name = 5;
+    ServableStatus status = 6;
+    string status_message = 7;
+    map<string, string> metadata = 8;
+}
+
+message Stage {
+    string stage_id = 1;
+    serving.contract.ModelSignature signature = 2;
+    repeated Servable servable = 3;
+}
+
+message Application {
+    enum ApplicationStatus {
+        FAILED = 0;
+        ASSEMBLING = 1;
+        READY = 2;
+    }
+    string id = 1;
+    string name = 2;
+    serving.contract.ModelSignature signature = 3;
+    repeated Stage pipeline = 4;
+    ApplicationStatus status = 5;
+    string status_message = 6;
+    map<string, string> metadata = 7;
+}
+
+message ThresholdConfig {
+    enum CmpOp {
+        EQ = 0;
+        NOT_EQ = 1;
+        GREATER = 2;
+        LESS = 3;
+        GREATER_EQ = 4;
+        LESS_EQ = 5;
+    }
+    double value = 1;
+    CmpOp comparison = 2;
+}
+
+message CustomModelMetric {
+    int64 monitor_model_id = 1;
+    ThresholdConfig threshold = 2; 
+    Servable servable = 3;
+}
+
+message MetricSpec {
+    string id = 1;
+    string name = 2;
+    int64 model_version_id = 3;
+    CustomModelMetric custom_model_config = 4;
+}

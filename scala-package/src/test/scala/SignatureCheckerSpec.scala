@@ -1,8 +1,7 @@
-import io.hydrosphere.serving.contract.model_signature.ModelSignature
-import io.hydrosphere.serving.contract.utils.ContractBuilders
-import io.hydrosphere.serving.model.api.ops.ModelSignatureOps
-import io.hydrosphere.serving.tensorflow.TensorShape
-import io.hydrosphere.serving.tensorflow.types.DataType
+import io.hydrosphere.serving.proto.contract.ops.ModelSignatureOps
+import io.hydrosphere.serving.proto.contract.signature.{ModelSignature, SignatureBuilder}
+import io.hydrosphere.serving.proto.contract.tensor.definitions.Shape
+import io.hydrosphere.serving.proto.contract.types.DataType
 import org.scalatest.wordspec.AnyWordSpec
 
 class SignatureCheckerSpec extends AnyWordSpec {
@@ -12,19 +11,19 @@ class SignatureCheckerSpec extends AnyWordSpec {
         val sig1 = ModelSignature(
           "sig1",
           List(
-            ContractBuilders.simpleTensorModelField("in1", DataType.DT_STRING, TensorShape.scalar)
+            SignatureBuilder.simpleTensorModelField("in1", DataType.DT_STRING, Shape.scalar)
           ),
           List(
-            ContractBuilders.simpleTensorModelField("out1", DataType.DT_STRING, TensorShape.scalar)
+            SignatureBuilder.simpleTensorModelField("out1", DataType.DT_STRING, Shape.scalar)
           )
         )
         val sig2 = ModelSignature(
           "sig2",
           List(
-            ContractBuilders.simpleTensorModelField("out1", DataType.DT_STRING, TensorShape.scalar)
+            SignatureBuilder.simpleTensorModelField("out1", DataType.DT_STRING, Shape.scalar)
           ),
           List(
-            ContractBuilders.simpleTensorModelField("out2", DataType.DT_STRING, TensorShape.scalar)
+            SignatureBuilder.simpleTensorModelField("out2", DataType.DT_STRING, Shape.scalar)
           )
         )
         assert(ModelSignatureOps.append(sig1, sig2).isRight)
@@ -34,19 +33,19 @@ class SignatureCheckerSpec extends AnyWordSpec {
         val sig1 = ModelSignature(
           "sig1",
           List(
-            ContractBuilders.simpleTensorModelField("in1", DataType.DT_DOUBLE, TensorShape.vector(5))
+            SignatureBuilder.simpleTensorModelField("in1", DataType.DT_DOUBLE, Shape.vector(5))
           ),
           List(
-            ContractBuilders.simpleTensorModelField("out1", DataType.DT_DOUBLE, TensorShape.vector(5))
+            SignatureBuilder.simpleTensorModelField("out1", DataType.DT_DOUBLE, Shape.vector(5))
           )
         )
         val sig2 = ModelSignature(
           "sig2",
           List(
-            ContractBuilders.simpleTensorModelField("out1", DataType.DT_DOUBLE, TensorShape.vector(5))
+            SignatureBuilder.simpleTensorModelField("out1", DataType.DT_DOUBLE, Shape.vector(5))
           ),
           List(
-            ContractBuilders.simpleTensorModelField("out2", DataType.DT_DOUBLE, TensorShape.vector(5))
+            SignatureBuilder.simpleTensorModelField("out2", DataType.DT_DOUBLE, Shape.vector(5))
 
           )
         )
@@ -57,19 +56,19 @@ class SignatureCheckerSpec extends AnyWordSpec {
         val sig1 = ModelSignature(
           "sig1",
           List(
-            ContractBuilders.simpleTensorModelField("in1", DataType.DT_INT32, TensorShape.vector(3))
+            SignatureBuilder.simpleTensorModelField("in1", DataType.DT_INT32, Shape.vector(3))
           ),
           List(
-            ContractBuilders.simpleTensorModelField("out1", DataType.DT_INT32, TensorShape.vector(3))
+            SignatureBuilder.simpleTensorModelField("out1", DataType.DT_INT32, Shape.vector(3))
           )
         )
         val sig2 = ModelSignature(
           "sig2",
           List(
-            ContractBuilders.simpleTensorModelField("out1", DataType.DT_INT32, TensorShape.vector(-1))
+            SignatureBuilder.simpleTensorModelField("out1", DataType.DT_INT32, Shape.vector(-1))
           ),
           List(
-            ContractBuilders.simpleTensorModelField("out2", DataType.DT_INT32, TensorShape.vector(-1))
+            SignatureBuilder.simpleTensorModelField("out2", DataType.DT_INT32, Shape.vector(-1))
 
           )
         )
@@ -80,19 +79,19 @@ class SignatureCheckerSpec extends AnyWordSpec {
         val sig1 = ModelSignature(
           "sig1",
           List(
-            ContractBuilders.simpleTensorModelField("in1", DataType.DT_DOUBLE, TensorShape.mat(5, 2))
+            SignatureBuilder.simpleTensorModelField("in1", DataType.DT_DOUBLE, Shape.mat(5, 2))
           ),
           List(
-            ContractBuilders.simpleTensorModelField("out1", DataType.DT_DOUBLE, TensorShape.mat(5, 2))
+            SignatureBuilder.simpleTensorModelField("out1", DataType.DT_DOUBLE, Shape.mat(5, 2))
           )
         )
         val sig2 = ModelSignature(
           "sig2",
           List(
-            ContractBuilders.simpleTensorModelField("out1", DataType.DT_DOUBLE, TensorShape.mat(5, 2))
+            SignatureBuilder.simpleTensorModelField("out1", DataType.DT_DOUBLE, Shape.mat(5, 2))
           ),
           List(
-            ContractBuilders.simpleTensorModelField("out2", DataType.DT_DOUBLE, TensorShape.mat(5, 2))
+            SignatureBuilder.simpleTensorModelField("out2", DataType.DT_DOUBLE, Shape.mat(5, 2))
 
           )
         )
@@ -103,19 +102,19 @@ class SignatureCheckerSpec extends AnyWordSpec {
         val sig1 = ModelSignature(
           "sig1",
           List(
-            ContractBuilders.simpleTensorModelField("in1", DataType.DT_DOUBLE, TensorShape.mat(5, 2))
+            SignatureBuilder.simpleTensorModelField("in1", DataType.DT_DOUBLE, Shape.mat(5, 2))
           ),
           List(
-            ContractBuilders.simpleTensorModelField("out1", DataType.DT_DOUBLE, TensorShape.mat(5, 2))
+            SignatureBuilder.simpleTensorModelField("out1", DataType.DT_DOUBLE, Shape.mat(5, 2))
           )
         )
         val sig2 = ModelSignature(
           "sig2",
           List(
-            ContractBuilders.simpleTensorModelField("out1", DataType.DT_DOUBLE, TensorShape.mat(5, -1))
+            SignatureBuilder.simpleTensorModelField("out1", DataType.DT_DOUBLE, Shape.mat(5, -1))
           ),
           List(
-            ContractBuilders.simpleTensorModelField("out2", DataType.DT_DOUBLE, TensorShape.mat(5, -1))
+            SignatureBuilder.simpleTensorModelField("out2", DataType.DT_DOUBLE, Shape.mat(5, -1))
 
           )
         )
@@ -129,19 +128,19 @@ class SignatureCheckerSpec extends AnyWordSpec {
         val sig1 = ModelSignature(
           "sig1",
           List(
-            ContractBuilders.simpleTensorModelField("in1", DataType.DT_STRING, TensorShape.scalar)
+            SignatureBuilder.simpleTensorModelField("in1", DataType.DT_STRING, Shape.scalar)
           ),
           List(
-            ContractBuilders.simpleTensorModelField("out1", DataType.DT_STRING, TensorShape.scalar)
+            SignatureBuilder.simpleTensorModelField("out1", DataType.DT_STRING, Shape.scalar)
           )
         )
         val sig2 = ModelSignature(
           "sig2",
           List(
-            ContractBuilders.simpleTensorModelField("out1", DataType.DT_INT32, TensorShape.scalar)
+            SignatureBuilder.simpleTensorModelField("out1", DataType.DT_INT32, Shape.scalar)
           ),
           List(
-            ContractBuilders.simpleTensorModelField("out2", DataType.DT_INT32, TensorShape.scalar)
+            SignatureBuilder.simpleTensorModelField("out2", DataType.DT_INT32, Shape.scalar)
           )
         )
         assert(ModelSignatureOps.append(sig1, sig2).isLeft)
@@ -151,19 +150,19 @@ class SignatureCheckerSpec extends AnyWordSpec {
         val sig1 = ModelSignature(
           "sig1",
           List(
-            ContractBuilders.simpleTensorModelField("in1", DataType.DT_STRING, TensorShape.vector(3))
+            SignatureBuilder.simpleTensorModelField("in1", DataType.DT_STRING, Shape.vector(3))
           ),
           List(
-            ContractBuilders.simpleTensorModelField("out1", DataType.DT_STRING, TensorShape.vector(3))
+            SignatureBuilder.simpleTensorModelField("out1", DataType.DT_STRING, Shape.vector(3))
           )
         )
         val sig2 = ModelSignature(
           "sig2",
           List(
-            ContractBuilders.simpleTensorModelField("out1", DataType.DT_INT32, TensorShape.vector(4))
+            SignatureBuilder.simpleTensorModelField("out1", DataType.DT_INT32, Shape.vector(4))
           ),
           List(
-            ContractBuilders.simpleTensorModelField("out2", DataType.DT_INT32, TensorShape.vector(4))
+            SignatureBuilder.simpleTensorModelField("out2", DataType.DT_INT32, Shape.vector(4))
           )
         )
         assert(ModelSignatureOps.append(sig1, sig2).isLeft)
@@ -173,19 +172,19 @@ class SignatureCheckerSpec extends AnyWordSpec {
         val sig1 = ModelSignature(
           "sig1",
           List(
-            ContractBuilders.simpleTensorModelField("in1", DataType.DT_DOUBLE, TensorShape.vector(4))
+            SignatureBuilder.simpleTensorModelField("in1", DataType.DT_DOUBLE, Shape.vector(4))
           ),
           List(
-            ContractBuilders.simpleTensorModelField("out1", DataType.DT_DOUBLE, TensorShape.vector(4))
+            SignatureBuilder.simpleTensorModelField("out1", DataType.DT_DOUBLE, Shape.vector(4))
           )
         )
         val sig2 = ModelSignature(
           "sig2",
           List(
-            ContractBuilders.simpleTensorModelField("out1", DataType.DT_DOUBLE, TensorShape.vector(3))
+            SignatureBuilder.simpleTensorModelField("out1", DataType.DT_DOUBLE, Shape.vector(3))
           ),
           List(
-            ContractBuilders.simpleTensorModelField("out2", DataType.DT_DOUBLE, TensorShape.vector(3))
+            SignatureBuilder.simpleTensorModelField("out2", DataType.DT_DOUBLE, Shape.vector(3))
           )
         )
         assert(ModelSignatureOps.append(sig1, sig2).isLeft)
@@ -195,17 +194,17 @@ class SignatureCheckerSpec extends AnyWordSpec {
         val sig1 = ModelSignature(
           "sig1",
           List(
-            ContractBuilders.simpleTensorModelField("in1", DataType.DT_DOUBLE, TensorShape.vector(4))
+            SignatureBuilder.simpleTensorModelField("in1", DataType.DT_DOUBLE, Shape.vector(4))
           ),
           List(
-            ContractBuilders.simpleTensorModelField("out1", DataType.DT_DOUBLE, TensorShape.vector(4))
+            SignatureBuilder.simpleTensorModelField("out1", DataType.DT_DOUBLE, Shape.vector(4))
           )
         )
         val sig2 = ModelSignature(
           "sig2",
           List(),
           List(
-            ContractBuilders.simpleTensorModelField("out2", DataType.DT_DOUBLE, TensorShape.vector(4))
+            SignatureBuilder.simpleTensorModelField("out2", DataType.DT_DOUBLE, Shape.vector(4))
           )
         )
         assert(ModelSignatureOps.append(sig1, sig2).isLeft)
@@ -215,17 +214,17 @@ class SignatureCheckerSpec extends AnyWordSpec {
         val sig1 = ModelSignature(
           "sig1",
           List(
-            ContractBuilders.simpleTensorModelField("in1", DataType.DT_DOUBLE, TensorShape.vector(4))
+            SignatureBuilder.simpleTensorModelField("in1", DataType.DT_DOUBLE, Shape.vector(4))
           ),
           List()
         )
         val sig2 = ModelSignature(
           "sig2",
           List(
-            ContractBuilders.simpleTensorModelField("in1", DataType.DT_DOUBLE, TensorShape.vector(4))
+            SignatureBuilder.simpleTensorModelField("in1", DataType.DT_DOUBLE, Shape.vector(4))
           ),
           List(
-            ContractBuilders.simpleTensorModelField("out2", DataType.DT_DOUBLE, TensorShape.vector(4))
+            SignatureBuilder.simpleTensorModelField("out2", DataType.DT_DOUBLE, Shape.vector(4))
           )
         )
         assert(ModelSignatureOps.append(sig1, sig2).isLeft)

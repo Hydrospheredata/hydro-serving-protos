@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package hydrosphere.serving.runtime;
+option java_package = "io.hydrosphere.serving.proto.runtime";
+
+import "hydro_serving_grpc/serving/contract/tensor.proto";
+
+message PredictRequest {
+    // Input tensors.
+    map<string, serving.contract.Tensor> inputs = 1;
+}
+
+// Response for PredictRequest on successful run.
+message PredictResponse {
+    // Output tensors.
+    map<string, serving.contract.Tensor> outputs = 1;
+}
+
+service PredictionService {
+    // Execute model prediction
+    rpc Predict(PredictRequest) returns (PredictResponse);
+}
