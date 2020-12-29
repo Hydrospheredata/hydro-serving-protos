@@ -33,6 +33,6 @@ object TensorJsonLens {
   }
 
   def mapToJson(tensors: Map[String, TypedTensor[_]]): Json = {
-    Json.fromFields(tensors.view.mapValues(toJson))
+    Json.fromFields(tensors.mapValues(toJson))
   }
 }

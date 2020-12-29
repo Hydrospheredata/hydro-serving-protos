@@ -30,10 +30,12 @@ class InfoFieldBuilder(val field: ModelField, val dataType: DataType) {
       case StringTensor => flattened.map(_.as[String])
       case BoolTensor => flattened.map(_.as[Boolean])
     }
-    val (errors: Seq[DecodingFailure], tensors: Seq[Any]) = convertedData.partitionMap(identity)
+    val (errors, tensors) = convertedData partition {
+      case e: Either[DecodingFailure, Any] => true
+      case _ => false
+    }
     if (errors.nonEmpty) {
-      val failures: Seq[String] = convertedData.collect { case Left(error) => error.message }
-      Left(InvalidFieldValuesConversion(failures))
+      Left(InvalidFieldValuesConversion(convertedData.collect { case Left(error) => error.message }))
     } else {
       toTensor(factory, tensors)
     }

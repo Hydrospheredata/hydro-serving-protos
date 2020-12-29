@@ -6,5 +6,5 @@ import io.hydrosphere.serving.proto.contract.tensor.definitions.MapTensor
 
 object MapToJson extends TensorJsonLens[MapTensor] {
   override def convert = x =>
-    Json.fromFields(x.view.mapValues(TensorJsonLens.toJson))
+    Json.fromFields(x.mapValues(TensorJsonLens.toJson))
 }

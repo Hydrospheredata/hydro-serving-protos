@@ -1,6 +1,6 @@
 package io.hydrosphere.serving.proto.contract.tensor.builders
 
-import io.circe.{ACursor, HCursor, Json}
+import io.circe.{ACursor, DecodingFailure, HCursor, Json}
 import io.hydrosphere.serving.proto.contract.errors.ValidationError
 import io.hydrosphere.serving.proto.contract.errors.ValidationError.{FieldMissingError, IncompatibleFieldTypeError}
 import io.hydrosphere.serving.proto.contract.field.ModelField
@@ -26,11 +26,14 @@ class NestedFieldBuilder(val modelField: ModelField, val subfields: Seq[ModelFie
             case None => Left(FieldMissingError(field.name))
           }
         }
-      val (errors, tensors) = convertions.partitionMap(identity)
+      val (errors, tensors) = convertions partition {
+        case e: Either[ValidationError, (String, TypedTensor[_])] => true
+        case _ => false
+      }
       if (errors.nonEmpty) {
-        Left(errors)
+        Left(errors.collect { case Left(error) => error })
       } else {
-        Right(MapTensor(Shape(modelField.shape), Seq(tensors.toMap)))
+        Right(MapTensor(Shape(modelField.shape), Seq(tensors.collect { case Right(tensor) => tensor }.toMap)))
       }
     } else if (data.isArray) {
       @tailrec
@@ -38,11 +41,14 @@ class NestedFieldBuilder(val modelField: ModelField, val subfields: Seq[ModelFie
         case Some(json) => loop(cursor.right, acc :+ convert(json))
         case None => Nil
       }
-      val (errors, tensors) = loop(cursor.downArray, List()).partitionMap(identity)
+      val (errors, tensors) = loop(cursor.downArray, List()) partition {
+        case e: ConvertResult => true
+        case _ => false
+      }
       if (errors.nonEmpty) {
-        Left(errors.flatten)
+        Left(errors.collect { case Left(error) => error }.flatten)
       } else {
-        Right(MapTensor(Shape(modelField.shape), tensors.map(_.data.head)))
+        Right(MapTensor(Shape(modelField.shape), tensors.collect { case Right(tensor) => tensor }.map(_.data.head)))
       }
     } else if (data.isNull) {
       Left(Seq(FieldMissingError(modelField.name)))
