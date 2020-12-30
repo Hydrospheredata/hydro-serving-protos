@@ -206,7 +206,7 @@ def releaseService(String xVersion, String yVersion){
       //Set global git
       sh script: "git diff", label: "show diff"
       sh script: "git commit -a -m 'Bump to $yVersion'", label: "commit to git"
-      sh script: "git push --set-upstream origin master", label: "push all file to git"
+      sh script: "git push https://$username:$password@github.com/Hydrospheredata/${SERVICENAME}.git --set-upstream master", label: "push all file to git"
       sh script: "git tag -a $yVersion -m 'Bump $xVersion to $yVersion version'",label: "set git tag"
       sh script: "git push --set-upstream origin master --tags",label: "push tag and create release"
       //Create release from tag
@@ -221,7 +221,7 @@ node('hydrocentral') {
       //Set commit author
       sh script: "git config --global user.name \"HydroRobot\"", label: "Set username"
       sh script: "git config --global user.email \"robot@hydrosphere.io\"", label: "Set user email"
-      checkoutRepo("https://github.com/Hydrospheredata/$SERVICENAME" + '.git')
+      checkoutRepo("https://github.com/Hydrospheredata/${SERVICENAME}.git")
       AUTHOR = sh(script:"git log -1 --pretty=format:'%an'", returnStdout: true, label: "get last commit author").trim()
     }
 
