@@ -2,7 +2,8 @@ properties([
   parameters([
     choice(choices: ['patch','minor','major','tag','addon'], name: 'patchVersion', description: 'What needs to be bump?'),
     string(defaultValue:'', description: 'Force set newVersion or leave empty', name: 'newVersion', trim: false),
-    choice(choices: ['local', 'global'], name: 'release', description: 'It\'s local release or global?'),
+    choice(choices: ['false', 'true'], name: 'release', description: 'Release python package?'),
+    choice(choices: ['local', 'global'], name: 'releaseType', description: 'It\'s local release or global?'),
    ])
 ])
 
@@ -235,8 +236,8 @@ node('hydrocentral') {
 
     stage('Release'){
       echo "Change target: ${env.CHANGE_TARGET}"
-      if (BRANCH_NAME == 'master' && env.CHANGE_TARGET == null || BRANCH_NAME == 'main' && env.CHANGE_TARGET == null ){ //Not run if PR, only manual from master
-          if (params.release == 'global'){
+      if (BRANCH_NAME == 'master' && params.release == 'true' || BRANCH_NAME == 'main' && params.release == 'true' ){ //Run only manual from master
+          if (params.releaseType == 'global'){
               oldVersion = sh(script: "curl -Ls https://pypi.org/pypi/hydro-serving-grpc/json | jq -r .info.version", returnStdout: true, label: "get grpc version").trim()
               sh script: "echo oldVersion > version", label: "change version"
           } else {
@@ -250,13 +251,13 @@ node('hydrocentral') {
         }
       }
     //post if success
-    if (params.release == 'local' && BRANCH_NAME == 'master' && env.CHANGE_TARGET == null){
+    if (params.releaseType == 'local' && params.release == 'true'){
         slackMessage()
     }
   } catch (e) {
   //post if failure
     currentBuild.result = 'FAILURE'
-    if (params.release == 'local' && BRANCH_NAME == 'master' && env.CHANGE_TARGET == null){
+    if (params.releaseType == 'local' && params.release == 'true'){
         slackMessage()
     }
       throw e
