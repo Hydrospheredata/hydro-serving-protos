@@ -19,7 +19,7 @@ def getVersion(){
         version = sh(script: "cat \"version\" | sed 's/\\\"/\\\\\"/g'", returnStdout: true ,label: "get version").trim()
         return version
     }catch(e){
-        return "file " + stage + "/version not found" 
+        return "file version not found" 
     }
 }
 
@@ -176,7 +176,7 @@ def buildPython(String command, String version){
             pip install wheel~=0.34.2
             pip install twine
             pip install -r \"$WORKSPACE/python-package/requirements.txt\" &&
-            python -m twine upload --config-file \"${env.WORKSPACE}/python-package/.pypirc\" -r testpypi \"${env.WORKSPACE}/python-package/dist/*\"""",label: "Release python package"
+            python -m twine upload --config-file \"${env.WORKSPACE}/python-package/.pypirc\" -r pypi \"${env.WORKSPACE}/python-package/dist/*\"""",label: "Release python package"
         }catch(err){
           echo "$err"
         }
