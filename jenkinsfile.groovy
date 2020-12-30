@@ -103,6 +103,59 @@ EOF""", label: "Set bumpversion configfile"
     }
 }
 
+def slackMessage(){
+    withCredentials([string(credentialsId: 'slack_message_url', variable: 'slack_url')]) {
+    //beautiful block
+      def json = """
+{
+	"blocks": [
+		{
+			"type": "header",
+			"text": {
+				"type": "plain_text",
+				"text": "$SERVICENAME: release - ${currentBuild.currentResult}!",
+				"emoji": true
+			}
+		},
+		{
+			"type": "section",
+			"block_id": "section567",
+			"text": {
+				"type": "mrkdwn",
+				"text": "Build info:\n    Project: $JOB_NAME\n    Author: $AUTHOR\n    SHA: $newVersion"
+			},
+			"accessory": {
+				"type": "image",
+				"image_url": "https://res-5.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_170,w_170,f_auto,b_white,q_auto:eco/oxpejnx8k2ixo0bhfsbo",
+				"alt_text": "Hydrospere loves you!"
+			}
+		},
+		{
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "You can see the assembly details by clicking on the button"
+			},
+			"accessory": {
+				"type": "button",
+				"text": {
+					"type": "plain_text",
+					"text": "Details",
+					"emoji": true
+				},
+				"value": "Details",
+				"url": "${env.BUILD_URL}",
+				"action_id": "button-action"
+			}
+		}
+	]
+}
+"""
+    //Send message
+        sh label:"send slack message",script:"curl -X POST \"$slack_url\" -H \"Content-type: application/json\" --data '${json}'"
+    }
+}
+
 //Собираем питонячие проекты, тестируем
 def buildPython(String command, String version){
     configFileProvider([configFile(fileId: 'PYPIDeployConfiguration', targetLocation: "${env.WORKSPACE}/python-package/.pypirc", variable: 'PYPI_SETTINGS')]) {
