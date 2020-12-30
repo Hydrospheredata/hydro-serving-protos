@@ -226,6 +226,7 @@ node('hydrocentral') {
     }
 
     stage('Test'){
+      echo "Change id: ${env.CHANGE_ID}"
       if (env.CHANGE_ID != null){ 
         currentVersion = getVersion()
         buildPython("build", currentVersion)
