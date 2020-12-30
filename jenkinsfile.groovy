@@ -246,13 +246,13 @@ node('hydrocentral') {
         }
       }
     //post if success
-    if (params.release == 'local'){
+    if (params.release == 'local' && BRANCH_NAME == 'master' && env.CHANGE_ID == null){
         slackMessage()
     }
   } catch (e) {
   //post if failure
     currentBuild.result = 'FAILURE'
-    if (params.release == 'local'){
+    if (params.release == 'local' && BRANCH_NAME == 'master' && env.CHANGE_ID == null){
         slackMessage()
     }
       throw e
