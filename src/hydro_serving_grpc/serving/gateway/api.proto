@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package hydrosphere.serving.gateway;
+option cc_enable_arenas = true;
+option java_package = "io.hydrosphere.serving.proto.gateway";
+
+import "hydro_serving_grpc/serving/contract/tensor.proto";
+import "hydro_serving_grpc/serving/runtime/api.proto";
+
+message GatewayPredictRequest {
+    string name = 1;
+    map<string, serving.contract.Tensor> data = 2;
+}
+
+// Extensions to the PredictionService API for a gateway
+service GatewayService {
+    // Send prediction request to specified servable. Sends data to shadow.
+    rpc PredictServable (GatewayPredictRequest) returns (serving.runtime.PredictResponse);
+    
+     // Makes prediction but doesn't send it to shadow
+    rpc ShadowlessPredictServable (GatewayPredictRequest) returns (serving.runtime.PredictResponse);
+
+    // Send prediction request to specified application. Sends data to shadow.
+    rpc PredictApplication (GatewayPredictRequest) returns (serving.runtime.PredictResponse);
+}

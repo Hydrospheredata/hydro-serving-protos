@@ -4,19 +4,22 @@ organization := "io.hydrosphere"
 name := "serving-grpc-scala"
 version := IO.read(file("../version")).trim
 
-scalaVersion := "2.12.8"
-crossScalaVersions := Seq("2.12.8", "2.13.3")
+scalaVersion := "2.13.2"
+crossScalaVersions := Seq("2.13.2", "2.12.11")
 
 publishMavenStyle := true
 
+val circeVersion = "0.13.0"
 libraryDependencies ++= Seq(
-  "org.scalactic" %% "scalactic" % "3.2.2",
-  "org.scalatest" %% "scalatest" % "3.2.2" % "test",
-  "io.spray" %% "spray-json" % "1.3.5" % "provided",
+  "org.scalatest" %% "scalatest" % "3.1.1" % "test",
   "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion,
   "io.grpc" % "grpc-netty" % scalapb.compiler.Version.grpcJavaVersion,
   "com.thesamet.scalapb" %% "scalapb-runtime-grpc" % scalapb.compiler.Version.scalapbVersion,
-  "com.google.api.grpc" % "googleapis-common-protos" % "0.0.3" % "protobuf"
+  "com.google.api.grpc" % "googleapis-common-protos" % "0.0.3" % "protobuf",
+  "io.circe" %% "circe-core" % circeVersion,
+  "io.circe" %% "circe-optics" % circeVersion,
+  "io.circe" %% "circe-generic" % circeVersion,
+  "io.circe" %% "circe-parser" % circeVersion
 )
 
 PB.protoSources in Compile := Seq(

@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package hydrosphere.serving.contract;
+option java_package = "io.hydrosphere.serving.proto.contract";
+
+import "hydro_serving_grpc/serving/contract/types.proto";
+import "hydro_serving_grpc/serving/contract/tensor.proto";
+
+message ModelField {
+    message Subfield {
+        repeated ModelField data = 1;
+    }
+
+    string name = 1;
+
+    contract.TensorShape shape = 2;
+
+    oneof type_or_subfields {
+        Subfield subfields = 3;
+        contract.DataType dtype = 4;
+    }
+
+    DataProfileType profile = 5;
+}
