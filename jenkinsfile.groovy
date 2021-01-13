@@ -209,7 +209,7 @@ def releaseService(String xVersion, String yVersion){
       sh script: "git commit --allow-empty -a -m 'Bump to $yVersion'", label: "commit to git"
       sh script: "git push https://$username:$password@github.com/Hydrospheredata/${SERVICENAME}.git --set-upstream master", label: "push all file to git"
       sh script: "git tag -a $yVersion -m 'Bump $xVersion to $yVersion version'",label: "set git tag"
-      sh script: "git push --set-upstream origin master --tags",label: "push tag and create release"
+      sh script: "git push https://$username:$password@github.com/Hydrospheredata/${SERVICENAME}.git --set-upstream master --tags",label: "push tag and create release"
       //Create release from tag
       sh script: "curl -X POST -H \"Accept: application/vnd.github.v3+json\" -H \"Authorization: token ${password}\" https://api.github.com/repos/Hydrospheredata/${SERVICENAME}/releases -d '{\"tag_name\":\"${yVersion}\",\"name\": \"${yVersion}\",\"body\": \"Bump to ${yVersion}\",\"draft\": false,\"prerelease\": false}'"
   }
