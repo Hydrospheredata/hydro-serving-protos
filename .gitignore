@@ -9,3 +9,5 @@
 /typescript-package/node_modules/*
 /.vscode/
 /hydro-serving-protos/
+venv/
+bumpversion.cfg
