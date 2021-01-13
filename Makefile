@@ -29,7 +29,7 @@ ifeq ($(INSTALL_PY_REQ), true)
 	pip install -r python-package/requirements.txt
 endif
 
-test: test-python test-scala
+test: test-scala # test-python 
 
 test-python:
 	cd python-package && $(PYTHON) setup.py test

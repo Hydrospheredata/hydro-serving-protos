@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package hydrosphere.monitoring.sonar;
+option java_package = "io.hydrosphere.monitoring.proto.sonar";
+
+import "hydro_serving_grpc/serving/runtime/api.proto";
+
+message ApplicationInfo {
+    string application_name = 1;
+    string stage_id = 2;
+}
+
+message ExecutionMetadata {
+    string request_id = 1;
+    int64 model_version_id = 2;
+    string model_name = 3;
+    int64 model_version = 4;
+    string signature_name = 5;
+    string servable_name = 6;
+    double latency = 7;
+    ApplicationInfo app_info = 8;
+}
+
+message ExecutionInformation {
+    serving.runtime.PredictRequest request = 1;
+    oneof response_or_error {
+        string error = 2;
+        serving.runtime.PredictResponse response = 3;
+    }
+    ExecutionMetadata metadata = 4;
+}
