@@ -31,7 +31,7 @@ class InfoFieldBuilder(val field: ModelField, val dataType: DataType) {
       case BoolTensor => flattened.map(_.as[Boolean])
     }
     val (errors, tensors) = convertedData partition {
-      case e: Either[DecodingFailure, Any] => true
+      case Left(_) => true
       case _ => false
     }
     if (errors.nonEmpty) {
