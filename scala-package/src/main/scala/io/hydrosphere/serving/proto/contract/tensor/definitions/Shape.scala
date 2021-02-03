@@ -17,10 +17,7 @@ object Shape {
   }
 
   case class LocalShape(dims: Seq[Long]) extends Shape {
-    override def toProto: Option[TensorShape] = dims match {
-      case Nil => None
-      case _ => Some(TensorShape(dims=dims))
-    }
+    override def toProto: Option[TensorShape] = Some(TensorShape(dims=dims))
   }
 
   def any: Shape = AnyShape
