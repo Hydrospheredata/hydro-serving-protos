@@ -9,7 +9,7 @@ sealed trait Shape {
 object Shape {
   def apply(tensorShape: Option[TensorShape]): Shape = tensorShape match {
     case Some(x) => LocalShape(x.dims)
-    case None => LocalShape(Seq.empty)
+    case None => AnyShape
   }
 
   case object AnyShape extends Shape {
