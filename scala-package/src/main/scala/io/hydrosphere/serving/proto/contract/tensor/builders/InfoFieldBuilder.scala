@@ -37,7 +37,7 @@ class InfoFieldBuilder(val field: ModelField, val dataType: DataType) {
     if (errors.nonEmpty) {
       Left(InvalidFieldValuesConversion(convertedData.collect { case Left(error) => error.message }))
     } else {
-      toTensor(factory, tensors)
+      toTensor(factory, tensors collect { case Right(v) => v})
     }
   }
 

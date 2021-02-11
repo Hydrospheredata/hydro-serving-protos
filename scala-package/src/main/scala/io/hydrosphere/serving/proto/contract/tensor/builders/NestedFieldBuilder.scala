@@ -27,7 +27,7 @@ class NestedFieldBuilder(val modelField: ModelField, val subfields: Seq[ModelFie
           }
         }
       val (errors, tensors) = convertions partition {
-        case e: Either[ValidationError, (String, TypedTensor[_])] => true
+        case Left(_) => true
         case _ => false
       }
       if (errors.nonEmpty) {
@@ -42,7 +42,7 @@ class NestedFieldBuilder(val modelField: ModelField, val subfields: Seq[ModelFie
         case None => Nil
       }
       val (errors, tensors) = loop(cursor.downArray, List()) partition {
-        case e: ConvertResult => true
+        case Left(_) => true
         case _ => false
       }
       if (errors.nonEmpty) {
