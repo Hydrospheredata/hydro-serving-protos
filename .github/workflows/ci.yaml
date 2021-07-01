@@ -27,7 +27,7 @@ jobs:
         run: make py_requirements
         
       - name: bump version
-        run: cd python-package && poetry version ${{ env.BUMP }}
+        run: cd python-package && poetry version prerelease
         
       - name: Build python
         run: make python

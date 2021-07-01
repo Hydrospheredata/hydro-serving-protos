@@ -10,7 +10,7 @@ on:
     inputs:
       bump:
         description: bump rule (major|minor|patch|premajor|preminor|prepatch|prerelease)
-        default: prepatch
+        default: prerelease
         required: false
         
       version:
