@@ -19,15 +19,10 @@ scala_publish_local: scala
 python: python_wheel
 
 python_wheel: python_grpc
-	cd $(PY_WORK_PATH) && $(PYTHON) setup.py bdist_wheel
+	cd $(PY_WORK_PATH) && poetry build
 
 python_grpc: py_requirements
 	$(PYTHON) -m grpc_tools.protoc -I $(PROTOS_PATH) --python_out=$(PY_WORK_PATH) --grpc_python_out=$(PY_WORK_PATH) $(GRPC_FILES)
-
-py_requirements:
-ifeq ($(INSTALL_PY_REQ), true)
-	pip install -r python-package/requirements.txt
-endif
 
 test: test-scala # test-python 
 
