@@ -22,6 +22,12 @@ protobuf = "^3.17.2"
 twine = "^3.4.1"
 requests = "^2.25.1"
 wheel = "^0.36.2"
+poethepoet = "^0.10.0"
+grpcio-tools = "^1.38.0"
+
+[tool.poe.tasks]
+compile = { shell = 'python -m grpc_tools.protoc -I ../src --python_out=. --grpc_python_out=. $(find ../src -regex ".*\.proto")' }
+
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
