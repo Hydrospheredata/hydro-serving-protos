@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "hydro_serving_grpc"
+version = "3.0.0-dev3"
+description = "Protobuf messages and GRPC API for Hydrosphere Serving platform"
+readme = "README.md"
+authors = ["Hydrospheredata <info@hydrosphere.io>"]
+license = "Apache 2.0"
+classifiers = [
+    'Natural Language :: English',
+    'License :: OSI Approved :: Apache Software License',
+    'Programming Language :: Python'
+]
+repository = "https://github.com/Hydrospheredata/hydro-serving-protos"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+grpcio = "^1.38.0"
+protobuf = "^3.17.2"
+
+[tool.poetry.dev-dependencies]
+
+twine = "^3.4.1"
+requests = "^2.25.1"
+wheel = "^0.36.2"
+poethepoet = "^0.10.0"
+grpcio-tools = "^1.38.0"
+
+[tool.poe.tasks]
+compile = { shell = 'python -m grpc_tools.protoc -I ../src --python_out=. --grpc_python_out=. $(find ../src -regex ".*\.proto")' }
+
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

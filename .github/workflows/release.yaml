@@ -1,0 +1,181 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+      - main
+      
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: bump rule (major|minor|patch|premajor|preminor|prepatch|prerelease)
+        default: prerelease
+        required: false
+        
+      version:
+        description: manual version
+        default: ''
+        required: false
+
+      release:
+        description: release type (local|global)
+        default: local
+        required: false
+        
+# Secrets:
+#   pypi_token - pypi API token
+      
+jobs:
+  Release:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    env:
+      BUMP: ${{ github.event.inputs.bump }} # default values for push-triggered run
+      RELEASE: local
+    steps:
+      - name: Validate inputs  #TODO create an action for this
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          case ${{ github.event.inputs.bump }} in
+            major)
+              ;;
+            premajor)
+              ;;
+            minor)
+              ;;
+            preminor)
+              ;;
+            patch)
+              ;;
+            prepatch)
+              ;;
+            prerelease)
+              ;;
+            *)
+              echo "invalid bump rule: ${{ github.event.inputs.bump }}"
+              exit 1
+              ;;
+          esac
+          
+          case ${{ github.event.inputs.release }} in 
+            local)
+              ;;
+            global)
+              ;;
+            *)
+              echo invalid release type: ${{ github.event.inputs.release }}
+              exit 1
+              ;;
+          esac
+          
+          echo BUMP=${{ github.event.inputs.bump }} >> $GITHUB_ENV
+          echo RELEASE=${{ github.event.inputs.release }} >> $GITHUB_ENV
+
+      # Checkout and prerequisite tools        
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2.2.2
+        with:
+          python-version: 3.7
+          
+      - name: Setup poetry
+        uses: abatilo/actions-poetry@v2.1.0
+
+      - name: Setup scala
+        uses: olafurpg/setup-scala@v10
+        with:
+          java-version: adopt@1.11
+        
+      - name: Restore cache
+        uses: actions/cache@v2.1.5
+        with:
+          path: |
+            ~/.ivy2/cache
+            ~/.sbt
+          key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt', '**/Dependencies.scala') }}   
+
+      # Build Python    
+      - name: Install dependencies
+        run: make py_requirements
+        
+      - name: bump version
+        if: github.events.inputs.version == ''
+        run: cd python-package && poetry version ${{ env.BUMP }}
+        
+      - name: force bump version
+        if: github.events.inputs.version != ''
+        run: cd python-package && poetry version ${{ github.events.inputs.version }}
+        
+      - name: Build python
+        run: make python
+
+      - name: Add version env
+        run: echo VERSION=$(cd python-package && poetry version -s) >> $GITHUB_ENV
+      
+      - name: Save new version 
+        run: echo ${{ env.VERSION }} > version
+
+      # Build Scala
+      - name: Build scala package
+        run: "make scala"
+
+      # Publish all
+      - name: Publish python
+        run: cd python-package && poetry publish -u __token__ -p ${{ secrets.pypi_token }}
+
+      # TODO add pgp or token
+      - name: Publish scala
+        run: |
+          sbt -DappVersion=${{ env.VERSION }} 'set pgpPassphrase := Some(Array())'  +publishSigned
+          sbt -DappVersion=${{ env.VERSION }} 'sonatypeReleaseAll'
+
+      - name: Tag and push changes
+        id: tag
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git commit -a --allow-empty -m "release version ${{ env.VERSION }}"
+          git tag ${{ env.VERSION }}
+          git push
+          git push --tags
+
+      - name: Reports
+        id: generate-output
+        run: echo "::set-output name=tag-output::${{ env.VERSION }}"
+
+    outputs:
+      tag: ${{ steps.generate-output.outputs.tag-output }}
+          
+  slackNotification:
+    name: Slack Notification
+    needs: Release
+    runs-on: ubuntu-latest
+    steps:
+    - name: Slack Notification success
+      if: ${{ success() }}
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_CHANNEL: hydrosphere
+        SLACK_USERNAME: HydroRobot
+        SLACK_ICON: https://avatars.githubusercontent.com/u/17550625?s=200&v=4
+        SLACK_COLOR: ${{ job.status }}
+        SLACK_TITLE: Build status - success
+        SLACK_MESSAGE: "Releasing hydro-serving-grpc ${{ needs.Release.outputs.tag }} :rocket:"
+        MSG_MINIMAL: true
+
+    - name: Slack Notification failure
+      if: ${{ failure() }}
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_CHANNEL: hydrosphere
+        SLACK_USERNAME: HydroRobot
+        SLACK_ICON: https://avatars.githubusercontent.com/u/17550625?s=200&v=4
+        SLACK_COLOR: ${{ job.status }}
+        SLACK_TITLE: Build status - failure
+        SLACK_MESSAGE: "Check build $GITHUB_RUN_ID status"
+        MSG_MINIMAL: true
