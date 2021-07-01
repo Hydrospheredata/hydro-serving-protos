@@ -1,0 +1,44 @@
+name: ci
+on: pull_request
+
+jobs:
+
+  Test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2      
+
+      - name: Setup scala
+        uses: olafurpg/setup-scala@v10
+        with:
+          java-version: adopt@1.11
+
+      - name: Setup Python
+        uses: actions/setup-python@v2.2.2
+        with:
+          python-version: 3.7
+          
+      - name: Setup poetry
+        uses: abatilo/actions-poetry@v2.1.0
+        
+      # Build Python    
+      - name: Install dependencies
+        run: make py_requirements
+        
+      - name: bump version
+        run: cd python-package && poetry version ${{ env.BUMP }}
+        
+      - name: Build python
+        run: make python
+
+      - name: Save new version
+        run: echo $(cd python-package && poetry version -s) > version
+
+      # Build Scala
+      - name: Build scala package
+        run: make scala
+
+      - name: Publish scala local
+        run: make scala_publish_local
+          
