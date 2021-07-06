@@ -25,6 +25,8 @@ on:
         
 # Secrets:
 #   pypi_token - pypi API token
+#   sonatype_user - oss.sonatype.org
+#   sonatype_token
       
 jobs:
   Release:
@@ -88,6 +90,15 @@ jobs:
         uses: olafurpg/setup-scala@v10
         with:
           java-version: adopt@1.11
+
+      - name: Set scala credentials
+        run: | 
+          cat << EOF > .sbt/1.0/sonatype.sbt 
+            credentials += Credentials("Sonatype Nexus Repository Manager",
+            "oss.sonatype.org",
+            "${{ secrets.sonatype_user }}",
+            "${{ secrets.sonatype_token }}")
+          EOF
         
       - name: Restore cache
         uses: actions/cache@v2.1.5
