@@ -137,6 +137,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Save version
+        run: echo ${{ env.VERSION }} > version
+
       - name: Tag and push changes
         id: tag
         run: |
