@@ -93,8 +93,8 @@ jobs:
 
       - name: Set scala credentials
         run: | 
-          mkdir -p .sbt/1.0
-          cat << EOF > .sbt/1.0/sonatype.sbt 
+          mkdir -p ./.sbt/1.0
+          cat << EOF > ./.sbt/1.0/sonatype.sbt 
             credentials += Credentials("Sonatype Nexus Repository Manager",
             "oss.sonatype.org",
             "${{ secrets.sonatype_user }}",
@@ -141,8 +141,9 @@ jobs:
       # TODO add pgp or token
       - name: Publish scala
         run: |
-          sbt -DappVersion=${{ env.VERSION }} 'set pgpPassphrase := Some(Array())'  +publishSigned
-          sbt -DappVersion=${{ env.VERSION }} 'sonatypeReleaseAll'
+          cd scala-package && sbt -DappVersion=${{ env.VERSION }} +publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Tag and push changes
         id: tag

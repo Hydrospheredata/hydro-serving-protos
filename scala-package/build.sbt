@@ -33,11 +33,11 @@ PB.targets in Compile := Seq(
 publishArtifact in Test := false
 pomIncludeRepository := { _ => false }
 publishTo := {
-  val nexus = "https://oss.sonatype.org/"
-  if (isSnapshot.value)
-    Some("snapshots" at nexus + "content/repositories/snapshots/")
-  else
-    Some("releases"  at nexus + "service/local/staging/deploy/maven2/")
+  val nexus = "https://maven.pkg.github.com/Hydrospheredata/hydro-serving-protos"
+  // if (isSnapshot.value)
+  //   Some("snapshots" at nexus + "content/repositories/snapshots/")
+  // else
+  Some("releases"  at nexus)
 }
 licenses := Seq(
   "Apache 2.0 License" -> url("https://github.com/Hydrospheredata/hydro-serving-protos/blob/master/LICENSE")
