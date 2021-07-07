@@ -134,18 +134,20 @@ jobs:
       - name: Build scala package
         run: make scala
 
-      # Publish all
-      - name: Publish python
-        run: cd python-package && poetry publish -u __token__ -p ${{ secrets.pypi_token }}
-
-      # TODO add pgp or token
+      # Add pgp
       - name: Import GPG key
         id: import_gpg
         uses: crazy-max/ghaction-import-gpg@v3
         with:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY_SONATYPE }}
 
+      # Publish all
+      - name: Publish python
+        continue-on-error: true
+        run: cd python-package && poetry publish -u __token__ -p ${{ secrets.pypi_token }}
+
       - name: Publish scala
+        continue-on-error: true
         run: |
           cd scala-package && sbt -DappVersion=${{ env.VERSION }} 'set pgpPassphrase := Some(Array())'  +publishSigned
           cd scala-package && sbt -DappVersion=${{ env.VERSION }} 'sonatypeReleaseAll'
