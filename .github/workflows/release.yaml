@@ -123,6 +123,8 @@ jobs:
       # Build Scala
       - name: Build scala package
         run: make scala
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Publish all
       - name: Publish python
@@ -136,9 +138,6 @@ jobs:
           cd scala-package && sbt -DappVersion=${{ env.VERSION }} +publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Save version
-        run: echo ${{ env.VERSION }} > version
 
       - name: Tag and push changes
         id: tag
