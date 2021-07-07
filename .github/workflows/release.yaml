@@ -128,12 +128,12 @@ jobs:
 
       # Publish all
       - name: Publish python
-        continue-on-error: false
+        continue-on-error: true
         run: cd python-package && poetry publish -u __token__ -p ${{ secrets.pypi_token }}
 
       # TODO add pgp or token
       - name: Publish scala
-        continue-on-error: false
+        continue-on-error: true
         run: |
           cd scala-package && sbt -DappVersion=${{ env.VERSION }} +publish
         env:
