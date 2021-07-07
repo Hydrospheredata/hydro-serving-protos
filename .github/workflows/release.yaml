@@ -122,7 +122,7 @@ jobs:
 
       # Build Scala
       - name: Build scala package
-        run: "make scala"
+        run: make scala
 
       # Publish all
       - name: Publish python
