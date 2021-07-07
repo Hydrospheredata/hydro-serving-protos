@@ -11,3 +11,4 @@
 /hydro-serving-protos/
 venv/
 bumpversion.cfg
+.DS_Store
