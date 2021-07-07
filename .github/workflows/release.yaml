@@ -93,6 +93,7 @@ jobs:
 
       - name: Set scala credentials
         run: | 
+          mkdir -p .sbt/1.0
           cat << EOF > .sbt/1.0/sonatype.sbt 
             credentials += Credentials("Sonatype Nexus Repository Manager",
             "oss.sonatype.org",
