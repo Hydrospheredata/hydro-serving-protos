@@ -90,16 +90,6 @@ jobs:
         uses: olafurpg/setup-scala@v10
         with:
           java-version: adopt@1.11
-
-      - name: Set scala credentials
-        run: | 
-          mkdir -p ./.sbt/1.0
-          cat << EOF > ./.sbt/1.0/sonatype.sbt 
-            credentials += Credentials("Sonatype Nexus Repository Manager",
-            "oss.sonatype.org",
-            "${{ secrets.sonatype_user }}",
-            "${{ secrets.sonatype_token }}")
-          EOF
         
       - name: Restore cache
         uses: actions/cache@v2.1.5
@@ -136,7 +126,7 @@ jobs:
 
       # Publish all
       - name: Publish python
-        continue-on-error: true
+        continue-on-error: false
         run: cd python-package && poetry publish -u __token__ -p ${{ secrets.pypi_token }}
 
       # TODO add pgp or token

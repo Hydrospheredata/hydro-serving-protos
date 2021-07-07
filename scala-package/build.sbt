@@ -9,6 +9,9 @@ crossScalaVersions := Seq("2.13.2", "2.12.11")
 
 publishMavenStyle := true
 
+githubOwner := "Hydrospheredata"
+githubRepository := "hydro-serving-protos"
+
 val circeVersion = "0.13.0"
 libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.1.1" % "test",
