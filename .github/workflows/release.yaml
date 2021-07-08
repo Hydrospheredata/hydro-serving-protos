@@ -143,6 +143,9 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY_SONATYPE }}
           passphrase: ${{ secrets.GPG_PRIVATE_KEY_PASS }}
 
+      - name: Export keyring
+        run: gpg --yes --batch --export-secret-key --passphrase ${{ secrets.GPG_PRIVATE_KEY_PASS }} ${{ steps.import_gpg.outputs.email }}  > ~/.sbt/gpg/secring.asc
+
       # Publish all
       - name: Publish python
         continue-on-error: true
