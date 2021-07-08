@@ -144,12 +144,11 @@ jobs:
         env:
           PGP_PASSPHRASE: ${{ secrets.GPG_PRIVATE_KEY_PASS }}
           PGP_SECRET: ${{ secrets.GPG_PRIVATE_KEY_SONATYPE }}
-          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-          SONATYPE_USERNAME: ${{ secrets.SONATYPE_TOKEN }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_TOKEN }}
+          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USER }}
         run: |
           cd scala-package && sbt ci-release
-         # cd scala-package && sbt -DappVersion=${{ env.VERSION }} 'set pgpPassphrase := sys.env.get("PGP_PASSPHRASE").map(_.toArray)' +publishSigned
-         # cd scala-package && sbt -DappVersion=${{ env.VERSION }} 'sonatypeReleaseAll'
+          cd scala-package && sbt sonatypeReleaseAll
 
       - name: Tag and push changes
         id: tag
