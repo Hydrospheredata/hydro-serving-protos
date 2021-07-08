@@ -35,6 +35,7 @@ jobs:
     env:
       BUMP: ${{ github.event.inputs.bump }} # default values for push-triggered run
       RELEASE: local
+      PGP_PASSPHRASE: ${{ secrets.GPG_PRIVATE_KEY_PASS }}
     steps:
       - name: Validate inputs  #TODO create an action for this
         if: github.event_name == 'workflow_dispatch'
@@ -91,15 +92,15 @@ jobs:
         with:
           java-version: adopt@1.11
 
-      # - name: Set scala credentials
-      #   run: | 
-      #     mkdir -p ./.sbt/1.0
-      #     cat << EOF > ./.sbt/1.0/sonatype.sbt 
-      #       credentials += Credentials("Sonatype Nexus Repository Manager",
-      #       "oss.sonatype.org",
-      #       "${{ secrets.sonatype_user }}",
-      #       "${{ secrets.sonatype_token }}")
-      #     EOF
+      - name: Set scala credentials
+        run: | 
+          mkdir -p ./.sbt/1.0
+          cat << EOF > ./.sbt/1.0/sonatype.sbt 
+            credentials += Credentials("Sonatype Nexus Repository Manager",
+            "oss.sonatype.org",
+            "${{ secrets.sonatype_user }}",
+            "${{ secrets.sonatype_token }}")
+          EOF
         
       - name: Restore cache
         uses: actions/cache@v2.1.5
@@ -150,7 +151,7 @@ jobs:
       - name: Publish scala
         continue-on-error: true
         run: |
-          cd scala-package && sbt -DappVersion=${{ env.VERSION }} +publishSigned
+          cd scala-package && sbt -DappVersion=${{ env.VERSION }} 'set pgpPassphrase := sys.env.get("PGP_PASSPHRASE").map(_.toArray)' +publishSigned
           cd scala-package && sbt -DappVersion=${{ env.VERSION }} 'sonatypeReleaseAll'
 
       - name: Tag and push changes
