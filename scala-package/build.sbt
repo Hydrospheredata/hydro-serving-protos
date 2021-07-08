@@ -1,5 +1,19 @@
 import sbt.Keys._
 
+inThisBuild(List(
+  organization := "io.hydrosphere",
+  homepage := Some(url("https://github.com/Hydrospheredata/hydro-serving-protos")),
+  licenses := List("Apache-2.0" -> url("https://github.com/Hydrospheredata/hydro-serving-protos/blob/master/LICENSE")),
+  developers := List(
+    Developer(
+      "KineticCookie",
+      "Bulat Lutfullin",
+      "lb6557@gmail.com",
+      url("https://github.com/KineticCookie")
+    )
+  )
+))
+
 organization := "io.hydrosphere"
 name := "serving-grpc-scala"
 version := sys.props.getOrElse("appVersion", IO.read(file("../version")).trim)
@@ -7,7 +21,7 @@ version := sys.props.getOrElse("appVersion", IO.read(file("../version")).trim)
 scalaVersion := "2.13.2"
 crossScalaVersions := Seq("2.13.2", "2.12.11")
 
-publishMavenStyle := true
+//publishMavenStyle := true
 
 val circeVersion = "0.13.0"
 libraryDependencies ++= Seq(
@@ -32,18 +46,18 @@ PB.targets in Compile := Seq(
 
 publishArtifact in Test := false
 pomIncludeRepository := { _ => false }
-publishTo := {
-  val nexus = "https://oss.sonatype.org/"
-  if (isSnapshot.value)
-    Some("snapshots" at nexus + "content/repositories/snapshots/")
-  else
-    Some("releases"  at nexus + "service/local/staging/deploy/maven2/")
-}
-licenses := Seq(
-  "Apache 2.0 License" -> url("https://github.com/Hydrospheredata/hydro-serving-protos/blob/master/LICENSE")
-)
+// // publishTo := {
+// //   val nexus = "https://oss.sonatype.org/"
+// //   if (isSnapshot.value)
+// //     Some("snapshots" at nexus + "content/repositories/snapshots/")
+// //   else
+// //     Some("releases"  at nexus + "service/local/staging/deploy/maven2/")
+// // }
+// licenses := Seq(
+//   "Apache 2.0 License" -> url("https://github.com/Hydrospheredata/hydro-serving-protos/blob/master/LICENSE")
+// )
 
-homepage := Some(url("https://github.com/Hydrospheredata/hydro-serving-protos"))
+// homepage := Some(url("https://github.com/Hydrospheredata/hydro-serving-protos"))
 
 scmInfo := Some(
   ScmInfo(
@@ -52,11 +66,11 @@ scmInfo := Some(
   )
 )
 
-developers := List(
-  Developer(
-    id = "KineticCookie",
-    name = "Bulat Lutfullin",
-    url = url("https://github.com/KineticCookie"),
-    email = "lb6557@gmail.com"
-  )
-)
+// developers := List(
+//   Developer(
+//     id = "KineticCookie",
+//     name = "Bulat Lutfullin",
+//     url = url("https://github.com/KineticCookie"),
+//     email = "lb6557@gmail.com"
+//   )
+// )
