@@ -147,7 +147,8 @@ jobs:
         run: |
           mkdir -p  ~/.sbt/gpg
           gpg --yes --batch --export-secret-key --passphrase ${{ secrets.GPG_PRIVATE_KEY_PASS }} ${{ steps.import_gpg.outputs.email }}  > ~/.sbt/gpg/secring.asc
-
+        env:
+          GPG_TTY: $(tty)
       # Publish all
       - name: Publish python
         continue-on-error: true
