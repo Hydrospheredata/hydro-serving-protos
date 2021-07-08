@@ -144,7 +144,9 @@ jobs:
           passphrase: ${{ secrets.GPG_PRIVATE_KEY_PASS }}
 
       - name: Export keyring
-        run: gpg --yes --batch --export-secret-key --passphrase ${{ secrets.GPG_PRIVATE_KEY_PASS }} ${{ steps.import_gpg.outputs.email }}  > ~/.sbt/gpg/secring.asc
+        run: |
+        mkdir -p  ~/.sbt/gpg/
+        gpg --yes --batch --export-secret-key --passphrase ${{ secrets.GPG_PRIVATE_KEY_PASS }} ${{ steps.import_gpg.outputs.email }}  > ~/.sbt/gpg/secring.asc
 
       # Publish all
       - name: Publish python
