@@ -146,9 +146,10 @@ jobs:
           PGP_SECRET: ${{ secrets.GPG_PRIVATE_KEY_SONATYPE }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_TOKEN }}
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USER }}
+          CI_SONATYPE_RELEASE: sonatypeReleaseAll
+          CI_SNAPSHOT_RELEASE: +publishSigned
         run: |
-          cd scala-package && sbt ci-release
-          cd scala-package && sbt sonatypeReleaseAll
+          cd scala-package && sbt -DappVersion=${{ env.VERSION }} ci-release
 
       - name: Tag and push changes
         id: tag
