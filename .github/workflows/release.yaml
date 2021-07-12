@@ -25,8 +25,10 @@ on:
         
 # Secrets:
 #   pypi_token - pypi API token
-#   sonatype_user - oss.sonatype.org
-#   sonatype_token
+#   SONATYPE_USER - oss.sonatype.org
+#   SONATYPE_TOKEN - password
+#   GPG_PRIVATE_KEY_PASS - passphrase gpg
+#   GPG_PRIVATE_KEY_SONATYPE - gpg keyring
       
 jobs:
   Release:
@@ -130,26 +132,37 @@ jobs:
       - name: Save new version 
         run: echo ${{ env.VERSION }} > version
 
-      # Build Scala
-      - name: Build scala package
-        run: make scala
+      # Publish scala and python
+      - name: Import gpg
+        run: echo $PGP_SECRET | base64 --decode | gpg --no-tty --yes --batch --import --passphrase $PGP_PASSPHRASE
+        env:
+          PGP_PASSPHRASE: ${{ secrets.GPG_PRIVATE_KEY_PASS }}
+          PGP_SECRET: ${{ secrets.GPG_PRIVATE_KEY_SONATYPE }}
 
-      # Publish all
-      - name: Publish python
-        continue-on-error: true
-        run: cd python-package && poetry publish -u __token__ -p ${{ secrets.pypi_token }}
+      - name: Export asc
+        run: |
+          mkdir -p ~/secret
+          echo use-agent >> ~/.gnupg/gpg.conf
+          echo pinentry-mode loopback >> ~/.gnupg/gpg.conf
+          echo allow-loopback-pinentry >> ~/.gnupg/gpg-agent.conf
+          echo RELOADAGENT | gpg-connect-agent
+          gpg --no-tty --batch --yes --output ~/secret/robot.gpg --passphrase $PGP_PASSPHRASE --export blutfullin@hydrosphere.io
+          echo 'Global / pgpKeyRing := Some(file("~/secret/robot.gpg"))' >> ./scala-package/build.sbt
+        env:
+          PGP_PASSPHRASE: ${{ secrets.GPG_PRIVATE_KEY_PASS }}
 
       - name: Publish scala
         continue-on-error: true
         env:
           PGP_PASSPHRASE: ${{ secrets.GPG_PRIVATE_KEY_PASS }}
-          PGP_SECRET: ${{ secrets.GPG_PRIVATE_KEY_SONATYPE }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_TOKEN }}
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USER }}
-          CI_SONATYPE_RELEASE: sonatypeReleaseAll
-          CI_SNAPSHOT_RELEASE: +publishSigned
         run: |
-          cd scala-package && sbt -DappVersion=${{ env.VERSION }} ci-release
+          cd scala-package && sbt -DappVersion=${{ env.VERSION }} +publishSigned sonatypeReleaseAll
+
+      - name: Publish python
+        continue-on-error: true
+        run: cd python-package && poetry publish -u __token__ -p ${{ secrets.pypi_token }}
 
       - name: Tag and push changes
         id: tag
