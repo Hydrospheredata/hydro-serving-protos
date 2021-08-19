@@ -12,7 +12,7 @@ on:
         description: bump rule (major|minor|patch|premajor|preminor|prepatch|prerelease)
         default: prerelease
         required: false
-        
+
       version:
         description: manual version
         default: ''
@@ -37,6 +37,7 @@ jobs:
     env:
       BUMP: ${{ github.event.inputs.bump }} # default values for push-triggered run
       RELEASE: local
+      VERSION: ${{ github.event.inputs.version }}
     steps:
       - name: Validate inputs  #TODO create an action for this
         if: github.event_name == 'workflow_dispatch'
@@ -75,6 +76,7 @@ jobs:
           
           echo BUMP=${{ github.event.inputs.bump }} >> $GITHUB_ENV
           echo RELEASE=${{ github.event.inputs.release }} >> $GITHUB_ENV
+          echo VERSION=${{ github.event.inputs.version }} >> $GITHUB_ENV
 
       # Checkout and prerequisite tools        
       - name: Checkout
@@ -116,12 +118,12 @@ jobs:
         run: make py_requirements
         
       - name: bump version
-        if: github.events.inputs.version == ''
+        if: env.VERSION  == ''
         run: cd python-package && poetry version ${{ env.BUMP }}
         
       - name: force bump version
-        if: github.events.inputs.version != ''
-        run: cd python-package && poetry version ${{ github.events.inputs.version }}
+        if: env.VERSION  != ''
+        run: cd python-package && poetry version ${{ env.VERSION }}
         
       - name: Build python
         run: make python
