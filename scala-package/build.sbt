@@ -51,3 +51,4 @@ PB.targets in Compile := Seq(
   scalapb.gen() -> (sourceManaged in Compile).value
 )
 Global / pgpKeyRing := Some(file("~/secret/robot.gpg"))
+Global / pgpKeyRing := Some(file("~/secret/robot.gpg"))
