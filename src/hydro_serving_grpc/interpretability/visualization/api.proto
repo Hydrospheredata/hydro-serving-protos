@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package hydrosphere.interpretability.visualization;
+
+option java_package = "io.hydrosphere.interpretability.proto.visualization";
+
+import "google/protobuf/empty.proto";
+
+message FitRequest {
+    int64 model_version_id = 1;
+    bool re = 2;
+}
+
+service VisualizationService {
+    rpc Fit(FitRequest) returns (google.protobuf.Empty);
+}

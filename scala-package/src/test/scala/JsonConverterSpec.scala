@@ -1,31 +1,31 @@
-import io.hydrosphere.serving.model.api.json.TensorJsonLens
-import io.hydrosphere.serving.tensorflow.TensorShape
-import io.hydrosphere.serving.tensorflow.tensor.DoubleTensor
-import org.scalatest.FunSpec
-import spray.json.{JsArray, JsNumber}
+import io.circe.{Json, parser}
+import io.hydrosphere.serving.proto.contract.tensor.conversions.json.TensorJsonLens
+import io.hydrosphere.serving.proto.contract.tensor.definitions.{DoubleTensor, Shape}
+import org.scalatest.funspec.AnyFunSpec
 
-class JsonConverterSpec extends FunSpec {
+class JsonConverterSpec extends AnyFunSpec {
   describe("Json Tensor converters") {
     it("should convert tensor without dims") {
-      val t1 = DoubleTensor(TensorShape.any, Seq(1, 2, 3, 4))
-      val t2 = DoubleTensor(TensorShape.any, Seq(1))
+      val t1 = DoubleTensor(Shape.any, Seq(1, 2, 3, 4))
+      val t2 = DoubleTensor(Shape.any, Seq(1))
 
       val res1 = TensorJsonLens.toJson(t1)
       val res2 = TensorJsonLens.toJson(t2)
-      assert(res1 === JsArray(Vector(JsNumber(1), JsNumber(2), JsNumber(3), JsNumber(4))))
-      assert(res2 === JsArray(Vector(JsNumber(1))))
+
+      assert(res1 === parser.parse("[1, 2, 3, 4]").getOrElse(Json.Null))
+      assert(res2 === parser.parse("[1]").getOrElse(Json.Null))
     }
     it("should convert scalar tensor") {
-      val t1 = DoubleTensor(TensorShape.scalar, Seq(1))
+      val t1 = DoubleTensor(Shape.scalar, Seq(1))
 
       val res1 = TensorJsonLens.toJson(t1)
-      assert(res1 === JsNumber(1))
+      assert(res1 === parser.parse("1").getOrElse(Json.Null))
     }
     it("should convert tensor with dims") {
-      val t1 = DoubleTensor(TensorShape.vector(-1), Seq(1, 2, 3, 4))
+      val t1 = DoubleTensor(Shape.vector(-1), Seq(1, 2, 3, 4))
 
       val res1 = TensorJsonLens.toJson(t1)
-      assert(res1 === JsArray(Vector(JsNumber(1), JsNumber(2), JsNumber(3), JsNumber(4))))
+      assert(res1 === parser.parse("[1, 2, 3, 4]").getOrElse(Json.Null))
     }
   }
 }

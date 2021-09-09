@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package hydrosphere.serving.contract;
+option java_package = "io.hydrosphere.serving.proto.contract";
+
+import "hydro_serving_grpc/serving/contract/field.proto";
+
+message ModelSignature {
+    string signature_name = 1;
+    repeated ModelField inputs = 2;
+    repeated ModelField outputs = 3;
+}

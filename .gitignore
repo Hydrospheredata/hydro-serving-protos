@@ -10,4 +10,11 @@ gradle.properties
 /typescript-package/node_modules/
 /typescript-package/node_modules/*
 /.vscode/
+<<<<<<< HEAD
 /hydro-serving-protos/
+=======
+/hydro-serving-protos/
+venv/
+bumpversion.cfg
+.DS_Store
+>>>>>>> b8b4b1ff4a86c81bc8d151194f522a5e9c487af8

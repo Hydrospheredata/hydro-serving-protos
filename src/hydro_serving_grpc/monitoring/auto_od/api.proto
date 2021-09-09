@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package hydrosphere.monitoring.auto_od;
+option java_package = "io.hydrosphere.monitoring.proto.audo_od";
+
+message ModelStatusRequest {
+  int64 model_version_id = 1;
+}
+
+message ModelStatusResponse {
+  enum AutoODState {
+    PENDING = 0;
+    STARTED = 1;
+    SELECTING_MODEL = 2;
+    SELECTING_PARAMETERS = 3;
+    DEPLOYING = 4;
+    SUCCESS = 5;
+    FAILED = 6;
+    NOT_SUPPORTED = 7;
+  }
+  AutoODState state = 1;
+  string description = 2;
+}
+
+message LaunchAutoOdRequest {
+  string training_data_path = 1;
+  int64 model_version_id = 2;
+}
+
+message LaunchAutoOdResponse {
+  enum LaunchState {
+    JOB_ALREADY_REQUESTED = 0;
+    MODEL_NOT_FOUND = 1;
+    SIGNATURE_NOT_SUPPORTED = 2;
+    JOB_STARTED = 3;
+  }
+  LaunchState state = 1;
+  string description = 2;
+}
+
+service AutoOdService {
+  rpc GetModelStatus (ModelStatusRequest) returns (ModelStatusResponse);
+  rpc LaunchAutoOd (LaunchAutoOdRequest) returns (LaunchAutoOdResponse);
+}

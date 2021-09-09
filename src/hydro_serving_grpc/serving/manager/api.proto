@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package hydrosphere.serving.manager;
+
+option java_package = "io.hydrosphere.serving.proto.manager";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+import "hydro_serving_grpc/serving/manager/entities.proto";
+
+message GetVersionRequest {
+    int64 id = 1;
+}
+
+message ModelVersionIdentifier {
+    string name = 1;
+    int64 version = 2;
+}
+
+message DeployServableRequest {
+    oneof model_version {
+        int64 version_id = 1;
+        ModelVersionIdentifier fullname = 2;
+    }
+    map<string, string> metadata = 3;
+    string deployment_config_name = 4;
+}
+
+message ServableFilter {
+    google.protobuf.StringValue name = 1;
+    google.protobuf.Int64Value version_id = 2;
+    map<string, string> metadata = 3;
+}
+
+message GetServablesRequest {
+    ServableFilter filter = 1;
+}
+
+message RemoveServableRequest {
+    string servable_name = 1;
+}
+
+service ManagerService {
+    rpc GetAllVersions (google.protobuf.Empty) returns (stream serving.manager.ModelVersion);
+    rpc GetVersion (GetVersionRequest) returns (serving.manager.ModelVersion);
+    
+    rpc DeployServable(DeployServableRequest) returns (stream serving.manager.Servable);
+    rpc GetServables(GetServablesRequest) returns (stream serving.manager.Servable);
+    rpc RemoveServable(RemoveServableRequest) returns (serving.manager.Servable);
+}

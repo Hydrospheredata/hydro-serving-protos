@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package hydrosphere.monitoring.sonar;
+option java_package = "io.hydrosphere.monitoring.proto.sonar";
+
+import "google/protobuf/empty.proto";
+import "hydro_serving_grpc/monitoring/sonar/entities.proto";
+
+service MonitoringService {
+    rpc Analyze (monitoring.sonar.ExecutionInformation) returns (google.protobuf.Empty);
+}

@@ -1,4 +1,0 @@
-grpcio-tools~=1.7.0
-twine~=1.9.1
-requests~=2.21.0
-wheel~=0.33.6

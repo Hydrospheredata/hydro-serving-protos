@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 INSTALL_PY_REQ = false
 VERSION := $(shell cat version)
 BASE_DIR := $(shell pwd)
@@ -17,6 +18,9 @@ test: test_python test_scala
 
 # Scala 
 # -----
+=======
+all: scala python
+>>>>>>> b8b4b1ff4a86c81bc8d151194f522a5e9c487af8
 
 scala:
 	cd scala-package && sbt +package
@@ -51,18 +55,24 @@ clean_java:
 python: python_wheel
 
 python_wheel: python_grpc
-	cd $(PY_WORK_PATH) && $(PYTHON) setup.py bdist_wheel
+	cd python-package && poetry build
 
 python_grpc: py_requirements
-	$(PYTHON) -m grpc_tools.protoc -I $(PROTOS_PATH) --python_out=$(PY_WORK_PATH) --grpc_python_out=$(PY_WORK_PATH) $(GRPC_FILES)
+	cd python-package && poetry run poe compile
 
 py_requirements:
+<<<<<<< HEAD
 ifeq ($(INSTALL_PY_REQ), true)
 	pip install -r python-package/requirements.txt
 endif
 
 test_python:
 	cd python-package && $(PYTHON) setup.py test
+=======
+	cd python-package && poetry install
+
+test: test-scala # test-python 
+>>>>>>> b8b4b1ff4a86c81bc8d151194f522a5e9c487af8
 
 clean_py:
 	find python-package -name '*_pb2.py' -delete
