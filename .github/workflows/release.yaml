@@ -163,7 +163,7 @@ jobs:
 
       # Build Python    
       - name: Install dependencies
-        if: github.event.inputs.skip_python != yes
+        if: github.event.inputs.skip_python != 'yes'
         run: make py_requirements
         
       - name: bump version
@@ -175,7 +175,7 @@ jobs:
         run: cd python-package && poetry version ${{ env.VERSION }}
         
       - name: Build python
-        if: github.event.inputs.skip_python != yes
+        if: github.event.inputs.skip_python != 'yes'
         run: make python
 
       - name: Add version env
@@ -205,7 +205,7 @@ jobs:
           PGP_PASSPHRASE: ${{ secrets.GPG_PRIVATE_KEY_PASS }}
 
       - name: Publish java
-        if: github.event.inputs.skip_java != yes
+        if: github.event.inputs.skip_java != 'yes'
         continue-on-error: true
         env:
           PGP_PASSPHRASE: ${{ secrets.GPG_PRIVATE_KEY_PASS }}
@@ -215,7 +215,7 @@ jobs:
           cd java-package && ./gradlew build -x signArchives
 
       - name: Publish scala
-        if: github.event.inputs.skip_scala != yes
+        if: github.event.inputs.skip_scala != 'yes'
         continue-on-error: true
         env:
           PGP_PASSPHRASE: ${{ secrets.GPG_PRIVATE_KEY_PASS }}
@@ -225,7 +225,7 @@ jobs:
           cd scala-package && sbt -DappVersion=${{ env.VERSION }} +publishSigned sonatypeReleaseAll
 
       - name: Publish python
-        if: github.event.inputs.skip_python != yes
+        if: github.event.inputs.skip_python != 'yes'
         continue-on-error: true
         run: cd python-package && poetry publish -u __token__ -p ${{ secrets.pypi_token }}
 
