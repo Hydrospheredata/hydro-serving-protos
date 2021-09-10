@@ -90,9 +90,9 @@ jobs:
           esac
 
           case ${{ github.event.inputs.skip_java }} in 
-            yes)
+            'yes')
               ;;
-            no)
+            'no')
               ;;
             *)
               echo invalid skip_java type: ${{ github.event.inputs.skip_java }}
@@ -101,9 +101,9 @@ jobs:
           esac
 
           case ${{ github.event.inputs.skip_python }} in 
-            yes)
+            'yes')
               ;;
-            no)
+            'no')
               ;;
             *)
               echo invalid skip_python type: ${{ github.event.inputs.skip_python }}
@@ -112,9 +112,9 @@ jobs:
           esac
 
           case ${{ github.event.inputs.skip_scala }} in 
-            yes)
+            'yes')
               ;;
-            no)
+            'no')
               ;;
             *)
               echo invalid skip_scala type: ${{ github.event.inputs.skip_scala }}
