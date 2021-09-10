@@ -11,7 +11,9 @@ plugins {
     id 'com.google.protobuf' version '0.8.8'
     id 'maven'
     id 'signing'
+    id "com.github.ben-manes.versions" version "0.39.0"
 }
+
 
 java {
     withJavadocJar()
@@ -30,7 +32,7 @@ dependencies {
 
 group = "io.hydrosphere"
 archivesBaseName = "serving-grpc-java"
-version = "0.1.0"
+version = buildVersion
 
 protobuf {
   protoc {
