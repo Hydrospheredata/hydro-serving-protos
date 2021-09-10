@@ -204,23 +204,18 @@ jobs:
         env:
           PGP_PASSPHRASE: ${{ secrets.GPG_PRIVATE_KEY_PASS }}
 
-      - name: Restore gradle.properties
-        env:
-          GRADLE_PROPERTIES: ${{ secrets.GRADLE_PROPERTIES }}
-        shell: bash
-        run: |
-          mkdir -p ~/.gradle/
-          echo ${GRADLE_PROPERTIES} > ~/.gradle/gradle.properties
-
       - name: Publish java
         if: github.event.inputs.skip_java != 'yes'
         continue-on-error: true
         env:
+          GRADLE_PROPERTIES: ${{ secrets.GRADLE_PROPERTIES }}
           PGP_PASSPHRASE: ${{ secrets.GPG_PRIVATE_KEY_PASS }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_TOKEN }}
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USER }}
         run: |
-          cd java-package && ./gradlew build -x signArchives
+          cd java-package
+          echo ${GRADLE_PROPERTIES} > ./gradle.properties
+          ./gradlew build -x signArchives
 
       - name: Publish scala
         if: github.event.inputs.skip_scala != 'yes'
