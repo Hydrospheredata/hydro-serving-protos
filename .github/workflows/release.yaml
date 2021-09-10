@@ -163,7 +163,7 @@ jobs:
 
       # Build Python    
       - name: Install dependencies
-        if: github.event.inputs.skip_python != 'yes'
+        if: github.event.inputs.skip_python == 'no'
         run: make py_requirements
         
       - name: bump version
@@ -175,7 +175,7 @@ jobs:
         run: cd python-package && poetry version ${{ env.VERSION }}
         
       - name: Build python
-        if: github.event.inputs.skip_python != 'yes'
+        if: github.event.inputs.skip_python == 'no'
         run: make python
 
       - name: Add version env
@@ -193,32 +193,32 @@ jobs:
 
       - name: Export asc
         run: |
-          mkdir -p ~/secret
-          echo use-agent >> ~/.gnupg/gpg.conf
-          echo pinentry-mode loopback >> ~/.gnupg/gpg.conf
-          echo allow-loopback-pinentry >> ~/.gnupg/gpg-agent.conf
+          echo use-agent >> /home/runner/.gnupg/gpg.conf
+          echo pinentry-mode loopback >> /home/runner/.gnupg/gpg.conf
+          echo allow-loopback-pinentry >> /home/runner/.gnupg/gpg-agent.conf
           echo RELOADAGENT | gpg-connect-agent
-          gpg --no-tty --batch --yes --output ~/secret/robot.gpg --passphrase $PGP_PASSPHRASE --export blutfullin@hydrosphere.io
-          echo 'Global / pgpKeyRing := Some(file("~/secret/robot.gpg"))' >> ./scala-package/build.sbt
-          echo 'Global / pgpKeyRing := Some(file("~/secret/robot.gpg"))' >> ./java-package/gradlew
+          gpg --no-tty --batch --yes --output /home/runner/.gnupg/robot.gpg --passphrase $PGP_PASSPHRASE --export blutfullin@hydrosphere.io
+          echo 'Global / pgpKeyRing := Some(file("/home/runner/.gnupg/robot.gpg"))' >> ./scala-package/build.sbt
         env:
           PGP_PASSPHRASE: ${{ secrets.GPG_PRIVATE_KEY_PASS }}
 
       - name: Publish java
-        if: github.event.inputs.skip_java != 'yes'
+        if: github.event.inputs.skip_java == 'no'
         continue-on-error: true
-        env:
-          GRADLE_PROPERTIES: ${{ secrets.GRADLE_PROPERTIES }}
-          PGP_PASSPHRASE: ${{ secrets.GPG_PRIVATE_KEY_PASS }}
-          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_TOKEN }}
-          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USER }}
         run: |
           cd java-package
-          echo ${GRADLE_PROPERTIES} > ./gradle.properties
-          ./gradlew build -x signArchives
+          echo "ossrhUsername=${{ secrets.SONATYPE_USER }}" > ./gradle.properties
+          echo "ossrhPassword=${{ secrets.SONATYPE_TOKEN }}" >> ./gradle.properties
+          echo "signing.gnupg.homeDir=/home/runner/.gnupg" >> ./gradle.properties
+          echo "signing.gnupg.passphrase=${{ secrets.GPG_PRIVATE_KEY_PASS }}" >> ./gradle.properties
+          echo "signing.gnupg.keyName=AE280B11" >> ./gradle.properties
+          echo "buildVersion=${{ env.VERSION }}" >> ./gradle.properties
+          ./gradlew clean build -x signArchives
+          ./gradlew signArchives --warning-mode all --stacktrace
+          ./gradlew uploadArchives
 
       - name: Publish scala
-        if: github.event.inputs.skip_scala != 'yes'
+        if: github.event.inputs.skip_scala == 'no'
         continue-on-error: true
         env:
           PGP_PASSPHRASE: ${{ secrets.GPG_PRIVATE_KEY_PASS }}
@@ -228,7 +228,7 @@ jobs:
           cd scala-package && sbt -DappVersion=${{ env.VERSION }} +publishSigned sonatypeReleaseAll
 
       - name: Publish python
-        if: github.event.inputs.skip_python != 'yes'
+        if: github.event.inputs.skip_python == 'no'
         continue-on-error: true
         run: cd python-package && poetry publish -u __token__ -p ${{ secrets.pypi_token }}
 
@@ -244,42 +244,42 @@ jobs:
         id: generate-output
         run: echo "::set-output name=tag-output::${{ env.VERSION }}"
 
-      - name: Create github release
-        uses: meeDamian/github-release@2.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ env.VERSION }}
+      # - name: Create github release
+      #   uses: meeDamian/github-release@2.0
+      #   with:
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      #     tag: ${{ env.VERSION }}
 
     outputs:
       tag: ${{ steps.generate-output.outputs.tag-output }}
           
-  slackNotification:
-    name: Slack Notification
-    needs: Release
-    runs-on: ubuntu-latest
-    steps:
-    - name: Slack Notification success
-      if: ${{ success() }}
-      uses: rtCamp/action-slack-notify@v2
-      env:
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        SLACK_CHANNEL: hydrosphere
-        SLACK_USERNAME: HydroRobot
-        SLACK_ICON: https://avatars.githubusercontent.com/u/17550625?s=200&v=4
-        SLACK_COLOR: ${{ job.status }}
-        SLACK_TITLE: Build status - success
-        SLACK_MESSAGE: "Releasing hydro-serving-grpc ${{ needs.Release.outputs.tag }} :rocket:"
-        MSG_MINIMAL: true
+  # slackNotification:
+  #   name: Slack Notification
+  #   needs: Release
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Slack Notification success
+  #     if: ${{ success() }}
+  #     uses: rtCamp/action-slack-notify@v2
+  #     env:
+  #       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+  #       SLACK_CHANNEL: hydrosphere
+  #       SLACK_USERNAME: HydroRobot
+  #       SLACK_ICON: https://avatars.githubusercontent.com/u/17550625?s=200&v=4
+  #       SLACK_COLOR: ${{ job.status }}
+  #       SLACK_TITLE: Build status - success
+  #       SLACK_MESSAGE: "Releasing hydro-serving-grpc ${{ needs.Release.outputs.tag }} :rocket:"
+  #       MSG_MINIMAL: true
 
-    - name: Slack Notification failure
-      if: ${{ failure() }}
-      uses: rtCamp/action-slack-notify@v2
-      env:
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        SLACK_CHANNEL: hydrosphere
-        SLACK_USERNAME: HydroRobot
-        SLACK_ICON: https://avatars.githubusercontent.com/u/17550625?s=200&v=4
-        SLACK_COLOR: ${{ job.status }}
-        SLACK_TITLE: Build status - failure
-        SLACK_MESSAGE: "Check build $GITHUB_RUN_ID status"
-        MSG_MINIMAL: true
+  #   - name: Slack Notification failure
+  #     if: ${{ failure() }}
+  #     uses: rtCamp/action-slack-notify@v2
+  #     env:
+  #       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+  #       SLACK_CHANNEL: hydrosphere
+  #       SLACK_USERNAME: HydroRobot
+  #       SLACK_ICON: https://avatars.githubusercontent.com/u/17550625?s=200&v=4
+  #       SLACK_COLOR: ${{ job.status }}
+  #       SLACK_TITLE: Build status - failure
+  #       SLACK_MESSAGE: "Check build $GITHUB_RUN_ID status"
+  #       MSG_MINIMAL: true

@@ -11,7 +11,7 @@ plugins {
     id 'com.google.protobuf' version '0.8.8'
     id 'maven'
     id 'signing'
-    id "com.github.ben-manes.versions" version "0.39.0"
+    id 'com.github.ben-manes.versions' version '0.39.0'
 }
 
 
@@ -31,13 +31,13 @@ dependencies {
     implementation 'javax.annotation:javax.annotation-api:1.2'
 }
 
-group = "io.hydrosphere"
-archivesBaseName = "serving-grpc-java"
-version = "0.1.0"
+group = 'io.hydrosphere'
+archivesBaseName = 'serving-grpc-java'
+version = findProperty('buildVersion')
 
 protobuf {
   protoc {
-    artifact = "com.google.protobuf:protoc:3.11.0"
+    artifact = 'com.google.protobuf:protoc:3.11.0'
   }
   plugins {
     grpc {
@@ -46,12 +46,13 @@ protobuf {
   }
   generateProtoTasks {
     all()*.plugins {
-      grpc {}
+      grpc { }
     }
   }
 }
 
 signing {
+    useGpgCmd()
     sign configurations.archives
 }
 
@@ -64,11 +65,12 @@ uploadArchives {
         mavenDeployer {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+            repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
                 authentication(userName: findProperty('ossrhUsername'), password: findProperty('ossrhPassword'))
             }
 
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+            snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
+                /* groovylint-disable-next-line DuplicateStringLiteral */
                 authentication(userName: findProperty('ossrhUsername'), password: findProperty('ossrhPassword'))
             }
             pom.project {
