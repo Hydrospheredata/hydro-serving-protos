@@ -214,8 +214,9 @@ jobs:
           echo "signing.gnupg.keyName=AE280B11" >> ./gradle.properties
           echo "buildVersion=${{ env.VERSION }}" >> ./gradle.properties
           ./gradlew clean build -x signArchives
-          ./gradlew signArchives --warning-mode all --stacktrace
+          ./gradlew signArchives
           ./gradlew uploadArchives
+          ./gradlew closeAndReleaseRepository
 
       - name: Publish scala
         if: github.event.inputs.skip_scala == 'no'
