@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "hydro_serving_grpc"
-version = "3.0.1-alpha.19"
+version = "3.0.1-alpha.20"
 description = "Protobuf messages and GRPC API for Hydrosphere Serving platform"
 readme = "README.md"
 authors = ["Hydrospheredata <info@hydrosphere.io>"]
