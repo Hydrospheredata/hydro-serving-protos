@@ -244,42 +244,42 @@ jobs:
         id: generate-output
         run: echo "::set-output name=tag-output::${{ env.VERSION }}"
 
-      # - name: Create github release
-      #   uses: meeDamian/github-release@2.0
-      #   with:
-      #     token: ${{ secrets.GITHUB_TOKEN }}
-      #     tag: ${{ env.VERSION }}
+      - name: Create github release
+        uses: meeDamian/github-release@2.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ env.VERSION }}
 
     outputs:
       tag: ${{ steps.generate-output.outputs.tag-output }}
           
-  # slackNotification:
-  #   name: Slack Notification
-  #   needs: Release
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - name: Slack Notification success
-  #     if: ${{ success() }}
-  #     uses: rtCamp/action-slack-notify@v2
-  #     env:
-  #       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-  #       SLACK_CHANNEL: hydrosphere
-  #       SLACK_USERNAME: HydroRobot
-  #       SLACK_ICON: https://avatars.githubusercontent.com/u/17550625?s=200&v=4
-  #       SLACK_COLOR: ${{ job.status }}
-  #       SLACK_TITLE: Build status - success
-  #       SLACK_MESSAGE: "Releasing hydro-serving-grpc ${{ needs.Release.outputs.tag }} :rocket:"
-  #       MSG_MINIMAL: true
+  slackNotification:
+    name: Slack Notification
+    needs: Release
+    runs-on: ubuntu-latest
+    steps:
+    - name: Slack Notification success
+      if: ${{ success() }}
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_CHANNEL: hydrosphere
+        SLACK_USERNAME: HydroRobot
+        SLACK_ICON: https://avatars.githubusercontent.com/u/17550625?s=200&v=4
+        SLACK_COLOR: ${{ job.status }}
+        SLACK_TITLE: Build status - success
+        SLACK_MESSAGE: "Releasing hydro-serving-grpc ${{ needs.Release.outputs.tag }} :rocket:"
+        MSG_MINIMAL: true
 
-  #   - name: Slack Notification failure
-  #     if: ${{ failure() }}
-  #     uses: rtCamp/action-slack-notify@v2
-  #     env:
-  #       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-  #       SLACK_CHANNEL: hydrosphere
-  #       SLACK_USERNAME: HydroRobot
-  #       SLACK_ICON: https://avatars.githubusercontent.com/u/17550625?s=200&v=4
-  #       SLACK_COLOR: ${{ job.status }}
-  #       SLACK_TITLE: Build status - failure
-  #       SLACK_MESSAGE: "Check build $GITHUB_RUN_ID status"
-  #       MSG_MINIMAL: true
+    - name: Slack Notification failure
+      if: ${{ failure() }}
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_CHANNEL: hydrosphere
+        SLACK_USERNAME: HydroRobot
+        SLACK_ICON: https://avatars.githubusercontent.com/u/17550625?s=200&v=4
+        SLACK_COLOR: ${{ job.status }}
+        SLACK_TITLE: Build status - failure
+        SLACK_MESSAGE: "Check build $GITHUB_RUN_ID status"
+        MSG_MINIMAL: true
