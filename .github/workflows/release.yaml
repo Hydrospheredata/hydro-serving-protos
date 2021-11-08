@@ -48,7 +48,7 @@ on:
 jobs:
   Release:
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch'
+#    if: github.event_name == 'workflow_dispatch'
     env:
       BUMP: ${{ github.event.inputs.bump }} # default values for push-triggered run
       RELEASE: local
