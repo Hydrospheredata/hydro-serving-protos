@@ -15,7 +15,7 @@ include = ["hydro_serving_grpc/**/*"] # undocuented fix for .gitignore exclusion
 
 [tool.poetry.dependencies]
 python = "^3.6"
-grpcio = "^1.38.0"
+grpcio = "^1.41.0"
 protobuf = "^3.17.2"
 
 [tool.poetry.dev-dependencies]
